@@ -1,6 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from routers import get_ai_response
 
 app = FastAPI()
 
@@ -11,6 +12,8 @@ app.add_middleware(
     allow_methods=["*"],  
     allow_headers=["*"],  
 )
+
+app.include_router(get_ai_response.router, prefix="/chat")
 
 if __name__ == "__main__":
     import uvicorn

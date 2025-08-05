@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 import google.generativeai as genai
-from query_processor import process_query
+from .query_processor import process_query
 
 load_dotenv()
 
