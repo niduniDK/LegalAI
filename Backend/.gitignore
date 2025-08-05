@@ -1,2 +1,11 @@
 venv/
 .env
+**/__pycache__/
+utils/
+
+
+**.npy
+**.pkl
+**.faiss
+
+**.tsv.gz
