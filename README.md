@@ -6,6 +6,6 @@ An information retrieval system which facilitates giving user friendly responses
 
 ## References
 
-- [System Architecture Document](docs/Software%20Architecture%20Document.pdf)
+- [Software Architecture Document](docs/Software%20Architecture%20Document.pdf)
 - [Software Requirements Specification](docs/Software%20Requirements%20Specification.pdf)
 - [Feasibility Report](docs/Feasibility%20Report.pdf)
