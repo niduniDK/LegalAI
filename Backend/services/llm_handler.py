@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 import google.generativeai as genai
-from .query_processor import process_query
+from .query_processor import retrieve_doc
 
 load_dotenv()
 
@@ -11,7 +11,7 @@ gemini_client = genai.GenerativeModel("gemini-2.0-flash")
 
 def generate_response(query: str, history: list = []) -> str:
 
-    content = process_query(query)
+    content, filenames = retrieve_doc(query)
     context = "\n".join(list(content))
     
     prompt = (
