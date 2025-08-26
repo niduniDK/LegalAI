@@ -36,6 +36,27 @@ export function DiscoverInterface() {
   const [searchQuery, setSearchQuery] = React.useState("")
   const [selectedCategory, setSelectedCategory] = React.useState("All")
   const [filteredDocuments, setFilteredDocuments] = React.useState(legalDocuments)
+  const [urls, setUrls] = React.useState([])
+
+  const handleSearch = async () => {
+    try{
+      const response = await fetch("http://localhost:8000/get_docs/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ query: searchQuery })
+      })
+      const data = await response.json()
+      const docUrls = Object.values(data)
+      console.log("Search results:", docUrls)
+
+      setUrls(data || [])
+
+    } catch(error) {
+      console.error("Error fetching search results:", error)
+    }
+  }
 
   React.useEffect(() => {
     let filtered = legalDocuments
@@ -58,7 +79,7 @@ export function DiscoverInterface() {
   }, [searchQuery, selectedCategory])
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-screen flex-col overflow-y-auto">
       {/* Header */}
       <div className="border-b border-border/40 p-4">
         <div className="flex items-center justify-between mb-4">
@@ -69,7 +90,7 @@ export function DiscoverInterface() {
         </div>
 
         {/* Search Bar */}
-        <div className="relative mb-4">
+        <div className="flex relative mb-4">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Search legal documents, acts, and regulations..."
@@ -77,7 +98,10 @@ export function DiscoverInterface() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
           />
+          <Button onClick={handleSearch} className="w-32 mx-5 mb-4">Search</Button>
         </div>
+
+        
 
         {/* Category Filters */}
         <div className="flex flex-wrap gap-2">
@@ -161,7 +185,56 @@ export function DiscoverInterface() {
               </Card>
             ))}
           </div>
-
+          {Array.isArray(urls) && urls.length > 0 && (
+            <div className="mt-8 max-w-4xl mx-auto">
+              <h2 className="text-xl font-semibold mb-6 text-foreground">Related Documents</h2>
+              <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
+                {urls.map((url, index) => (
+                  <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow duration-200">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-sm font-medium text-muted-foreground">
+                          Document {index + 1}
+                        </CardTitle>
+                        <Badge variant="outline" className="text-xs">
+                          PDF
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <div className="relative group">
+                        <iframe 
+                          src={`https://docs.google.com/gview?url=${url}&embedded=true`}
+                          className="w-full h-64 border-0 rounded-b-lg"
+                          title={`Document ${index + 1}`}
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200 rounded-b-lg" />
+                      </div>
+                      <div className="p-4 bg-muted/30">
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs text-muted-foreground truncate flex-1 mr-3">
+                            {url}
+                          </p>
+                          <div className="flex gap-2">
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="h-7 text-xs"
+                              onClick={() => window.open(url, '_blank')}
+                            >
+                              <ExternalLink className="h-3 w-3 mr-1" />
+                              Open
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
           {filteredDocuments.length === 0 && (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <FileText className="h-12 w-12 text-muted-foreground mb-4" />
@@ -172,6 +245,8 @@ export function DiscoverInterface() {
             </div>
           )}
         </div>
+
+        
       </ScrollArea>
     </div>
   )

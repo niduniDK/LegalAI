@@ -95,7 +95,7 @@ export function ChatInterface({ initialQuery, initialResponse, isLoading: initia
   return (
     <div className="flex flex-col h-[600px] border rounded-xl p-4">
       {/* Chat Messages */}
-      <ScrollArea className="flex-1" ref={scrollAreaRef}>
+      <ScrollArea className="flex-1 overflow-y-auto scrollbar-hide" ref={scrollAreaRef}>
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
             <Scale className="h-10 w-10 mb-2" />
@@ -105,7 +105,7 @@ export function ChatInterface({ initialQuery, initialResponse, isLoading: initia
         ) : (
           <div className="space-y-4">
             {messages.map(msg => (
-              <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end mr-10" : "justify-start ml-10"}`}>
                 <div className={`max-w-[70%] px-4 py-2 rounded-2xl ${msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
                   <div className="whitespace-pre-wrap text-sm">{msg.content}</div>
                 </div>
