@@ -8,30 +8,37 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Badge } from "@/components/ui/badge"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 
-// Sample messages (starts empty)
-const sampleMessages = [
-    {
-    id: "1",
-    content: "What are the requirements for starting a business in Sri Lanka?",
-    role: "user", // "user" | "assistant"
-    timestamp: new Date(),
-    sources: [
-      {
-        title: "Companies Act No. 07 of 2007",
-        url: "#",
-        snippet: "Requirements for company incorporation"
-      }
-    ]
-  }
-]
-
-export function ChatInterface() {
-  const [messages, setMessages] = useState(sampleMessages)
+export function ChatInterface({ initialQuery, initialResponse, isLoading: initialLoading }) {
+  const [messages, setMessages] = useState([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const scrollAreaRef = useRef(null)
 
-  const handleSend = () => {
+  // Initialize messages when component mounts or when initial data changes
+  React.useEffect(() => {
+    if (initialQuery && !messages.length) {
+      const userMessage = {
+        id: "initial-user",
+        content: initialQuery,
+        role: "user",
+        timestamp: new Date(),
+      }
+      
+      setMessages([userMessage])
+      
+      if (initialResponse) {
+        const assistantMessage = {
+          id: "initial-assistant",
+          content: initialResponse,
+          role: "assistant",
+          timestamp: new Date(),
+        }
+        setMessages(prev => [...prev, assistantMessage])
+      }
+    }
+  }, [initialQuery, initialResponse, messages.length])
+
+  const handleSend = async () => {
     if (!input.trim()) return
 
     const userMessage = {
@@ -45,17 +52,37 @@ export function ChatInterface() {
     setInput("")
     setIsLoading(true)
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/chat/get_ai_response', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: input }),
+      })
+      
+      const data = await response.json()
+      
       const assistantMessage = {
         id: (Date.now() + 1).toString(),
-        content: "This is a simulated AI response based on your question.",
+        content: data.response,
         role: "assistant",
         timestamp: new Date(),
       }
+      
       setMessages(prev => [...prev, assistantMessage])
+    } catch (error) {
+      console.error('Error:', error)
+      const errorMessage = {
+        id: (Date.now() + 1).toString(),
+        content: "Sorry, I encountered an error. Please try again.",
+        role: "assistant",
+        timestamp: new Date(),
+      }
+      setMessages(prev => [...prev, errorMessage])
+    } finally {
       setIsLoading(false)
-    }, 2000)
+    }
   }
 
   const handleKeyPress = (e) => {
@@ -85,12 +112,14 @@ export function ChatInterface() {
               </div>
             ))}
 
-            {isLoading && (
+            {(isLoading || initialLoading) && (
               <div className="flex justify-start">
                 <div className="max-w-[70%] rounded-2xl bg-muted px-4 py-3 animate-pulse">
-                  <div className="h-2 w-2 rounded-full bg-muted-foreground mb-1"></div>
-                  <div className="h-2 w-2 rounded-full bg-muted-foreground mb-1"></div>
-                  <div className="h-2 w-2 rounded-full bg-muted-foreground"></div>
+                  <div className="flex space-x-1">
+                    <div className="h-2 w-2 rounded-full bg-muted-foreground animate-bounce"></div>
+                    <div className="h-2 w-2 rounded-full bg-muted-foreground animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                    <div className="h-2 w-2 rounded-full bg-muted-foreground animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                  </div>
                 </div>
               </div>
             )}
@@ -106,9 +135,9 @@ export function ChatInterface() {
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyPress={handleKeyPress}
-          disabled={isLoading}
+          disabled={isLoading || initialLoading}
         />
-        <Button onClick={handleSend} disabled={!input.trim() || isLoading}>
+        <Button onClick={handleSend} disabled={!input.trim() || isLoading || initialLoading}>
           <Send className="h-4 w-4" />
         </Button>
       </div>
