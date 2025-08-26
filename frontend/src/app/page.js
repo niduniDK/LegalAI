@@ -22,7 +22,7 @@ export default function HomePage() {
           </div>
 
           {chatStarted ? (
-            <ChatInterface />
+            <ChatInterface initialQuery={initialQuery} />
           ) : (
             <ChatBox onStartChat={handleStartChat} />
           )}

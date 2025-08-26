@@ -14,29 +14,12 @@ export function ChatInterface({ initialQuery, initialResponse, isLoading: initia
   const [isLoading, setIsLoading] = useState(false)
   const scrollAreaRef = useRef(null)
 
-  // Initialize messages when component mounts or when initial data changes
+  // Initialize input with the initial query when component mounts
   React.useEffect(() => {
-    if (initialQuery && !messages.length) {
-      const userMessage = {
-        id: "initial-user",
-        content: initialQuery,
-        role: "user",
-        timestamp: new Date(),
-      }
-      
-      setMessages([userMessage])
-      
-      if (initialResponse) {
-        const assistantMessage = {
-          id: "initial-assistant",
-          content: initialResponse,
-          role: "assistant",
-          timestamp: new Date(),
-        }
-        setMessages(prev => [...prev, assistantMessage])
-      }
+    if (initialQuery) {
+      setInput(initialQuery)
     }
-  }, [initialQuery, initialResponse, messages.length])
+  }, [initialQuery])
 
   const handleSend = async () => {
     if (!input.trim()) return
