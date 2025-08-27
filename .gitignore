@@ -1,0 +1,12 @@
+venv/
+**/.env
+**/__pycache__/
+utils/
+.venv
+**/.venv
+
+**.npy
+**.pkl
+**.faiss
+
+**.tsv.gz
