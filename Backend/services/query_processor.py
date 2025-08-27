@@ -1,3 +1,4 @@
+import os
 import joblib
 import numpy as np
 from typing import List, Tuple
@@ -10,14 +11,20 @@ import pandas as pd
 from rank_bm25 import BM25Okapi
 import re
 
-model = SentenceTransformer('nlpaueb/legal-bert-base-uncased')
-index_bills = faiss.read_index("F:/Semester 5/DSE Project/LegalAI/utils/bills_utils/bills.faiss")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # current file directory
+index_path = os.path.join(BASE_DIR, "..", "docs", "bills.faiss")  # go up one folder
+bm25_path = os.path.join(BASE_DIR, "..", "docs", "bills_bm25.pkl")
+data_path = os.path.join(BASE_DIR, "..", "docs", "bills_data.pkl")
+bills_path = os.path.join(BASE_DIR, "..", "docs", "bills.tsv")
 
-bm25_corpus = joblib.load("F:/Semester 5/DSE Project/LegalAI/utils/bills_utils/bills_bm25.pkl")
+model = SentenceTransformer('nlpaueb/legal-bert-base-uncased')
+index_bills = faiss.read_index(index_path)
+
+bm25_corpus = joblib.load(bm25_path)
 bm25_bills = BM25Okapi(bm25_corpus)
 
-data = joblib.load("F:/Semester 5/DSE Project/LegalAI/utils/bills_utils/bills_data.pkl")
-bills_data = pd.read_csv("F:/Semester 5/DSE Project/LegalAI/utils/bills_utils/bills.tsv", sep='\t', compression='gzip')
+data = joblib.load(data_path)
+bills_data = pd.read_csv(bills_path, sep='\t', compression='gzip')
 
 documents_bills = bills_data['content'].tolist()
 metadata_bills = bills_data[["name", "type"]].to_dict(orient='records')
