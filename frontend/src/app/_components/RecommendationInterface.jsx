@@ -1,11 +1,13 @@
 "use client"
 
 import * as React from "react"
-import { Star, MessageCircle, FileText, Clock } from 'lucide-react'
+import { Star, MessageCircle, FileText, Clock, ExternalLink } from 'lucide-react';
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import Link from "next/link"
+import { data } from "react-router-dom"
 
 const recommendations = [
   {
@@ -34,10 +36,41 @@ const recommendations = [
   }
 ]
 
-
 export function RecommendationsInterface() {
+
+  const [userRecommendation, setUserRecommendations] = React.useState([])
+
+  React.useEffect(() => {
+    localStorage.setItem('username', 'user_2');
+  }, []);
+  
+  React.useEffect(()=> {
+    const username = localStorage.getItem('username');
+    if(username){
+      const fetchRecommendations = async () => {
+        try{
+          const response = await fetch("http://localhost:8000/recommendations/get_recommendations/", {
+            method: "POST",
+            headers:{
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({username: username})
+          })
+          const data = await response.json()
+          const urls = Object.values(data)
+          setUserRecommendations(urls)
+        }
+        catch(error){
+          console.error("Error fetching recommendations:", error);
+        }
+      }
+      fetchRecommendations();
+    }
+    }, []);
+
+
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-screen flex-col overflow-y-auto">
       {/* Header */}
       <div className="border-b border-border/40 p-4">
         <div className="flex items-center gap-2 mb-4">
@@ -56,6 +89,58 @@ export function RecommendationsInterface() {
               <Star className="h-4 w-4" />
               Recommended for You
             </h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              {userRecommendation.length > 0 && 
+                userRecommendation.map((url, index) => (
+                  <div key={index} className="mb-4 p-4 border border-border rounded-lg">
+                    <a href={url}>
+                      <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow duration-200">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <CardTitle className="text-sm font-medium text-muted-foreground">
+                            Document {index + 1}
+                          </CardTitle>
+                          <Badge variant="outline" className="text-xs">
+                            PDF
+                          </Badge>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="p-0">
+                        <div className="relative group">
+                          <iframe 
+                            src={`https://docs.google.com/gview?url=${url}&embedded=true`}
+                            className="w-full h-64 border-0 rounded-b-lg"
+                            title={`Document ${index + 1}`}
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200 rounded-b-lg" />
+                        </div>
+                        <div className="p-4 bg-muted/30">
+                          <div className="flex items-center justify-between">
+                            <p className="text-xs text-muted-foreground truncate flex-1 mr-3">
+                              {url}
+                            </p>
+                            <div className="flex gap-2">
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="h-7 text-xs"
+                                onClick={() => window.open(url, '_blank')}
+                              >
+                                <ExternalLink className="h-3 w-3 mr-1" />
+                                Open
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    </a>
+                  </div>
+                ))}
+            
+            </div>
+            
             <div className="space-y-4">
               {recommendations.map((rec) => (
                 <Card key={rec.id} className="hover:shadow-md transition-shadow">
@@ -103,10 +188,13 @@ export function RecommendationsInterface() {
                       </div>
                       <div className="flex gap-2">
                         {rec.actionType === "chat" ? (
-                          <Button size="sm" className="h-8 text-xs">
-                            <MessageCircle className="h-3 w-3 mr-1" />
-                            Start Chat
-                          </Button>
+                          <Link to="/">
+                            <Button size="sm" className="h-8 text-xs">
+                              <MessageCircle className="h-3 w-3 mr-1" />
+                              Start Chat
+                            </Button>
+                          </Link>
+                          
                         ) : (
                           <Button size="sm" variant="outline" className="h-8 text-xs">
                             <FileText className="h-3 w-3 mr-1" />
@@ -124,10 +212,13 @@ export function RecommendationsInterface() {
             </div>
           </div>
 
+          
+
           {/* Quick Actions */}
           <div>
             <h2 className="text-base font-semibold mb-4">Quick Actions</h2>
             <div className="grid gap-3 md:grid-cols-3">
+              <Link href="/">
               <Card className="p-4 cursor-pointer hover:shadow-md transition-shadow">
                 <div className="text-center">
                   <MessageCircle className="h-8 w-8 mx-auto mb-2 text-primary" />
@@ -135,13 +226,17 @@ export function RecommendationsInterface() {
                   <p className="text-xs text-muted-foreground">Get instant answers from our AI</p>
                 </div>
               </Card>
-              <Card className="p-4 cursor-pointer hover:shadow-md transition-shadow">
-                <div className="text-center">
-                  <FileText className="h-8 w-8 mx-auto mb-2 text-primary" />
-                  <h3 className="font-medium text-sm mb-1">Browse Documents</h3>
-                  <p className="text-xs text-muted-foreground">Explore legal documents and acts</p>
-                </div>
-              </Card>
+              </Link>
+              <Link href='/discover'>
+                <Card className="p-4 cursor-pointer hover:shadow-md transition-shadow">
+                  <div className="text-center">
+                    <FileText className="h-8 w-8 mx-auto mb-2 text-primary" />
+                    <h3 className="font-medium text-sm mb-1">Browse Documents</h3>
+                    <p className="text-xs text-muted-foreground">Explore legal documents and acts</p>
+                  </div>
+                </Card>
+              </Link>
+              
               <Card className="p-4 cursor-pointer hover:shadow-md transition-shadow">
                 <div className="text-center">
                   <Star className="h-8 w-8 mx-auto mb-2 text-primary" />

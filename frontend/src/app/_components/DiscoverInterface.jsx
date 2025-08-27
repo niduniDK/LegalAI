@@ -35,8 +35,8 @@ const categories = ["All", "Corporate Law", "Consumer Protection", "Labor Law", 
 export function DiscoverInterface() {
   const [searchQuery, setSearchQuery] = React.useState("")
   const [selectedCategory, setSelectedCategory] = React.useState("All")
-  const [filteredDocuments, setFilteredDocuments] = React.useState(legalDocuments)
   const [urls, setUrls] = React.useState([])
+  const [filteredDocuments, setFilteredDocuments] = React.useState([...legalDocuments, ...urls])
 
   const handleSearch = async () => {
     try{
@@ -59,7 +59,7 @@ export function DiscoverInterface() {
   }
 
   React.useEffect(() => {
-    let filtered = legalDocuments
+    let filtered = [...legalDocuments, ...urls]
 
     if (selectedCategory !== "All") {
       filtered = filtered.filter(doc => doc.category === selectedCategory)

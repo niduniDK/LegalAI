@@ -108,7 +108,7 @@ export function HistoryInterface() {
   }
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-screen flex-col overflow-y-auto">
       {/* Header */}
       <div className="border-b border-border/40 p-4">
         <div className="flex items-center gap-2 mb-4">

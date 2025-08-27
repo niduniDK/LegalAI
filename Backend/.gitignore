@@ -2,7 +2,9 @@ venv/
 .env
 **/__pycache__/
 utils/
+docs/
 
+**.tsv
 
 **.npy
 **.pkl
