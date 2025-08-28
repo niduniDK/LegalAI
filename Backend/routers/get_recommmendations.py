@@ -154,5 +154,7 @@ def get_recommendations(user: Recommendation):
     print(f"Detected user interests: {user_interests}")
 
     recommended_docs = get_pdfs(user_interests, top_k=5)
+    print(f"Generated {len(recommended_docs)} recommendations for user {user_id}")
+    print(f"Recommended document URLs: {recommended_docs}")
 
     return recommended_docs

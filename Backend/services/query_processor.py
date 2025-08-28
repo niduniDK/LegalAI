@@ -34,10 +34,14 @@ def faiss_retrieve(query: str, k: int = 5) -> List[Tuple[str, dict, float]]:
     query_embedding = model.encode([query])[0]
     distances, indices = index_bills.search(np.array([query_embedding], dtype=np.float32), k)
     results = []
+    print(f"\n> FAISS RETRIEVAL RESULTS for query: '{query}'")
     for idx, distance in zip(indices[0], distances[0]):
         if idx < len(data):
             score = 1 / (1 + distance)  # Convert L2 distance to similarity score
+            print(f"FAISS Document: {metadata_bills[idx]['name']}, Score: {score:.4f}, Distance: {distance:.4f}")
             results.append((documents_bills[idx], metadata_bills[idx], score))
+    if len(results) == 0:
+        print("No FAISS results retrieved.")
     return results
 
 def bm25_retrieve(query: str, k: int = 5) -> List[Tuple[str, dict, float]]:
@@ -46,11 +50,14 @@ def bm25_retrieve(query: str, k: int = 5) -> List[Tuple[str, dict, float]]:
     scores = bm25_bills.get_scores(tokens)
     top_indices = np.argsort(scores)[::-1][:k]
     results = []
+    print(f"\n> BM25 RETRIEVAL RESULTS for query: '{query}'")
     for i in top_indices:
         if scores[i] > 0:
+            print(f"BM25 Document: {metadata_bills[i]['name']}, Score: {float(scores[i]):.4f}")
             results.append((documents_bills[i], metadata_bills[i], float(scores[i])))
+    if len(results) == 0:
+        print("No BM25 results retrieved.")
     return results
-
 
 def retrieve_doc(query: str, top_k: int = 5):
     """    Retrieve top K documents based on the query using BM25 and FAISS.
@@ -81,6 +88,13 @@ def retrieve_doc(query: str, top_k: int = 5):
 
     results = bm25_results + faiss_results
 
+    # Use this if we filter the number of documents to top_k
+
+    # print(f"\n> COMBINED RETRIEVAL RESULTS")
+    # print(f"Total documents from BM25: {len(bm25_results)}")
+    # print(f"Total documents from FAISS: {len(faiss_results)}")
+    # print(f"Combined results: {len(results)}")
+
     for result in results:
         doc, meta, score = result
 
@@ -88,5 +102,8 @@ def retrieve_doc(query: str, top_k: int = 5):
             filenames.append(meta["name"])
         
         content.append(doc)
+
+    # print(f"Final unique documents selected: {len(filenames)}")
+    # print(f"Document names: {filenames}")
 
     return content, filenames

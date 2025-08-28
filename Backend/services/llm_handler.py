@@ -11,8 +11,12 @@ gemini_client = genai.GenerativeModel("gemini-2.0-flash")
 
 def generate_response(query: str, history: list = []) -> str:
 
+    print(f"\n> LLM HANDLER: Generating response for query: '{query}'")
     content, filenames = retrieve_doc(query)
     context = "\n".join(list(content))
+    
+    print(f"\n> Retrieved {len(content)} document chunks from {len(filenames)} unique documents")
+    print(f"Total context length: {len(context)} characters")
     
     prompt = (
        f"""
@@ -24,11 +28,13 @@ def generate_response(query: str, history: list = []) -> str:
 """
     )
     try:
+        print(f"\n> Sending prompt to Gemini API")
         response = gemini_client.generate_content(prompt)
         if hasattr(response, "text") and response.text:
-            print(f"Generated response: {response.text}")
+            print(f"Generated Response: {response.text}")
             return response.text
         else:
+            print(f"No response text generated")
             return "Sorry, something went wrong. Please try again later."
     except Exception as e:
         print(f"Error generating response: {e}")

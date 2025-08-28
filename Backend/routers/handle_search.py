@@ -10,5 +10,7 @@ class SearchRequest(BaseModel):
 @router.post("/search")
 def handle_search(request: SearchRequest):
     query = request.query
+    print(f"\n> SEARCH HANDLER: Processing search query: '{query}'")
     pdf_urls = get_pdfs(query)
+    print(f"Search Returned {len(pdf_urls)} PDF URLs")
     return pdf_urls

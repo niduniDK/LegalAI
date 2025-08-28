@@ -13,7 +13,7 @@ def get_ai_response(request: GetAIResponseRequest):
     query = request.query
     history = request.history
     response = generate_response(query, history)
-    print(f"Response: {response}")
+    # print(f"Response: {response}")
     if not response:
         return {"error": "No response generated. Please try again."}
     return {"response": response}
