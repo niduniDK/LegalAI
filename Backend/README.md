@@ -67,7 +67,8 @@ Backend/
     Create a `.env` file in the `Backend` directory with the following content:
 
     ```env
-    GEMINI_API_KEY=your_google_gemini_api_key_here
+    GEMINI_API_KEY=your_google_gemini_api_key # https://aistudio.google.com/apikey
+    GROQ_API_KEY=your_groq_api_key # https://console.groq.com/keys
     ```
 
 5. **Run the server**
@@ -194,7 +195,8 @@ Create a `.env` file in the Backend directory:
 
 ```env
 # Required
-GEMINI_API_KEY=your_google_gemini_api_key
+GEMINI_API_KEY=your_google_gemini_api_key # https://aistudio.google.com/apikey
+GROQ_API_KEY=your_groq_api_key # https://console.groq.com/keys
 
 # Optional
 HOST=0.0.0.0
