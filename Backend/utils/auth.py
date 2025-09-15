@@ -3,8 +3,8 @@ import secrets
 import asyncio
 import aiosmtplib
 from datetime import datetime, timedelta
-from email.mime.text import MimeText
-from email.mime.multipart import MimeMultipart
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from typing import Optional
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -84,16 +84,16 @@ async def send_email(to_email: str, subject: str, body: str, is_html: bool = Fal
     
     try:
         # Create message
-        msg = MimeMultipart('alternative')
+        msg = MIMEMultipart('alternative')
         msg['From'] = f"{SMTP_FROM_NAME} <{SMTP_FROM_EMAIL}>"
         msg['To'] = to_email
         msg['Subject'] = subject
         
         # Add body to email
         if is_html:
-            msg.attach(MimeText(body, 'html'))
+            msg.attach(MIMEText(body, 'html'))
         else:
-            msg.attach(MimeText(body, 'plain'))
+            msg.attach(MIMEText(body, 'plain'))
         
         # Connect to server and send email using aiosmtplib
         await aiosmtplib.send(

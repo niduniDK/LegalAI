@@ -50,12 +50,13 @@ def query_llama(prompt: str) -> str:
         return "Error in API request"
 
 
-def detect_user_interest(user_id):
+def generate_search_query(user_id):
     history = history_db[user_id]
     prompt = f"""
-        You are an intelligent agent in classifying user interests based on the user query history. User history is given below to identify the user_interests.
+        You are an intelligent agent for generating document search queries based on user query history. Based on the user's chat history, create a comprehensive search query that incorporates the user's interests and can retrieve relevant legal documents.
+        
         history: {history}
-        user_interests:
+        query:
     
         For example,
        1) history: [
@@ -63,79 +64,43 @@ def detect_user_interest(user_id):
             "In case of inconsistency between Sinhala and Tamil texts of the Act, which version prevails?",
             "What departments or authorities are responsible for the publication and implementation of this Act?"
         ]
-        user_interests: [
-            "Local government law",
-            "Administrative procedures",
-            "Statutory regulations",
-            "Legal governance",
-            "Law interpretation and compliance"
-        ]
+        query: "Find legal documents related to local government law, administrative procedures, statutory regulations, legal governance, and law interpretation compliance for Urban Councils and municipal administration"
     
         2) history: [
-            "What is the effect if an Urban Council fails to pass its budget within the given timeframe?",
-            "In case of inconsistency between Sinhala and Tamil texts of the Act, which version prevails?",
-            "What departments or authorities are responsible for the publication and implementation of this Act?"
-        ]
-        user_interests: [
-            "Local government law",
-            "Administrative procedures",
-            "Statutory regulations",
-            "Legal governance",
-            "Law interpretation and compliance"
-        ]
-
-        3)history: [
             "What are the penalties for cybercrime under the Computer Crimes Act?",
             "How is evidence collected and presented in a criminal trial?",
             "What rights does a suspect have during police interrogation?"
         ]
-        user_interests: [
-            "Criminal law",
-            "Cybercrime regulations",
-            "Legal procedures",
-            "Rights of suspects",
-            "Law enforcement practices"
-        ]
-        
-        4) history: [
+        query: "Retrieve documents on criminal law, cybercrime regulations, legal procedures, rights of suspects, and law enforcement practices in Sri Lanka"
+
+        3) history: [
             "What are the obligations of directors under the Companies Act?",
             "How are shareholder disputes resolved in Sri Lanka?",
             "What is the process for registering a new business entity?"
         ]
-        user_interests: [
-            "Corporate law",
-            "Commercial regulations",
-            "Company governance",
-            "Shareholder rights",
-            "Business registration procedures"
-        ]
-
-        5) history: [
+        query: "Search for corporate law documents covering commercial regulations, company governance, shareholder rights, and business registration procedures"
+        
+        4) history: [
             "Which authority has the power to amend the Constitution?",
             "How are conflicts between central and provincial governments resolved?",
             "What legal remedies exist against administrative decisions?"
         ]
-        user_interests: [
-            "Constitutional law",
-            "Administrative law",
-            "Separation of powers",
-            "Government authority",
-            "Legal remedies and appeals"
-        ]
-    
-        6) history: [
+        query: "Find constitutional law and administrative law documents on separation of powers, government authority, and legal remedies and appeals processes"
+
+        5) history: [
             "How do I register a trademark in Sri Lanka?",
             "What protections are available under copyright law?",
             "What are the penalties for patent infringement?"
         ]
-        user_interests: [
-            "Intellectual property law",
-            "Trademark and copyright regulations",
-            "Patent law",
-            "Legal protections for creations",
-            "Enforcement of IP rights"
+        query: "Retrieve intellectual property law documents including trademark and copyright regulations, patent law, legal protections for creations, and enforcement of IP rights"
+    
+        6) history: [
+            "What is the procedure for filing a divorce petition?",
+            "How is child custody determined in family disputes?",
+            "What are the grounds for alimony in Sri Lanka?"
         ]
-     provide only the user_interests as a list without adding any starting or ending text
+        query: "Search for family law documents covering divorce procedures, child custody regulations, matrimonial law, and spousal support requirements"
+     provide only the search query as a single comprehensive string without adding any starting or ending text
     """
     response = query_llama(prompt)
     print(f"LLama response: {response}")
@@ -150,10 +115,10 @@ def get_recommendations(user: Recommendation):
     if user_id not in history_db:
         return {"error": "User not found"}
     
-    user_interests = detect_user_interest(user_id)
-    print(f"Detected user interests: {user_interests}")
+    search_query = generate_search_query(user_id)
+    print(f"Generated search query: {search_query}")
 
-    recommended_docs = get_pdfs(user_interests, top_k=5)
+    recommended_docs = get_pdfs(search_query, top_k=5)
     print(f"Generated {len(recommended_docs)} recommendations for user {user_id}")
     print(f"Recommended document URLs: {recommended_docs}")
 
