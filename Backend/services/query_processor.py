@@ -14,13 +14,12 @@ DOCS_DIR = os.path.join(BASE_DIR, "..", "docs")
 
 # Load Sentence Transformer model
 try:
-    # Try to load the legal-bert model directly
     model = SentenceTransformer('nlpaueb/legal-bert-base-uncased')
     print(f"Successfully loaded model: nlpaueb/legal-bert-base-uncased")
 except Exception as e:
     print(f"Failed to load nlpaueb/legal-bert-base-uncased: {e}")
     print("This model exists on Hugging Face but may need to be downloaded first")
-    # Force download and create sentence transformer
+    
     try:
         from transformers import AutoModel, AutoTokenizer
         tokenizer = AutoTokenizer.from_pretrained('nlpaueb/legal-bert-base-uncased')
@@ -206,6 +205,8 @@ def retrieve_doc(query: str, top_k: int = 5):
     final_results = sorted_results[:top_k]
 
     content = [doc for doc, meta, score in final_results]
-    filenames = [meta["name"] for doc, meta, score in final_results]
+    filenames = [f"{meta['type'] if meta['type'] != 'bill' else 'bills'}/{meta['name']}" for doc, meta, score in final_results]
+
+    print(content)
 
     return content, filenames
