@@ -307,6 +307,11 @@ export function DiscoverInterface() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  handleSearch()
+                }
+              }}
             />
           </div>
           <Button onClick={handleSearch} className="w-32">Search</Button>
