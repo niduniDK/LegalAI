@@ -319,32 +319,6 @@ async def get_user_preferences(
     preferences = db.query(UserPreference).filter(UserPreference.user_email == current_user.email).all()
     return preferences
 
-@router.post("/preferences", response_model=UserPreferenceResponse)
-async def create_user_preference(
-    preference_data: UserPreferenceCreate,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    """Create or update user preference."""
-    # Check if preference already exists
-    existing_pref = db.query(UserPreference).filter(
-        UserPreference.user_email == current_user.email,
-        UserPreference.preference_key == preference_data.preference_key
-    ).first()
-    
-    if existing_pref:
-        existing_pref.preference_value = preference_data.preference_value
-        db.commit()
-        return existing_pref
-    else:
-        new_pref = UserPreference(
-            user_email=current_user.email,
-            preference_key=preference_data.preference_key,
-            preference_value=preference_data.preference_value
-        )
-        db.add(new_pref)
-        db.commit()
-        return new_pref
 
 @router.put("/preferences/{preference_key}", response_model=UserPreferenceResponse)
 async def update_user_preference(

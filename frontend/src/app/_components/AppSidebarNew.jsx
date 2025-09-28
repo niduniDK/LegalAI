@@ -51,18 +51,60 @@ const navigationItems = [
     url: "/history",
     icon: History,
     description: "View past conversations and queries"
-  },
+  }
 ]
 
 export function AppSidebar() {
   const pathname = usePathname()
   const router = useRouter()
-  const { user, logout, isAuthenticated } = useAuth()
+  const { user, logout, isAuthenticated, token } = useAuth()
+
+  const [chats, setChats] = React.useState([])
+  const [isLoadingChats, setIsLoadingChats] = React.useState(false)
 
   const handleLogout = () => {
     logout()
     router.push('/login')
   }
+
+  React.useEffect(() => {
+    const fetchChatSessions = async () => {
+      if (!token) {
+        return
+      }
+
+      setIsLoadingChats(true)
+      try{
+        const response = await fetch("http://localhost:8000/chat-history/user_sessions", {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token && { "Authorization": `Bearer ${token}` })
+        },
+        })
+
+        if (response.status === 401) {
+          logout()
+          return
+        }
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        const data = await response.json()
+        // Only show the 5 most recent chats to avoid clutter
+        setChats((data || []).slice(0, 5))
+      } catch (error) {
+        console.error('Error fetching chat history:', error)
+        setChats([])
+      } finally {
+        setIsLoadingChats(false)
+      }
+    }
+    
+    fetchChatSessions()
+  }, [token, logout])
 
   // Don't show sidebar on auth pages
   if (pathname === '/login' || pathname === '/register' || pathname === '/reset-password') {
@@ -84,14 +126,15 @@ export function AppSidebar() {
       </SidebarHeader>
       
       <SidebarContent className="p-2">
-        {isAuthenticated && (
+        {isAuthenticated ? (
           <>
+            {/* New Chat Section */}
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu>
                   <SidebarMenuItem>
                     <Button 
-                      className="w-full justify-start gap-2 h-9 mb-2" 
+                      className="w-full justify-start gap-2 h-10 mb-3 bg-primary hover:bg-primary/90" 
                       size="sm"
                       asChild
                     >
@@ -105,9 +148,10 @@ export function AppSidebar() {
               </SidebarGroupContent>
             </SidebarGroup>
 
+            {/* Navigation Section */}
             <SidebarGroup>
               <SidebarGroupLabel className="text-xs font-medium text-muted-foreground px-2 mb-2">
-                Navigation
+                Features
               </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
@@ -118,7 +162,7 @@ export function AppSidebar() {
                         isActive={pathname === item.url}
                         tooltip={item.description}
                       >
-                        <Link href={item.url} className="flex items-center gap-3 px-2 py-2">
+                        <Link href={item.url} className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-accent">
                           <item.icon className="h-4 w-4" />
                           <span className="text-sm">{item.title}</span>
                         </Link>
@@ -128,16 +172,77 @@ export function AppSidebar() {
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
-          </>
-        )}
 
-        {!isAuthenticated && (
+            {/* Recent Chats Section */}
+            <SidebarGroup>
+              <div className="flex items-center justify-between px-2 mb-2">
+                <SidebarGroupLabel className="text-xs font-medium text-muted-foreground">
+                  Recent Chats
+                </SidebarGroupLabel>
+                {chats.length > 0 && (
+                  <Link href="/recommendations" className="text-xs text-primary hover:underline">
+                    View All
+                  </Link>
+                )}
+              </div>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {isLoadingChats ? (
+                    <SidebarMenuItem>
+                      <div className="flex items-center gap-2 px-2 py-2 text-xs text-muted-foreground">
+                        <MessageCircle className="h-4 w-4 animate-pulse" />
+                        <span>Loading chats...</span>
+                      </div>
+                    </SidebarMenuItem>
+                  ) : chats.length > 0 ? (
+                    chats.map((chat) => (
+                      <SidebarMenuItem key={chat.id}>
+                        <SidebarMenuButton 
+                          asChild 
+                          isActive={pathname === `/chat/${chat.id}`}
+                          tooltip={chat.session_name}
+                        >
+                          <Link href={`/chat/${chat.id}`} className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-accent">
+                            <MessageCircle className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-sm truncate">{chat.session_name}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))
+                  ) : (
+                    <SidebarMenuItem>
+                      <div className="px-2 py-2">
+                        <p className="text-xs text-muted-foreground text-center">
+                          No recent chats
+                        </p>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="w-full mt-2 h-8 text-xs"
+                          asChild
+                        >
+                          <Link href="/">
+                            Start chatting
+                          </Link>
+                        </Button>
+                      </div>
+                    </SidebarMenuItem>
+                  )}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </>
+        ) : (
+          /* Guest User Section */
           <SidebarGroup>
+            <SidebarGroupLabel className="text-xs font-medium text-muted-foreground px-2 mb-2">
+              Get Started
+            </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
                   <Button 
-                    className="w-full justify-start gap-2 h-9 mb-2" 
+                    className="w-full justify-start gap-2 h-10 mb-2" 
                     size="sm"
                     asChild
                   >
@@ -149,7 +254,7 @@ export function AppSidebar() {
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <Button 
-                    className="w-full justify-start gap-2 h-9" 
+                    className="w-full justify-start gap-2 h-10" 
                     size="sm"
                     variant="outline"
                     asChild

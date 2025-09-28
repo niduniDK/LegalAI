@@ -35,7 +35,7 @@ async def create_chat_session(
     
     return new_session
 
-@router.get("/sessions", response_model=List[ChatSessionResponse])
+@router.get("/user_sessions", response_model=List[ChatSessionResponse])
 async def get_user_chat_sessions(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
