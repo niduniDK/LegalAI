@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { Search, FileText, Calendar, ExternalLink, MessageCircle } from 'lucide-react'
 import { Send, Paperclip, Mic, Scale } from 'lucide-react'
 import { Button } from "@/components/ui/button"

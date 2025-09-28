@@ -4,14 +4,54 @@ import { useState } from "react"
 import { ChatBox } from "./_components/ChatBox"
 import { ChatInterface } from "./_components/ChatInterface"
 import ProtectedRoute from "@/components/ProtectedRoute"
+import { useAuth } from "@/contexts/AuthContext"
 
 export default function HomePage() {
+  const { token, logout } = useAuth()
   const [chatStarted, setChatStarted] = useState(false)
   const [initialQuery, setInitialQuery] = useState("")
+  const [sessionName, setSessionName] = useState("")
+  const [chat_id, setChatId] = useState(null)
 
   const handleStartChat = (query) => {
     setInitialQuery(query)
     setChatStarted(true)
+    createChatSession(query)
+  }
+
+  const createChatSession = async (query) => {
+    if (!token) {
+      console.warn("No authentication token available")
+      return
+    }
+
+    try{
+      const response = await fetch("http://localhost:8000/chat-history/sessions", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { "Authorization": `Bearer ${token}` })
+        },
+        body: JSON.stringify({session_name: query}),
+      })
+
+      if (response.status === 401) {
+        console.error("Token expired or invalid. Please log in again.")
+        logout()
+        return
+      }
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+      setSessionName(data.session_name)
+      setChatId(data.id)
+      console.log("Created chat session:", data)
+    } catch (error){
+      console.error('Error creating chat session:', error)
+    }
   }
 
   return (
@@ -24,7 +64,7 @@ export default function HomePage() {
             </div>
 
             {chatStarted ? (
-              <ChatInterface initialQuery={initialQuery} />
+              <ChatInterface initialQuery={initialQuery} chat_id={chat_id} session_name={sessionName}/>
             ) : (
               <ChatBox onStartChat={handleStartChat} />
             )}

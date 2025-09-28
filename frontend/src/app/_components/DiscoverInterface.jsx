@@ -141,6 +141,9 @@ export function DiscoverInterface() {
   }
 
   const handleAskAI = (document) => {
+    // Track document view
+    trackDocumentView(document)
+    
     // Create a query about the document
     const documentContext = `Document: ${document.title}\nCategory: ${document.category}\nSummary: ${document.summary}`
     const query = `I have a question about "${document.title}". `
@@ -155,6 +158,40 @@ export function DiscoverInterface() {
     // Navigate to chat interface - assuming it's at /chat route
     // You might need to adjust this based on your routing structure
     window.location.href = '/'
+  }
+
+  const handleViewDocument = (document) => {
+    // Track document view
+    trackDocumentView(document)
+    
+    // Open document in new tab
+    if (document.url) {
+      window.open(document.url, '_blank')
+    }
+  }
+
+  const trackDocumentView = (document) => {
+    const viewedDoc = {
+      title: document.title,
+      summary: document.summary,
+      category: document.category,
+      url: document.url,
+      source: document.source || 'documents.gov.lk',
+      viewedAt: new Date().toISOString()
+    }
+
+    try {
+      const stored = localStorage.getItem('recentlyViewedDocuments')
+      const recent = stored ? JSON.parse(stored) : []
+      
+      // Remove if already exists and add to front
+      const filtered = recent.filter(doc => doc.url !== viewedDoc.url)
+      const updated = [viewedDoc, ...filtered].slice(0, 10) // Keep only 10 most recent
+      
+      localStorage.setItem('recentlyViewedDocuments', JSON.stringify(updated))
+    } catch (error) {
+      console.error('Error tracking document view:', error)
+    }
   }
 
   React.useEffect(() => {
@@ -408,11 +445,7 @@ export function DiscoverInterface() {
                         size="sm" 
                         variant="outline" 
                         className="h-8 text-xs"
-                        onClick={() => {
-                          if (document.url) {
-                            window.open(document.url, '_blank')
-                          }
-                        }}
+                        onClick={() => handleViewDocument(document)}
                       >
                         <ExternalLink className="h-3 w-3 mr-1" />
                         View
