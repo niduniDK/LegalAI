@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import ReactMarkdown from 'react-markdown'
 
-export function ChatInterface({ initialQuery, initialResponse, isLoading: initialLoading }) {
+export function ChatInterface({ initialQuery, initialResponse, chat_id, session_name, isLoading: initialLoading }) {
   const [messages, setMessages] = useState([])
   const [resources, setResources] = useState([])
   const [input, setInput] = useState("")
