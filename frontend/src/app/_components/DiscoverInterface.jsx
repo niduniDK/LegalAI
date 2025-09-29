@@ -414,11 +414,12 @@ export function DiscoverInterface() {
                     </div>
                     <ul className="space-y-1">
                       {(document.highlights || []).map((highlight, index) => (
-                        <li key={index} className="text-xs text-muted-foreground flex items-start gap-1">
+                        <li key={`${document.id}-hl-${index}`} className="text-xs text-muted-foreground flex items-start gap-1">
                           <span className="text-primary">•</span>
                           {highlight}
                         </li>
                       ))}
+
                       {(!document.highlights || document.highlights.length === 0) && (
                         <li className="text-xs text-muted-foreground">
                           No highlights available

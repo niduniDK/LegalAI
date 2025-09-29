@@ -34,20 +34,16 @@ async def create_user_preference(
     
     print("Existing Preference:", existing_pref)
     
-    if existing_pref:
-        existing_pref.preference_value = preference_data.preference_value
-        db.commit()
-        return existing_pref
-    else:
-        new_pref = UserPreference(
-            user_email=current_user.email,
-            preference_key=preference_data.preference_key,
-            preference_value=preference_data.preference_value
-        )
-        db.add(new_pref)
-        db.commit()
-        print("New Preference Created:", new_pref)
-        return new_pref
+    
+    new_pref = UserPreference(
+        user_email=current_user.email,
+        preference_key=preference_data.preference_key,
+        preference_value=preference_data.preference_value
+    )
+    db.add(new_pref)
+    db.commit()
+    print("New Preference Created:", new_pref)
+    return new_pref
 
 
 @router.post("/search")

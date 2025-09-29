@@ -184,6 +184,7 @@ def bm25_retrieve(query: str, source_key: str, k: int = 5) -> List[Tuple[str, di
     results = []
     for i in top_indices:
         if i < len(docs) and scores[i] > 0:
+            scores[i] = (scores[i] - np.min(scores))/(np.max(scores) - np.min(scores))  # Normalize score
             results.append((docs[i], metadata[i], float(scores[i])))
     return results
 
@@ -194,6 +195,7 @@ def retrieve_doc(query: str, top_k: int = 5):
     for key in sources.keys():
         bm25_results = bm25_retrieve(query, key, k=top_k) if "bm25" in sources[key] else []
         faiss_results = faiss_retrieve(query, key, k=top_k) if "faiss" in sources[key] else []
+
         combined_results = bm25_results + faiss_results
 
         for doc, meta, score in combined_results:

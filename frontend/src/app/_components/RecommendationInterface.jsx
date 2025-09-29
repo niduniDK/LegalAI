@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Star, MessageCircle, FileText, Clock, ExternalLink, Eye, Calendar } from 'lucide-react';
+import { Star, MessageCircle, FileText, Clock, ExternalLink } from 'lucide-react';
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -38,97 +38,114 @@ const recommendations = [
 
 export function RecommendationsInterface() {
   const { token, logout } = useAuth()
-  const [userRecommendation, setUserRecommendations] = React.useState([])
-  const [recommendedChats, setRecommendedChats] = React.useState([])
+  const [userRecommendations, setUserRecommendations] = React.useState([])
+  const [user, setUser] = React.useState(null)
+  const [preferences, setPreferences] = React.useState([])
+  const [loading, setLoading] = React.useState(false)
 
+  // Fetch user data and set username
   React.useEffect(() => {
-    localStorage.setItem('username', 'user_2');
-  }, []);
-  
-  // Fetch document recommendations
-  React.useEffect(()=> {
-    const username = localStorage.getItem('username');
-    if(username){
-      const fetchRecommendations = async () => {
-        try{
-          const response = await fetch("http://localhost:8000/recommendations/get_recommendations/", {
-            method: "POST",
-            headers:{
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({username: username})
-          })
-          const data = await response.json()
-          const urls = Object.values(data)
-          setUserRecommendations(urls)
-        }
-        catch(error){
-          console.error("Error fetching recommendations:", error);
-        }
-      }
-      fetchRecommendations();
-    }
-  }, []);
-
-  // Fetch recommended chat sessions
-  React.useEffect(() => {
-    const fetchRecommendedChats = async () => {
-      if (!token) {
-        console.warn("No authentication token available for chat recommendations")
-        return
-      }
-
+    const fetchUserData = async () => {
+      if (!token) return
+      
       try {
-        const response = await fetch("http://localhost:8000/chat-history/user_sessions", {
+        const response = await fetch("http://localhost:8000/auth/me", {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
-          },
+          }
         })
-
-        if (response.status === 401) {
-          console.error("Token expired or invalid. Please log in again.")
-          logout()
-          return
-        }
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-
-        const data = await response.json()
-        console.log("Fetched chat sessions for recommendations:", data)
         
-        // Get the 3 most recent chat sessions as recommendations
-        const recentChats = (data || []).slice(0, 3)
-        setRecommendedChats(recentChats)
-        
-      } catch (error) {
-        console.error('Error fetching recommended chat sessions:', error)
+        if (response.ok) {
+          const data = await response.json()
+          setUser(data)
+          localStorage.setItem('username', data.first_name || data.username || '')
+        }
+      } catch(error){
+        console.error("Error fetching user data:", error);
       }
     }
+
+    fetchUserData()
+  }, [token])
+
+  // Fetch preferences
+  const fetchPreferences = async () => {
+    if (!token) return []
     
-    fetchRecommendedChats()
-  }, [token, logout])
+    try {
+      const response = await fetch("http://localhost:8000/auth/preferences", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        const userPreferences = data.preference_value || []
+        setPreferences(userPreferences)
+        return userPreferences
+      }
+    } catch(error) {
+      console.error("Error fetching preferences:", error);
+    }
+    return []
+  }
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString)
-    const now = new Date()
-    const diffTime = Math.abs(now - date)
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-
-    if (diffDays === 1) {
-      return "Today"
-    } else if (diffDays === 2) {
-      return "Yesterday"
-    } else if (diffDays <= 7) {
-      return `${diffDays - 1} days ago`
-    } else {
-      return date.toLocaleDateString()
+  // Fetch document recommendations
+  const fetchRecommendations = async (username, userPreferences) => {
+    if (!username) return
+    
+    try {
+      setLoading(true)
+      const response = await fetch("http://localhost:8000/recommendations/get_recommendations/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: username, 
+          preferences: userPreferences
+        })
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        console.log("Recommendations response:", data)
+        const urls = Object.values(data)
+        setUserRecommendations(urls)
+      }
+    } catch(error) {
+      console.error("Error fetching recommendations:", error);
+    } finally {
+      setLoading(false)
     }
   }
 
+  // Main effect to coordinate data fetching
+  React.useEffect(() => {
+    const loadRecommendations = async () => {
+      if (!token) return
+      
+      // First fetch preferences
+      const userPreferences = await fetchPreferences()
+      
+      // Get username from localStorage (set by user data fetch)
+      const username = localStorage.getItem('username')
+      
+      // Fetch recommendations with both username and preferences
+      if (username) {
+        await fetchRecommendations(username, userPreferences)
+      }
+    }
+
+    // Add a small delay to ensure user data is fetched first
+    const timer = setTimeout(loadRecommendations, 100)
+    return () => clearTimeout(timer)
+  }, [token, user])
 
   return (
     <div className="flex h-screen flex-col overflow-y-auto">
@@ -150,9 +167,25 @@ export function RecommendationsInterface() {
               <Star className="h-4 w-4" />
               Recommended for You
             </h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              {userRecommendation.length > 0 && 
-                userRecommendation.map((url, index) => {
+            
+            {loading ? (
+              <div className="grid gap-4 md:grid-cols-2">
+                {[1, 2, 3, 4].map((i) => (
+                  <Card key={i} className="animate-pulse">
+                    <CardHeader className="pb-3">
+                      <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
+                      <div className="h-3 bg-muted rounded w-1/2 mb-2"></div>
+                      <div className="h-3 bg-muted rounded w-full"></div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-20 bg-muted rounded"></div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : userRecommendations.length > 0 ? (
+              <div className="grid gap-4 md:grid-cols-2">
+                {userRecommendations.map((url, index) => {
                   // Extract document information from URL (same logic as DiscoverInterface)
                   let docType = "Document"
                   let filename = ""
@@ -305,10 +338,24 @@ export function RecommendationsInterface() {
                     </Card>
                   )
                 })}
+              </div>
+            ) : (
+              <Card className="p-6 text-center">
+                <Star className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                <h3 className="text-lg font-semibold mb-2">No Recommendations Yet</h3>
+                <p className="text-muted-foreground mb-4">
+                  We're learning your preferences to provide personalized recommendations.
+                </p>
+                <Link href="/discover">
+                  <Button className="gap-2">
+                    <FileText className="h-4 w-4" />
+                    Browse Documents
+                  </Button>
+                </Link>
+              </Card>
+            )}
             
-            </div>
-            
-            <div className="space-y-4">
+            <div className="space-y-4 mt-6">
               {recommendations.map((rec) => (
                 <Card key={rec.id} className="hover:shadow-md transition-shadow">
                   <CardHeader className="pb-3">
@@ -377,112 +424,6 @@ export function RecommendationsInterface() {
                 </Card>
               ))}
             </div>
-          </div>
-
-          {/* Recommended Chat Sessions */}
-          <div>
-            <h2 className="text-base font-semibold mb-4 flex items-center gap-2">
-              <MessageCircle className="h-4 w-4" />
-              Recent Chat Sessions
-            </h2>
-            {recommendedChats.length > 0 ? (
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
-                {recommendedChats.map((chat) => (
-                  <Card key={chat.id} className="group hover:shadow-lg transition-all duration-200 border-border/50 hover:border-border hover:scale-[1.02]">
-                    <CardHeader className="pb-4 space-y-3">
-                      <div className="flex flex-col items-center text-center space-y-3">
-                        {/* Chat Icon */}
-                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                          <MessageCircle className="h-6 w-6 text-primary" />
-                        </div>
-                        
-                        {/* Session Name */}
-                        <CardTitle className="text-lg font-semibold leading-tight w-full" title={chat.session_name}>
-                          {chat.session_name}
-                        </CardTitle>
-                        
-                        {/* Status Badge */}
-                        <Badge variant="secondary" className="text-xs px-3 py-1 bg-green-50 text-green-700 border-green-200">
-                          <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                          Active Session
-                        </Badge>
-                      </div>
-                    </CardHeader>
-
-                    <CardContent className="pt-0 pb-6">
-                      <div className="space-y-4">
-                        {/* Session Details */}
-                        <div className="bg-muted/30 rounded-lg p-3 space-y-2">
-                          <div className="flex items-center justify-evenly text-sm">
-                            <span className="text-muted-foreground flex items-center gap-2">
-                              <Clock className="h-4 w-4" />
-                              Last active
-                            </span>
-                            <span className="font-medium text-foreground">{formatDate(chat.updated_at)}</span>
-                          </div>
-                          <div className="flex items-center justify-evenly text-sm">
-                            <span className="text-muted-foreground flex items-center gap-2">
-                              <Calendar className="h-4 w-4" />
-                              Created
-                            </span>
-                            <span className="font-medium text-foreground">{formatDate(chat.created_at)}</span>
-                          </div>
-                          <div className="flex items-center justify-evenly text-sm">
-                            <span className="text-muted-foreground flex items-center gap-2">
-                              <FileText className="h-4 w-4" />
-                              Session ID
-                            </span>
-                            <span className="font-medium text-foreground">#{chat.id}</span>
-                          </div>
-                        </div>
-
-                        {/* Description */}
-                        <p className="text-sm text-muted-foreground text-center leading-relaxed">
-                          Continue your legal conversation and get personalized insights based on your previous interactions.
-                        </p>
-
-                        {/* Action Buttons */}
-                        <div className="grid grid-cols-2 gap-3 pt-2">
-                          <Link href={`/chat/${chat.id}`} className="block">
-                            <Button 
-                              size="sm" 
-                              variant="outline" 
-                              className="w-full h-9 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-all"
-                            >
-                              <Eye className="h-4 w-4 mr-2" />
-                              Preview
-                            </Button>
-                          </Link>
-                          <Link href={`/chat/${chat.id}`} className="block">
-                            <Button 
-                              size="sm" 
-                              className="w-full h-9 text-sm font-medium bg-primary hover:bg-primary/90 transition-all"
-                            >
-                              <MessageCircle className="h-4 w-4 mr-2" />
-                              Continue
-                            </Button>
-                          </Link>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <Card className="p-6 text-center">
-                <MessageCircle className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="text-lg font-semibold mb-2">No Chat Sessions Yet</h3>
-                <p className="text-muted-foreground mb-4">
-                  Start your first conversation to see recommendations here.
-                </p>
-                <Link href="/">
-                  <Button className="gap-2">
-                    <MessageCircle className="h-4 w-4" />
-                    Start New Chat
-                  </Button>
-                </Link>
-              </Card>
-            )}
           </div>
 
           {/* Quick Actions */}
