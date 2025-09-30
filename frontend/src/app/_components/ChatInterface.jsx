@@ -16,6 +16,7 @@ export function ChatInterface({ initialQuery, initialResponse, chat_id, session_
   const [resources, setResources] = useState([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [language, setLanguage] = useState("en")
   const scrollAreaRef = useRef(null)
 
   // Initialize input with the initial query when component mounts
@@ -45,7 +46,7 @@ export function ChatInterface({ initialQuery, initialResponse, chat_id, session_
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ query: input }),
+        body: JSON.stringify({ query: input, language: language }),
       })
       
       const data = await response.json()
@@ -82,6 +83,25 @@ export function ChatInterface({ initialQuery, initialResponse, chat_id, session_
 
   return (
     <div className="flex flex-col h-[600px] border rounded-xl p-4">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4 pb-2 border-b border-border/40">
+        <div className="flex items-center gap-2">
+          <Scale className="h-5 w-5 text-primary" />
+          <h2 className="font-semibold text-foreground">Legal AI Assistant</h2>
+        </div>
+        <div className="flex items-center gap-2">
+          <select 
+            className="text-sm border border-border rounded-md px-2 py-1 bg-background text-foreground hover:bg-muted/50 transition-colors"
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+          >
+            <option value="en">English</option>
+            <option value="si">සිංහල</option>
+            <option value="ta">தமிழ்</option>
+          </select>
+        </div>
+      </div>
+      
       {/* Chat Messages */}
       <ScrollArea className="flex-1 overflow-y-auto scrollbar-hide" ref={scrollAreaRef}>
         {messages.length === 0 ? (
@@ -197,6 +217,16 @@ export function ChatInterface({ initialQuery, initialResponse, chat_id, session_
           onKeyPress={handleKeyPress}
           disabled={isLoading || initialLoading}
         />
+        <select 
+          className="text-sm border border-border rounded-md px-2 py-2 bg-background text-foreground hover:bg-muted/50 transition-colors"
+          value={language}
+          onChange={(e) => setLanguage(e.target.value)}
+          disabled={isLoading || initialLoading}
+        >
+          <option value="en">English</option>
+          <option value="si">සිංහල</option>
+          <option value="ta">தமிழ்</option>
+        </select>
         <Button onClick={handleSend} disabled={!input.trim() || isLoading || initialLoading}>
           <Send className="h-4 w-4" />
         </Button>

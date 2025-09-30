@@ -9,7 +9,7 @@ GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 genai.configure(api_key=GEMINI_API_KEY)
 gemini_client = genai.GenerativeModel("gemini-2.0-flash")
 
-def generate_response(query: str, history: list = []) -> str:
+def generate_response(query: str, language, history: list = []) -> str:
 
     print(f"\n> LLM HANDLER: Generating response for query: '{query}'")
     content, filenames = retrieve_doc(query)
@@ -31,6 +31,7 @@ def generate_response(query: str, history: list = []) -> str:
     {context}
     Use the following conversation history as reference to maintain context and continuity in the conversation:
     {history}
+    Provide your answer in {language}.
     Question: {query}
     Answer:
 """

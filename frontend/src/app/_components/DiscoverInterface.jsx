@@ -39,6 +39,7 @@ export function DiscoverInterface() {
   const [selectedCategory, setSelectedCategory] = React.useState("All")
   const [urls, setUrls] = React.useState([])
   const [filteredDocuments, setFilteredDocuments] = React.useState([])
+  const [language, setLanguage] = React.useState("en")
 
   let i = 0;
 
@@ -112,7 +113,7 @@ export function DiscoverInterface() {
           "Content-Type": "application/json",
           ...(token && { "Authorization": `Bearer ${token}` })
         },
-        body: JSON.stringify({ query: searchQuery })
+        body: JSON.stringify({ query: searchQuery, language: language })
       })
       
       if (!response.ok) {
@@ -327,6 +328,7 @@ export function DiscoverInterface() {
             <select 
               className="text-sm border border-border rounded-md px-2 py-1 bg-background text-foreground hover:bg-muted/50 transition-colors"
               defaultValue="en"
+              onClick={(e) => setLanguage(e.target.value)}
             >
               <option value="en">English</option>
               <option value="si">සිංහල</option>

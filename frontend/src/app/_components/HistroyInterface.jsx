@@ -58,6 +58,7 @@ export function HistoryInterface() {
   const [recentDocuments, setRecentDocuments] = React.useState([])
   const [recentChats, setRecentChats] = React.useState([])
   const [isLoading, setIsLoading] = React.useState(true)
+  const [language, setLanguage] = React.useState("en")
 
   // Fetch recent chat sessions
   React.useEffect(() => {
@@ -243,9 +244,22 @@ export function HistoryInterface() {
     <div className="flex h-screen flex-col overflow-y-auto">
       {/* Header */}
       <div className="border-b border-border/40 p-4">
-        <div className="flex items-center gap-2 mb-4">
-          <SidebarTrigger />
-          <h1 className="text-lg font-semibold">Recent Activity</h1>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <SidebarTrigger />
+            <h1 className="text-lg font-semibold">Recent Activity</h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <select 
+              className="text-sm border border-border rounded-md px-2 py-1 bg-background text-foreground hover:bg-muted/50 transition-colors"
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+            >
+              <option value="en">English</option>
+              <option value="si">සිංහල</option>
+              <option value="ta">தமிழ்</option>
+            </select>
+          </div>
         </div>
         <p className="text-sm text-muted-foreground mb-4">
           Recently viewed documents and chat sessions

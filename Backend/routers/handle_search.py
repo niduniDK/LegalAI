@@ -17,6 +17,7 @@ router = APIRouter()
 
 class SearchRequest(BaseModel):
     query: str
+    language: str
 
 
 @router.post("/preferences", response_model=UserPreferenceResponse)
@@ -49,7 +50,8 @@ async def create_user_preference(
 @router.post("/search")
 def handle_search(request: SearchRequest):
     query = request.query
+    language = request.language
     print(f"\n> SEARCH HANDLER: Processing search query: '{query}'")
-    pdf_urls = get_pdfs(query)
+    pdf_urls = get_pdfs(query, language)
     print(f"Search Returned {len(pdf_urls)} PDF URLs")
     return pdf_urls

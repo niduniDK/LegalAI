@@ -12,6 +12,7 @@ router = APIRouter()
 class Recommendation(BaseModel):
     username: str
     prefrerences: list[str] = []
+    language: str
 
 # history_db = {
 #     "user_1": [
@@ -110,13 +111,14 @@ def generate_search_query(history):
 def get_recommendations(user: Recommendation):
     user_id = user.username
     history = user.prefrerences
+    language = user.language
 
     print(f"Fetching recommendations for user: {user_id}")
 
     search_query = generate_search_query(history)
     print(f"Generated search query: {search_query}")
 
-    recommended_docs = get_pdfs(search_query, top_k=5)
+    recommended_docs = get_pdfs(search_query, language, top_k=5)
     print(f"Generated {len(recommended_docs)} recommendations for user {user_id}")
     print(f"Recommended document URLs: {recommended_docs}")
 

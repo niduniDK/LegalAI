@@ -42,6 +42,7 @@ export function RecommendationsInterface() {
   const [user, setUser] = React.useState(null)
   const [preferences, setPreferences] = React.useState([])
   const [loading, setLoading] = React.useState(false)
+  const [language, setLanguage] = React.useState("en")
 
   // Fetch user data and set username
   React.useEffect(() => {
@@ -108,7 +109,8 @@ export function RecommendationsInterface() {
         },
         body: JSON.stringify({
           username: username, 
-          preferences: userPreferences
+          preferences: userPreferences,
+          language: language
         })
       })
       
@@ -145,14 +147,27 @@ export function RecommendationsInterface() {
     // Add a small delay to ensure user data is fetched first
     const timer = setTimeout(loadRecommendations, 100)
     return () => clearTimeout(timer)
-  }, [token, user])
+  }, [token, user, language])
 
   return (
     <div className="flex h-screen flex-col overflow-y-auto">
       {/* Header */}
       <div className="border-b border-border/40 p-4">
-        <div className="flex items-center gap-2 mb-4">
-          <h1 className="text-lg font-semibold">Personalized Recommendations</h1>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <h1 className="text-lg font-semibold">Personalized Recommendations</h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <select 
+              className="text-sm border border-border rounded-md px-2 py-1 bg-background text-foreground hover:bg-muted/50 transition-colors"
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+            >
+              <option value="en">English</option>
+              <option value="si">සිංහල</option>
+              <option value="ta">தமිழ්</option>
+            </select>
+          </div>
         </div>
         <p className="text-sm text-muted-foreground">
           Curated legal content based on your interests and recent activity
