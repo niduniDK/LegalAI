@@ -180,7 +180,7 @@ export function AppSidebar() {
                   Recent Chats
                 </SidebarGroupLabel>
                 {chats.length > 0 && (
-                  <Link href="/recommendations" className="text-xs text-primary hover:underline">
+                  <Link href="/history" className="text-xs text-primary hover:underline">
                     View All
                   </Link>
                 )}

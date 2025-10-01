@@ -39,6 +39,7 @@ class UserVerify(BaseModel):
     verification_code: str
 
 class UserResponse(UserBase):
+    first_name: Optional[str] = None
     is_verified: bool
     created_at: datetime
     last_login: Optional[datetime] = None

@@ -11,19 +11,21 @@ router = APIRouter()
 
 class Recommendation(BaseModel):
     username: str
+    prefrerences: list[str] = []
+    language: str
 
-history_db = {
-    "user_1": [
-        "How is the composition of Municipal Councils determined according to the amendments?",
-        "How does the Act amend the composition of Urban Councils?",
-        "What happens if a Pradeshiya Sabha fails to pass a budget within two weeks?"
-    ],
-    "user_2" : [
-        "What is the effect if an Urban Council fails to pass its budget within the given timeframe?",
-        "In case of inconsistency between Sinhala and Tamil texts of the Act, which version prevails?",
-        "What departments or authorities are responsible for the publication and implementation of this Act?"
-    ]
-}
+# history_db = {
+#     "user_1": [
+#         "How is the composition of Municipal Councils determined according to the amendments?",
+#         "How does the Act amend the composition of Urban Councils?",
+#         "What happens if a Pradeshiya Sabha fails to pass a budget within two weeks?"
+#     ],
+#     "user_2" : [
+#         "What is the effect if an Urban Council fails to pass its budget within the given timeframe?",
+#         "In case of inconsistency between Sinhala and Tamil texts of the Act, which version prevails?",
+#         "What departments or authorities are responsible for the publication and implementation of this Act?"
+#     ]
+# }
 
 GROQ_API_KEY = os.getenv("groq_api_key")
 GROQ_MODEL = 'llama-3.3-70b-versatile'
@@ -50,8 +52,7 @@ def query_llama(prompt: str) -> str:
         return "Error in API request"
 
 
-def generate_search_query(user_id):
-    history = history_db[user_id]
+def generate_search_query(history):
     prompt = f"""
         You are an intelligent agent for generating document search queries based on user query history. Based on the user's chat history, create a comprehensive search query that incorporates the user's interests and can retrieve relevant legal documents.
         
@@ -109,16 +110,15 @@ def generate_search_query(user_id):
 @router.post("/get_recommendations")
 def get_recommendations(user: Recommendation):
     user_id = user.username
+    history = user.prefrerences
+    language = user.language
 
     print(f"Fetching recommendations for user: {user_id}")
 
-    if user_id not in history_db:
-        return {"error": "User not found"}
-    
-    search_query = generate_search_query(user_id)
+    search_query = generate_search_query(history)
     print(f"Generated search query: {search_query}")
 
-    recommended_docs = get_pdfs(search_query, top_k=5)
+    recommended_docs = get_pdfs(search_query, language, top_k=5)
     print(f"Generated {len(recommended_docs)} recommendations for user {user_id}")
     print(f"Recommended document URLs: {recommended_docs}")
 

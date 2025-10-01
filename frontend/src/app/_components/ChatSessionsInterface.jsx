@@ -41,6 +41,7 @@ export function ChatSessionsInterface() {
   const [editingSession, setEditingSession] = React.useState(null)
   const [newSessionName, setNewSessionName] = React.useState("")
   const [isCreating, setIsCreating] = React.useState(false)
+  const [language, setLanguage] = React.useState("en")
 
   const fetchChatSessions = async () => {
     if (!token) {
@@ -196,46 +197,58 @@ export function ChatSessionsInterface() {
             <h1 className="text-lg font-semibold">Chat Sessions</h1>
           </div>
           
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="gap-2">
-                <Plus className="h-4 w-4" />
-                New Chat
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Create New Chat Session</DialogTitle>
-                <DialogDescription>
-                  Give your new chat session a name to help you organize your conversations.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
-                    Name
-                  </Label>
-                  <Input
-                    id="name"
-                    value={newSessionName}
-                    onChange={(e) => setNewSessionName(e.target.value)}
-                    className="col-span-3"
-                    placeholder="New Chat Session"
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button 
-                  onClick={createNewSession} 
-                  disabled={isCreating}
-                  className="gap-2"
-                >
+          <div className="flex items-center gap-3">
+            <select 
+              className="text-sm border border-border rounded-md px-2 py-1 bg-background text-foreground hover:bg-muted/50 transition-colors"
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+            >
+              <option value="en">English</option>
+              <option value="si">සිංහල</option>
+              <option value="ta">தமிழ்</option>
+            </select>
+            
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="gap-2">
                   <Plus className="h-4 w-4" />
-                  Create Session
+                  New Chat
                 </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Create New Chat Session</DialogTitle>
+                  <DialogDescription>
+                    Give your new chat session a name to help you organize your conversations.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">
+                      Name
+                    </Label>
+                    <Input
+                      id="name"
+                      value={newSessionName}
+                      onChange={(e) => setNewSessionName(e.target.value)}
+                      className="col-span-3"
+                      placeholder="New Chat Session"
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button 
+                    onClick={createNewSession} 
+                    disabled={isCreating}
+                    className="gap-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    Create Session
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
         
         <p className="text-sm text-muted-foreground">

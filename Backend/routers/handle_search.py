@@ -17,6 +17,7 @@ router = APIRouter()
 
 class SearchRequest(BaseModel):
     query: str
+    language: str
 
 
 @router.post("/preferences", response_model=UserPreferenceResponse)
@@ -34,26 +35,23 @@ async def create_user_preference(
     
     print("Existing Preference:", existing_pref)
     
-    if existing_pref:
-        existing_pref.preference_value = preference_data.preference_value
-        db.commit()
-        return existing_pref
-    else:
-        new_pref = UserPreference(
-            user_email=current_user.email,
-            preference_key=preference_data.preference_key,
-            preference_value=preference_data.preference_value
-        )
-        db.add(new_pref)
-        db.commit()
-        print("New Preference Created:", new_pref)
-        return new_pref
+    
+    new_pref = UserPreference(
+        user_email=current_user.email,
+        preference_key=preference_data.preference_key,
+        preference_value=preference_data.preference_value
+    )
+    db.add(new_pref)
+    db.commit()
+    print("New Preference Created:", new_pref)
+    return new_pref
 
 
 @router.post("/search")
 def handle_search(request: SearchRequest):
     query = request.query
+    language = request.language
     print(f"\n> SEARCH HANDLER: Processing search query: '{query}'")
-    pdf_urls = get_pdfs(query)
+    pdf_urls = get_pdfs(query, language)
     print(f"Search Returned {len(pdf_urls)} PDF URLs")
     return pdf_urls
