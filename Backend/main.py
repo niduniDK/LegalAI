@@ -6,6 +6,7 @@ from routers import handle_search
 from routers import get_recommmendations
 from routers import auth
 from routers import chat_history
+from routers import generate_summary
 
 app = FastAPI(
     title="LegalAI API",
@@ -27,6 +28,7 @@ app.include_router(chat_history.router, prefix="/chat-history", tags=["Chat Hist
 app.include_router(get_ai_response.router, prefix="/chat")
 app.include_router(handle_search.router, prefix="/get_docs")
 app.include_router(get_recommmendations.router, prefix="/recommendations")
+app.include_router(generate_summary.router, prefix="/summary", tags=["Summary Generation"])
 
 @app.get("/")
 async def root():

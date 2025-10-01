@@ -3,13 +3,20 @@ from services.llm_handler import generate_response
 from services.get_relevant_docs import get_pdfs
 from services.translator import translate
 from pydantic import BaseModel
+from typing import List, Optional, Any
 
 router = APIRouter()
 
+class MessageModel(BaseModel):
+    id: str
+    content: str
+    role: str
+    timestamp: Optional[str] = None
+
 class GetAIResponseRequest(BaseModel):
     query: str
-    history: list = []
-    language: str
+    history: List[Any] = []  # Changed to allow any structure for backward compatibility
+    language: str = "en"
 
 @router.post("/get_ai_response")
 def get_ai_response(request: GetAIResponseRequest):

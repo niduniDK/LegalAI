@@ -18,6 +18,14 @@ def generate_response(query: str, language, history: list = []) -> str:
     print(f"\n> Retrieved {len(content)} document chunks from {len(filenames)} unique documents")
     print(f"Total context length: {len(context)} characters")
     
+    # Format history for prompt
+    formatted_history = ""
+    if history:
+        formatted_history = "\n".join([
+            f"{msg.get('role', 'user').title()}: {msg.get('content', '')}" 
+            for msg in history if msg.get('content')
+        ])
+    
     prompt = (
        f"""
     You are a helpful assistant specialized in answering questions related to Sri Lankan law. Use the provided context to generate accurate and relevant responses. 
@@ -30,7 +38,7 @@ def generate_response(query: str, language, history: list = []) -> str:
     Use the following pieces of context to answer the question at the end. If you use any piece of context, cite it using [filename] after the sentence where it is used. If multiple pieces of context support your answer, cite all relevant filenames.
     {context}
     Use the following conversation history as reference to maintain context and continuity in the conversation:
-    {history}
+    {formatted_history}
     Provide your answer in {language}.
     Question: {query}
     Answer:
