@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { MessageCircle, FileText, Clock, Search, Filter, MoreHorizontal, Trash2, BookOpen, Eye, ExternalLink, Calendar } from 'lucide-react'
+import { MessageCircle, FileText, Clock, Search, Filter, MoreHorizontal, Trash2, BookOpen, Eye, ExternalLink, Calendar, X } from 'lucide-react'
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -12,6 +12,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { useAuth } from "@/contexts/AuthContext"
@@ -56,13 +64,79 @@ export function HistoryInterface() {
   const [selectedCategory, setSelectedCategory] = React.useState("All")
   const [selectedTimeFilter, setSelectedTimeFilter] = React.useState("All Time")
   const [recentDocuments, setRecentDocuments] = React.useState([])
-  const [recentChats, setRecentChats] = React.useState([])
+  const [allChats, setAllChats] = React.useState([])
   const [isLoading, setIsLoading] = React.useState(true)
   const [language, setLanguage] = React.useState("en")
+  const [docHighlights, setDocHighlights] = React.useState({})
+  const [docSummaries, setDocSummaries] = React.useState({})
+  const [selectedDocument, setSelectedDocument] = React.useState(null)
+  const [showSummaryDialog, setShowSummaryDialog] = React.useState(false)
 
-  // Fetch recent chat sessions
+  // Function to fetch highlights for a document
+  const fetchHighlights = async (filename) => {
+    try {
+      const response = await fetch("http://localhost:8000/summary/highlights", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ file_name: filename })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        return data.highlights || []
+      } else {
+        console.error(`Failed to fetch highlights for ${filename}`)
+        return []
+      }
+    } catch (error) {
+      console.error(`Error fetching highlights for ${filename}:`, error)
+      return []
+    }
+  }
+
+  // Function to fetch summary for a document
+  const fetchSummary = async (filename) => {
+    try {
+      const response = await fetch("http://localhost:8000/summary/summary", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ file_name: filename })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        return data.summary || ""
+      } else {
+        console.error(`Failed to fetch summary for ${filename}`)
+        return ""
+      }
+    } catch (error) {
+      console.error(`Error fetching summary for ${filename}:`, error)
+      return ""
+    }
+  }
+
+  // Function to format summary into bullet points
+  const formatSummaryAsPoints = (summary) => {
+    if (!summary) return []
+    
+    // Split by sentences and clean up
+    const sentences = summary
+      .split(/[.!?]+/)
+      .map(s => s.trim())
+      .filter(s => s.length > 10) // Filter out very short fragments
+      .slice(0, 4) // Limit to 4 points for card display
+    
+    return sentences
+  }
+
+  // Fetch all chat sessions
   React.useEffect(() => {
-    const fetchRecentChats = async () => {
+    const fetchAllChats = async () => {
       if (!token) {
         setIsLoading(false)
         return
@@ -87,8 +161,8 @@ export function HistoryInterface() {
         }
 
         const data = await response.json()
-        // Get the 3 most recent chat sessions
-        const recent = (data || []).slice(0, 3).map(chat => ({
+        // Get ALL chat sessions for history view
+        const allChats = (data || []).map(chat => ({
           id: `chat-${chat.id}`,
           type: "chat",
           title: chat.session_name,
@@ -98,15 +172,17 @@ export function HistoryInterface() {
           chatId: chat.id,
           created: new Date(chat.created_at)
         }))
-        setRecentChats(recent)
+        setAllChats(allChats)
         
       } catch (error) {
-        console.error('Error fetching recent chats:', error)
-        setRecentChats([])
+        console.error('Error fetching all chats:', error)
+        setAllChats([])
+      } finally {
+        setIsLoading(false)
       }
     }
     
-    fetchRecentChats()
+    fetchAllChats()
   }, [token, logout])
 
   // Load recently viewed documents from localStorage
@@ -117,16 +193,35 @@ export function HistoryInterface() {
         if (stored) {
           const parsed = JSON.parse(stored)
           // Get the 5 most recent documents
-          const recent = parsed.slice(0, 5).map((doc, index) => ({
-            id: `doc-${index}`,
-            type: "document",
-            title: doc.title || 'Legal Document',
-            summary: doc.summary || 'Recently viewed legal document',
-            timestamp: new Date(doc.viewedAt),
-            category: doc.category || 'Legal Documents',
-            url: doc.url,
-            source: doc.source || 'documents.gov.lk'
-          }))
+          const recent = parsed.slice(0, 5).map((doc, index) => {
+            // Extract filename from URL for highlights
+            let filename = ""
+            const basePath = "https://documents.gov.lk/view/"
+            if (doc.url && doc.url.startsWith(basePath)) {
+              const afterBase = doc.url.slice(basePath.length)
+              const parts = afterBase.split("/")
+              if (parts.length > 1) {
+                filename = parts.slice(1).join("/")
+              }
+            }
+
+            return {
+              id: `doc-${index}`,
+              type: "document",
+              title: doc.title || 'Legal Document',
+              summary: docSummaries[filename] || doc.summary || 'Loading summary for recently viewed document...',
+              timestamp: new Date(doc.viewedAt),
+              category: doc.category || 'Legal Documents',
+              url: doc.url,
+              source: doc.source || 'documents.gov.lk',
+              filename: filename,
+              highlights: docHighlights[filename] || [
+                "Loading highlights...",
+                "Recently viewed document",
+                "Government source"
+              ]
+            }
+          })
           setRecentDocuments(recent)
         }
       } catch (error) {
@@ -138,13 +233,66 @@ export function HistoryInterface() {
     }
 
     loadRecentDocuments()
+  }, [docHighlights, docSummaries])
+
+  // Effect to fetch highlights and summaries for documents
+  React.useEffect(() => {
+    const fetchAllData = async () => {
+      const stored = localStorage.getItem('recentlyViewedDocuments')
+      if (!stored) return
+
+      const parsed = JSON.parse(stored)
+      const newHighlights = { ...docHighlights }
+      const newSummaries = { ...docSummaries }
+      let needsUpdate = false
+
+      for (const doc of parsed.slice(0, 5)) {
+        // Extract filename from URL
+        let filename = ""
+        const basePath = "https://documents.gov.lk/view/"
+        if (doc.url && doc.url.startsWith(basePath)) {
+          const afterBase = doc.url.slice(basePath.length)
+          const parts = afterBase.split("/")
+          if (parts.length > 1) {
+            filename = parts.slice(1).join("/")
+          }
+        }
+
+        if (filename) {
+          // Fetch highlights if not already loaded
+          if (!docHighlights[filename]) {
+            const highlights = await fetchHighlights(filename)
+            if (highlights.length > 0) {
+              newHighlights[filename] = highlights
+              needsUpdate = true
+            }
+          }
+          
+          // Fetch summary if not already loaded
+          if (!docSummaries[filename]) {
+            const summary = await fetchSummary(filename)
+            if (summary) {
+              newSummaries[filename] = summary
+              needsUpdate = true
+            }
+          }
+        }
+      }
+
+      if (needsUpdate) {
+        setDocHighlights(newHighlights)
+        setDocSummaries(newSummaries)
+      }
+    }
+
+    fetchAllData()
   }, [])
 
   // Combine recent items
   const allRecentItems = React.useMemo(() => {
-    const combined = [...recentChats, ...recentDocuments]
+    const combined = [...allChats, ...recentDocuments]
     return combined.sort((a, b) => b.timestamp - a.timestamp)
-  }, [recentChats, recentDocuments])
+  }, [allChats, recentDocuments])
 
   // Apply filters
   const filteredItems = React.useMemo(() => {
@@ -247,7 +395,7 @@ export function HistoryInterface() {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <SidebarTrigger />
-            <h1 className="text-lg font-semibold">Recent Activity</h1>
+            <h1 className="text-lg font-semibold">Activity History</h1>
           </div>
           <div className="flex items-center gap-2">
             <select 
@@ -262,7 +410,7 @@ export function HistoryInterface() {
           </div>
         </div>
         <p className="text-sm text-muted-foreground mb-4">
-          Recently viewed documents and chat sessions
+          All your chat sessions and recently viewed documents
         </p>
 
         {/* Search and Filters */}
@@ -375,9 +523,60 @@ export function HistoryInterface() {
                                 {formatTimestamp(item.timestamp)}
                               </div>
                             </div>
-                            <CardDescription className="text-sm">
-                              {item.summary}
-                            </CardDescription>
+                            <div className="mb-3">
+                              <h4 className="text-sm font-medium text-foreground mb-2">Summary</h4>
+                              <div className="text-sm">
+                                {(() => {
+                                  // Use fetched summary if available for documents, otherwise fall back to item summary
+                                  const summary = item.type === "document" && item.filename && docSummaries[item.filename] 
+                                    ? docSummaries[item.filename] 
+                                    : item.summary
+                                  
+                                  // For documents, format as bullet points
+                                  if (item.type === "document") {
+                                    const summaryPoints = formatSummaryAsPoints(summary)
+                                    const displayPoints = summaryPoints.slice(0, 2)
+                                    const hasMorePoints = summaryPoints.length > 2
+                                    
+                                    return (
+                                      <div>
+                                        {displayPoints.length > 0 ? (
+                                          <ul className="space-y-1 text-muted-foreground">
+                                            {displayPoints.map((point, index) => (
+                                              <li key={index} className="flex items-start gap-2">
+                                                <span className="text-primary mt-1 text-xs">•</span>
+                                                <span className="text-xs">{point}</span>
+                                              </li>
+                                            ))}
+                                          </ul>
+                                        ) : (
+                                          <span className="text-muted-foreground text-xs">No description available</span>
+                                        )}
+                                        {(hasMorePoints || summary.length > 200) && (
+                                          <Button
+                                            variant="link"
+                                            size="sm"
+                                            className="h-auto p-0 ml-2 text-xs text-primary hover:underline mt-1"
+                                            onClick={() => {
+                                              setSelectedDocument({
+                                                ...item,
+                                                fullSummary: summary
+                                              })
+                                              setShowSummaryDialog(true)
+                                            }}
+                                          >
+                                            Read more
+                                          </Button>
+                                        )}
+                                      </div>
+                                    )
+                                  }
+                                  
+                                  // For chat items, display as regular text
+                                  return <span className="text-muted-foreground text-xs">{summary}</span>
+                                })()}
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -421,14 +620,28 @@ export function HistoryInterface() {
                                 variant="outline" 
                                 className="h-8 text-xs"
                                 onClick={() => {
-                                  // Store document context for Ask AI feature
-                                  const documentContext = `Document: ${item.title}\nCategory: ${item.category}\nSummary: ${item.summary}`
+                                  // Extract filename from URL for backend processing
+                                  let filename = ""
+                                  const basePath = "https://documents.gov.lk/view/"
+                                  if (item.url && item.url.startsWith(basePath)) {
+                                    const afterBase = item.url.slice(basePath.length)
+                                    const parts = afterBase.split("/")
+                                    if (parts.length > 1) {
+                                      filename = parts.slice(1).join("/")
+                                    }
+                                  }
+                                  
+                                  // Store the document context and summary request in localStorage
                                   localStorage.setItem('chatContext', JSON.stringify({
                                     document: item,
-                                    initialQuery: `I have a question about "${item.title}". `,
-                                    documentContext: documentContext
+                                    initialQuery: "Give a summary on this document",
+                                    documentContext: `Document: ${item.title}\nCategory: ${item.category}\nURL: ${item.url}`,
+                                    filename: filename,
+                                    requestType: 'summary'
                                   }))
-                                  window.location.href = '/'
+                                  
+                                  // Navigate to the dedicated document summary interface
+                                  window.location.href = '/document-summary'
                                 }}
                               >
                                 <MessageCircle className="h-3 w-3 mr-1" />
@@ -490,6 +703,61 @@ export function HistoryInterface() {
           )}
         </div>
       </ScrollArea>
+
+      {/* Summary Dialog */}
+      <Dialog open={showSummaryDialog} onOpenChange={setShowSummaryDialog}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-semibold pr-8">
+              {selectedDocument?.title || 'Document Summary'}
+            </DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              {selectedDocument?.category && (
+                <Badge variant="secondary" className="text-xs mr-2">
+                  {selectedDocument.category}
+                </Badge>
+              )}
+              {selectedDocument?.source && `Source: ${selectedDocument.source}`}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4">
+            <div className="prose prose-sm max-w-none">
+              {(() => {
+                const fullSummary = selectedDocument?.fullSummary || 'No summary available'
+                const summaryPoints = formatSummaryAsPoints(fullSummary)
+                
+                return summaryPoints.length > 0 ? (
+                  <ul className="space-y-2 text-sm">
+                    {summaryPoints.map((point, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm leading-relaxed">
+                    {fullSummary}
+                  </p>
+                )
+              })()}
+            </div>
+            {selectedDocument?.filename && docHighlights[selectedDocument.filename] && (
+              <div className="mt-6 pt-4 border-t">
+                <h4 className="text-sm font-medium mb-3">Key Highlights:</h4>
+                <ul className="space-y-2">
+                  {docHighlights[selectedDocument.filename].map((highlight, index) => (
+                    <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
+                      <span className="text-primary mt-1">•</span>
+                      <span>{highlight}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

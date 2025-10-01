@@ -10,21 +10,112 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import ReactMarkdown from 'react-markdown'
+import { useAuth } from "@/contexts/AuthContext"
 
 export function ChatInterface({ initialQuery, initialResponse, chat_id, session_name, isLoading: initialLoading }) {
+  const { token } = useAuth()
   const [messages, setMessages] = useState([])
   const [resources, setResources] = useState([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [language, setLanguage] = useState("en")
+  const [documentContext, setDocumentContext] = useState(null)
   const scrollAreaRef = useRef(null)
 
-  // Initialize input with the initial query when component mounts
+  // Initialize with document context and query when component mounts
   React.useEffect(() => {
-    if (initialQuery) {
+    // Check for document context from localStorage
+    const chatContext = localStorage.getItem('chatContext')
+    if (chatContext) {
+      try {
+        const context = JSON.parse(chatContext)
+        setDocumentContext(context)
+        
+        if (context.initialQuery) {
+          setInput(context.initialQuery)
+        }
+        
+        // Auto-trigger summary generation for document summary requests
+        if (context.requestType === 'summary') {
+          // Add a small delay to ensure state is set
+          setTimeout(() => {
+            handleDocumentSummary(context)
+          }, 100)
+        }
+        
+        // Clear the context from localStorage after using it
+        localStorage.removeItem('chatContext')
+      } catch (error) {
+        console.error('Error parsing chat context:', error)
+      }
+    } else if (initialQuery) {
       setInput(initialQuery)
     }
   }, [initialQuery])
+
+  const handleDocumentSummary = async (context) => {
+    if (!context || !context.filename) return
+
+    const userMessage = {
+      id: Date.now().toString(),
+      content: context.initialQuery,
+      role: "user",
+      timestamp: new Date(),
+    }
+
+    setMessages(prev => [...prev, userMessage])
+    setInput("")
+    setIsLoading(true)
+
+    try {
+      // Use the enhanced summary generation endpoint
+      const summaryResponse = await fetch('http://localhost:8000/summary/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
+        },
+        body: JSON.stringify({ 
+          file_name: context.filename,
+          language: language
+        }),
+      })
+
+      if (!summaryResponse.ok) {
+        const errorData = await summaryResponse.json()
+        console.error('Summary API Error:', errorData)
+        throw new Error(`HTTP ${summaryResponse.status}: ${JSON.stringify(errorData)}`)
+      }
+
+      const summaryData = await summaryResponse.json()
+      
+      const assistantMessage = {
+        id: (Date.now() + 1).toString(),
+        content: summaryData.summary,
+        role: "assistant",
+        timestamp: new Date(),
+      }
+      
+      setMessages(prev => [...prev, assistantMessage])
+      
+      // Set the document URL as a resource if available
+      if (context.document && context.document.url) {
+        setResources([context.document.url])
+      }
+
+    } catch (error) {
+      console.error('Error generating document summary:', error)
+      const errorMessage = {
+        id: (Date.now() + 1).toString(),
+        content: "Sorry, I encountered an error while generating the document summary. Please try again.",
+        role: "assistant",
+        timestamp: new Date(),
+      }
+      setMessages(prev => [...prev, errorMessage])
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const handleSend = async () => {
     if (!input.trim()) return
@@ -45,9 +136,20 @@ export function ChatInterface({ initialQuery, initialResponse, chat_id, session_
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
         },
-        body: JSON.stringify({ query: input, language: language }),
+        body: JSON.stringify({ 
+          query: input, 
+          history: messages,
+          language: language
+        }),
       })
+      
+      if (!response.ok) {
+        const errorData = await response.json()
+        console.error('API Error:', errorData)
+        throw new Error(`HTTP ${response.status}: ${JSON.stringify(errorData)}`)
+      }
       
       const data = await response.json()
       
@@ -104,14 +206,54 @@ export function ChatInterface({ initialQuery, initialResponse, chat_id, session_
       
       {/* Chat Messages */}
       <ScrollArea className="flex-1 overflow-y-auto scrollbar-hide" ref={scrollAreaRef}>
-        {messages.length === 0 ? (
+        {/* Document Context Display */}
+        {documentContext && documentContext.document && (
+          <div className="mb-4 p-3 bg-muted/30 rounded-lg border border-border/40">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-16 bg-primary/10 rounded border border-border/40 flex items-center justify-center">
+                  <FileText className="h-6 w-6 text-primary" />
+                </div>
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-medium text-sm text-foreground truncate">
+                  {documentContext.document.title}
+                </h3>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {documentContext.document.category}
+                </p>
+                <div className="flex items-center gap-2 mt-2">
+                  <Badge variant="secondary" className="text-xs">
+                    Document Analysis
+                  </Badge>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-6 text-xs px-2"
+                    onClick={() => window.open(documentContext.document.url, '_blank')}
+                  >
+                    <ExternalLink className="h-3 w-3 mr-1" />
+                    View Original
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {messages.length === 0 && !documentContext ? (
           <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
             <Scale className="h-10 w-10 mb-2" />
             <h2 className="text-xl font-semibold">Start your chat</h2>
             <p>Ask any legal question about Sri Lanka.</p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-4">{messages.length === 0 && documentContext && (
+              <div className="text-center text-muted-foreground py-4">
+                <MessageCircle className="h-8 w-8 mx-auto mb-2" />
+                <p className="text-sm">Generating document summary...</p>
+              </div>
+            )}
             {messages.map(msg => (
               <div key={msg.id}>
                 <div className={`flex ${msg.role === "user" ? "justify-end mr-10" : "justify-start ml-10"}`}>

@@ -16,6 +16,7 @@ const ChatPage = ({ sessionId }) => {
     const [resources, setResources] = useState([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [language, setLanguage] = useState("en");
     const scrollAreaRef = useRef(null);
 
     // Fetch chat history on mount or sessionId change
