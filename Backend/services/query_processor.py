@@ -4,106 +4,209 @@ import numpy as np
 from typing import List, Tuple
 from sentence_transformers import SentenceTransformer
 import faiss
-import torch
-import torch
-from sentence_transformers import SentenceTransformer
 import pandas as pd
 from rank_bm25 import BM25Okapi
 import re
+import csv
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # current file directory
-index_path = os.path.join(BASE_DIR, "..", "docs", "bills.faiss")  # go up one folder
-bm25_path = os.path.join(BASE_DIR, "..", "docs", "bills_bm25.pkl")
-data_path = os.path.join(BASE_DIR, "..", "docs", "bills_data.pkl")
-bills_path = os.path.join(BASE_DIR, "..", "docs", "bills.tsv")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DOCS_DIR = os.path.join(BASE_DIR, "..", "docs")
 
-model = SentenceTransformer('nlpaueb/legal-bert-base-uncased')
-index_bills = faiss.read_index(index_path)
+# Load Sentence Transformer model
+try:
+    model = SentenceTransformer('nlpaueb/legal-bert-base-uncased')
+    print(f"Successfully loaded model: nlpaueb/legal-bert-base-uncased")
+except Exception as e:
+    print(f"Failed to load nlpaueb/legal-bert-base-uncased: {e}")
+    print("This model exists on Hugging Face but may need to be downloaded first")
+    
+    try:
+        from transformers import AutoModel, AutoTokenizer
+        tokenizer = AutoTokenizer.from_pretrained('nlpaueb/legal-bert-base-uncased')
+        bert_model = AutoModel.from_pretrained('nlpaueb/legal-bert-base-uncased')
+        # Create sentence transformer with mean pooling
+        from sentence_transformers.models import Transformer, Pooling
+        word_embedding_model = Transformer('nlpaueb/legal-bert-base-uncased')
+        pooling_model = Pooling(word_embedding_model.get_word_embedding_dimension())
+        model = SentenceTransformer(modules=[word_embedding_model, pooling_model])
+        print("Successfully created SentenceTransformer with custom pooling")
+    except Exception as e2:
+        print(f"Failed to create custom model: {e2}")
+        print("Falling back to a working model...")
+        model = SentenceTransformer('all-MiniLM-L6-v2')
+        print("Using fallback model: all-MiniLM-L6-v2")
 
-bm25_corpus = joblib.load(bm25_path)
-bm25_bills = BM25Okapi(bm25_corpus)
+def safe_read_tsv(path: str) -> pd.DataFrame:
+    """
+    Read a TSV file safely with gzip detection and encoding fallback.
+    Skips bad lines.
+    """
+    compression = 'gzip' if path.endswith('.gz') or path_magic(path) else None
+    encodings = ['utf-8', 'latin1', 'cp1252']
 
-data = joblib.load(data_path)
-bills_data = pd.read_csv(bills_path, sep='\t', compression='gzip')
+    for enc in encodings:
+        try:
+            df = pd.read_csv(
+                path,
+                sep='\t',
+                engine='python',
+                encoding=enc,
+                compression=compression,
+                on_bad_lines='skip'
+            )
+            return df
+        except Exception as e:
+            print(f"Failed to read {path} with encoding {enc}: {e}")
+    raise Exception(f"Unable to read TSV file: {path}")
 
-documents_bills = bills_data['content'].tolist()
-metadata_bills = bills_data[["name", "type"]].to_dict(orient='records')
+def path_magic(path: str) -> bool:
+    """Return True if file is gzip-compressed (even without .gz extension)."""
+    try:
+        with open(path, 'rb') as f:
+            magic = f.read(2)
+            return magic == b'\x1f\x8b'
+    except:
+        return False
 
-def faiss_retrieve(query: str, k: int = 5) -> List[Tuple[str, dict, float]]:
-    # FAISS embedding retrieval
+def load_all_documents(docs_dir: str):
+    """
+    Load all documents dynamically from the docs folder.
+    Supports: .faiss, _bm25.pkl, _data.pkl, .tsv
+    """
+    sources = {}
+    for fname in os.listdir(docs_dir):
+        path = os.path.join(docs_dir, fname)
+
+        if fname.endswith(".faiss"):
+            try:
+                index = faiss.read_index(path)
+                key = fname.split('.')[0]  # e.g., bills, acts, gazettes
+                sources.setdefault(key, {})["faiss"] = index
+                print(f"Loaded FAISS index for {key} with {index.ntotal} vectors")
+            except Exception as e:
+                print(f"Failed to load FAISS index {fname}: {e}")
+                # Skip this file and continue
+
+        elif fname.endswith("_bm25.pkl"):
+            try:
+                bm25_corpus = joblib.load(path)
+                bm25 = BM25Okapi(bm25_corpus)
+                key = fname.split('_')[0]  # e.g., bills, acts, gazettes
+                sources.setdefault(key, {})["bm25"] = bm25
+                print(f"Loaded BM25 index for {key}")
+            except (EOFError, Exception) as e:
+                print(f"Failed to load BM25 file {fname}: {e}")
+                # Skip this file and continue
+
+        elif fname.endswith("_data.pkl"):
+            try:
+                data = joblib.load(path)
+                key = fname.split('_')[0]
+                sources.setdefault(key, {})["data"] = data
+                print(f"Loaded data for {key}")
+            except (EOFError, Exception) as e:
+                print(f"Failed to load data file {fname}: {e}")
+                # Skip this file and continue
+
+        elif fname.endswith(".tsv") or fname.endswith(".tsv.gz"):
+            df = safe_read_tsv(path)
+            key = fname.split('.')[0]
+            sources.setdefault(key, {})["df"] = df
+
+            # Ensure 'content', 'name', 'type' columns exist
+            if 'content' not in df.columns:
+                df['content'] = ""
+            if 'name' not in df.columns:
+                df['name'] = df.index.astype(str)
+            if 'type' not in df.columns:
+                df['type'] = ""
+
+            sources[key]["documents"] = df['content'].tolist()
+            sources[key]["metadata"] = df[["name", "type"]].to_dict(orient='records')
+
+    return sources
+
+# Load all documents
+sources = load_all_documents(DOCS_DIR)
+
+# Print summary of loaded sources
+print(f"Loaded {len(sources)} document sources:")
+for key, data in sources.items():
+    components = []
+    if "faiss" in data:
+        components.append("FAISS")
+    if "bm25" in data:
+        components.append("BM25")
+    if "documents" in data:
+        components.append(f"{len(data['documents'])} docs")
+    print(f"  {key}: {', '.join(components) if components else 'No components loaded'}")
+
+if not sources:
+    print("Warning: No document sources loaded successfully!")
+
+# Retrieval functions generalized
+def faiss_retrieve(query: str, source_key: str, k: int = 5) -> List[Tuple[str, dict, float]]:
+    if source_key not in sources or "faiss" not in sources[source_key]:
+        return []
+    
+    if "documents" not in sources[source_key] or "metadata" not in sources[source_key]:
+        return []
+    
+    index = sources[source_key]["faiss"]
+    docs = sources[source_key]["documents"]
+    metadata = sources[source_key]["metadata"]
+
     query_embedding = model.encode([query])[0]
-    distances, indices = index_bills.search(np.array([query_embedding], dtype=np.float32), k)
+    distances, indices = index.search(np.array([query_embedding], dtype=np.float32), k)
+
     results = []
-    print(f"\n> FAISS RETRIEVAL RESULTS for query: '{query}'")
     for idx, distance in zip(indices[0], distances[0]):
-        if idx < len(data):
-            score = 1 / (1 + distance)  # Convert L2 distance to similarity score
-            print(f"FAISS Document: {metadata_bills[idx]['name']}, Score: {score:.4f}, Distance: {distance:.4f}")
-            results.append((documents_bills[idx], metadata_bills[idx], score))
-    if len(results) == 0:
-        print("No FAISS results retrieved.")
+        if idx < len(docs):
+            score = 1 / (1 + distance)
+            results.append((docs[idx], metadata[idx], score))
     return results
 
-def bm25_retrieve(query: str, k: int = 5) -> List[Tuple[str, dict, float]]:
-    # BM25 keyword retrieval
+def bm25_retrieve(query: str, source_key: str, k: int = 5) -> List[Tuple[str, dict, float]]:
+    if source_key not in sources or "bm25" not in sources[source_key]:
+        return []
+    
+    if "documents" not in sources[source_key] or "metadata" not in sources[source_key]:
+        return []
+    
+    bm25 = sources[source_key]["bm25"]
+    docs = sources[source_key]["documents"]
+    metadata = sources[source_key]["metadata"]
+
     tokens = re.findall(r"\w+", query.lower())
-    scores = bm25_bills.get_scores(tokens)
+    scores = bm25.get_scores(tokens)
     top_indices = np.argsort(scores)[::-1][:k]
+
     results = []
-    print(f"\n> BM25 RETRIEVAL RESULTS for query: '{query}'")
     for i in top_indices:
-        if scores[i] > 0:
-            print(f"BM25 Document: {metadata_bills[i]['name']}, Score: {float(scores[i]):.4f}")
-            results.append((documents_bills[i], metadata_bills[i], float(scores[i])))
-    if len(results) == 0:
-        print("No BM25 results retrieved.")
+        if i < len(docs) and scores[i] > 0:
+            results.append((docs[i], metadata[i], float(scores[i])))
     return results
 
 def retrieve_doc(query: str, top_k: int = 5):
-    """    Retrieve top K documents based on the query using BM25 and FAISS.
+    """Retrieve top K documents from all sources, sorted by similarity score."""
+    results_dict = {}
 
-    Args:
-        query (str): The query string.
-        top_k (int): Number of top documents to retrieve.  
-    Returns:
-        List[Tuple[str, str]]: List of tuples containing document name and content.
-    """
+    for key in sources.keys():
+        bm25_results = bm25_retrieve(query, key, k=top_k) if "bm25" in sources[key] else []
+        faiss_results = faiss_retrieve(query, key, k=top_k) if "faiss" in sources[key] else []
+        combined_results = bm25_results + faiss_results
 
-    # model = torch.load('F:/Semester 5/DSE Project/LegalAI/utils/model.pkl', map_location=torch.device('cpu'))
+        for doc, meta, score in combined_results:
+            name = meta["name"]
+            if name not in results_dict or score > results_dict[name][2]:
+                results_dict[name] = (doc, meta, score)
 
-    torch.serialization.add_safe_globals({'sentence_transformers.SentenceTransformer.SentenceTransformer': SentenceTransformer})
-    # model = torch.load(
-    #     SentenceTransformer('nlpaueb/legal-bert-base-uncased'),
-    #     map_location=torch.device('cpu'),
-    #     weights_only=False
-    # )
-    # meta_data_bills = joblib.load("F:/Semester 5/DSE Project/LegalAI/utils/meta_data.pkl")
-    # documents_bills = joblib.load("F:/Semester 5/DSE Project/LegalAI/utils/documents.pkl")
+    sorted_results = sorted(results_dict.values(), key=lambda x: x[2], reverse=True)
+    final_results = sorted_results[:top_k]
 
-    content = []
-    filenames = []
+    content = [doc for doc, meta, score in final_results]
+    filenames = [f"{meta['type'] if meta['type'] != 'bill' else 'bills'}/{meta['name']}" for doc, meta, score in final_results]
 
-    bm25_results = bm25_retrieve(query)
-    faiss_results = faiss_retrieve(query)
-
-    results = bm25_results + faiss_results
-
-    # Use this if we filter the number of documents to top_k
-
-    # print(f"\n> COMBINED RETRIEVAL RESULTS")
-    # print(f"Total documents from BM25: {len(bm25_results)}")
-    # print(f"Total documents from FAISS: {len(faiss_results)}")
-    # print(f"Combined results: {len(results)}")
-
-    for result in results:
-        doc, meta, score = result
-
-        if meta["name"] not in filenames:
-            filenames.append(meta["name"])
-        
-        content.append(doc)
-
-    # print(f"Final unique documents selected: {len(filenames)}")
-    # print(f"Document names: {filenames}")
+    print(content)
 
     return content, filenames

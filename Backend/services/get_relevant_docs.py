@@ -12,7 +12,7 @@ def get_pdfs(query: str, top_k: int = 10):
         name_split = filename.split('.')[0]
         name = name_split[:-7].replace("-", "/")
         year = name_split[-7:]
-        url = f"https://documents.gov.lk/view/bills/{name}{year}.pdf"
+        url = f"https://documents.gov.lk/view/{name}{year}.pdf"
         pdf_urls.append(url)
         print(f"Generated URL for {filename}: {url}")
 
