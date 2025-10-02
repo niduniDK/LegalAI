@@ -1,0 +1,292 @@
+{
+  "id": "view-previous-chat-test",
+  "version": "2.0",
+  "name": "View Previous Chat Test",
+  "url": "http://localhost:3000",
+  "tests": [{
+    "id": "view-previous-chat",
+    "name": "View Previous Chat",
+    "commands": [{
+      "id": "1",
+      "comment": "Navigate to home page",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2",
+      "comment": "Wait for page to load",
+      "command": "waitForElementVisible",
+      "target": "css=body",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "3",
+      "comment": "Ensure user is logged in",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"logout-button\"]') !== null",
+      "targets": [],
+      "value": "isLoggedIn"
+    }, {
+      "id": "4",
+      "comment": "If not logged in, perform login",
+      "command": "if",
+      "target": "!${isLoggedIn}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5",
+      "command": "click",
+      "target": "css=[data-testid=\"login-button\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "6",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "7",
+      "command": "type",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "test@example.com"
+    }, {
+      "id": "8",
+      "command": "type",
+      "target": "css=[data-testid=\"password-input\"]",
+      "targets": [],
+      "value": "testpassword123"
+    }, {
+      "id": "9",
+      "command": "click",
+      "target": "css=[data-testid=\"login-submit\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "10",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"dashboard\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "11",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "12",
+      "comment": "Navigate to history interface",
+      "command": "click",
+      "target": "css=[data-testid=\"history-nav\"]",
+      "targets": [
+        ["css=[data-testid=\"history-nav\"]", "css:data-testid"],
+        ["css=.history-nav", "css:class"],
+        ["linkText=History", "linkText"]
+      ],
+      "value": ""
+    }, {
+      "id": "13",
+      "comment": "Wait for history interface to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"history-interface\"]",
+      "targets": [
+        ["css=[data-testid=\"history-interface\"]", "css:data-testid"],
+        ["css=.history-interface", "css:class"]
+      ],
+      "value": "5000"
+    }, {
+      "id": "14",
+      "comment": "Wait for history items to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"history-item\"], [data-testid=\"no-history-message\"]",
+      "targets": [
+        ["css=[data-testid=\"history-item\"]", "css:data-testid"],
+        ["css=.history-item", "css:class"]
+      ],
+      "value": "5000"
+    }, {
+      "id": "15",
+      "comment": "Check if history items exist",
+      "command": "runScript",
+      "target": "return document.querySelectorAll('[data-testid=\"history-item\"]').length > 0",
+      "targets": [],
+      "value": "hasHistoryItems"
+    }, {
+      "id": "16",
+      "comment": "If no history exists, create a chat first",
+      "command": "if",
+      "target": "!${hasHistoryItems}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "17",
+      "comment": "Navigate to chat to create history",
+      "command": "click",
+      "target": "css=[data-testid=\"chat-nav\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "18",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"chat-interface\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "19",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"chat-input\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "20",
+      "comment": "Send a test message to create history",
+      "command": "type",
+      "target": "css=[data-testid=\"chat-input\"]",
+      "targets": [],
+      "value": "Test message for chat history"
+    }, {
+      "id": "21",
+      "command": "click",
+      "target": "css=[data-testid=\"send-button\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "22",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"user-message\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "23",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"ai-message\"]",
+      "targets": [],
+      "value": "15000"
+    }, {
+      "id": "24",
+      "comment": "Go back to history",
+      "command": "click",
+      "target": "css=[data-testid=\"history-nav\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "25",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"history-interface\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "26",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"history-item\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "27",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "28",
+      "comment": "Verify history items are displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"history-item\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "29",
+      "comment": "Click on first chat history item",
+      "command": "click",
+      "target": "css=[data-testid=\"history-item\"]:first-child",
+      "targets": [
+        ["css=[data-testid=\"history-item\"]:first-child", "css:data-testid"],
+        ["css=.history-item:first-child", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "30",
+      "comment": "Wait for chat history to load or chat interface to open",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"chat-history-view\"], [data-testid=\"chat-interface\"]",
+      "targets": [
+        ["css=[data-testid=\"chat-history-view\"]", "css:data-testid"],
+        ["css=[data-testid=\"chat-interface\"]", "css:data-testid"],
+        ["css=.chat-history-view", "css:class"]
+      ],
+      "value": "5000"
+    }, {
+      "id": "31",
+      "comment": "Verify previous messages are displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"user-message\"], [data-testid=\"chat-message\"]",
+      "targets": [
+        ["css=[data-testid=\"user-message\"]", "css:data-testid"],
+        ["css=[data-testid=\"chat-message\"]", "css:data-testid"],
+        ["css=.message", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "32",
+      "comment": "Verify that chat history contains actual content",
+      "command": "runScript",
+      "target": "var messages = document.querySelectorAll('[data-testid=\"user-message\"], [data-testid=\"ai-message\"], [data-testid=\"chat-message\"]'); return Array.from(messages).some(msg => msg.textContent.trim().length > 0);",
+      "targets": [],
+      "value": "hasMessageContent"
+    }, {
+      "id": "33",
+      "comment": "Assert that chat history has content",
+      "command": "assert",
+      "target": "hasMessageContent",
+      "targets": [],
+      "value": "true"
+    }, {
+      "id": "34",
+      "comment": "Check if there's a back button or way to return to history list",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"back-to-history\"]') !== null || document.querySelector('[data-testid=\"history-nav\"]') !== null",
+      "targets": [],
+      "value": "canNavigateBack"
+    }, {
+      "id": "35",
+      "comment": "If back button exists, test navigation back",
+      "command": "if",
+      "target": "${canNavigateBack}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "36",
+      "comment": "Click back to history or history nav",
+      "command": "runScript",
+      "target": "var backBtn = document.querySelector('[data-testid=\"back-to-history\"]'); var historyNav = document.querySelector('[data-testid=\"history-nav\"]'); if(backBtn) backBtn.click(); else if(historyNav) historyNav.click(); return true;",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "37",
+      "comment": "Verify return to history list",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"history-interface\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "38",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "previous-chat-suite",
+    "name": "View Previous Chat Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["view-previous-chat"]
+  }],
+  "urls": ["http://localhost:3000"],
+  "plugins": []
+}

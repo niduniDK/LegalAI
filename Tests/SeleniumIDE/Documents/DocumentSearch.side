@@ -1,0 +1,251 @@
+{
+  "id": "document-search-test",
+  "version": "2.0",
+  "name": "Document Search Test",
+  "url": "http://localhost:3000",
+  "tests": [{
+    "id": "document-search",
+    "name": "Document Search",
+    "commands": [{
+      "id": "1",
+      "comment": "Navigate to home page",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2",
+      "comment": "Wait for page to load",
+      "command": "waitForElementVisible",
+      "target": "css=body",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "3",
+      "comment": "Ensure user is logged in",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"logout-button\"]') !== null",
+      "targets": [],
+      "value": "isLoggedIn"
+    }, {
+      "id": "4",
+      "comment": "If not logged in, perform login",
+      "command": "if",
+      "target": "!${isLoggedIn}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5",
+      "command": "click",
+      "target": "css=[data-testid=\"login-button\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "6",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "7",
+      "command": "type",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "test@example.com"
+    }, {
+      "id": "8",
+      "command": "type",
+      "target": "css=[data-testid=\"password-input\"]",
+      "targets": [],
+      "value": "testpassword123"
+    }, {
+      "id": "9",
+      "command": "click",
+      "target": "css=[data-testid=\"login-submit\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "10",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"dashboard\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "11",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "12",
+      "comment": "Navigate to discover interface",
+      "command": "click",
+      "target": "css=[data-testid=\"discover-nav\"]",
+      "targets": [
+        ["css=[data-testid=\"discover-nav\"]", "css:data-testid"],
+        ["css=.discover-nav", "css:class"],
+        ["linkText=Discover", "linkText"]
+      ],
+      "value": ""
+    }, {
+      "id": "13",
+      "comment": "Wait for discover interface to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"discover-interface\"]",
+      "targets": [
+        ["css=[data-testid=\"discover-interface\"]", "css:data-testid"],
+        ["css=.discover-interface", "css:class"]
+      ],
+      "value": "5000"
+    }, {
+      "id": "14",
+      "comment": "Wait for search input to be available",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"search-input\"]",
+      "targets": [
+        ["css=[data-testid=\"search-input\"]", "css:data-testid"],
+        ["css=.search-input", "css:class"],
+        ["css=input[type=\"search\"]", "css:type"],
+        ["css=input[placeholder*=\"search\"]", "css:placeholder"]
+      ],
+      "value": "3000"
+    }, {
+      "id": "15",
+      "comment": "Clear search input",
+      "command": "runScript",
+      "target": "document.querySelector('[data-testid=\"search-input\"]').value = ''; return true;",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "16",
+      "comment": "Enter search term",
+      "command": "type",
+      "target": "css=[data-testid=\"search-input\"]",
+      "targets": [
+        ["css=[data-testid=\"search-input\"]", "css:data-testid"],
+        ["css=.search-input", "css:class"]
+      ],
+      "value": "Constitution"
+    }, {
+      "id": "17",
+      "comment": "Click search button or press enter",
+      "command": "runScript",
+      "target": "var searchBtn = document.querySelector('[data-testid=\"search-button\"]'); var searchInput = document.querySelector('[data-testid=\"search-input\"]'); if(searchBtn) { searchBtn.click(); } else { var event = new KeyboardEvent('keydown', {key: 'Enter'}); searchInput.dispatchEvent(event); } return true;",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "18",
+      "comment": "Wait for search results to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"search-results\"], [data-testid=\"document-card\"]",
+      "targets": [
+        ["css=[data-testid=\"search-results\"]", "css:data-testid"],
+        ["css=[data-testid=\"document-card\"]", "css:data-testid"],
+        ["css=.search-results", "css:class"],
+        ["css=.document-card", "css:class"]
+      ],
+      "value": "10000"
+    }, {
+      "id": "19",
+      "comment": "Verify search results are displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"document-card\"], [data-testid=\"search-result\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "20",
+      "comment": "Check that search results contain search term",
+      "command": "runScript",
+      "target": "var cards = document.querySelectorAll('[data-testid=\"document-card\"], [data-testid=\"search-result\"]'); return Array.from(cards).some(card => card.textContent.toLowerCase().includes('constitution'));",
+      "targets": [],
+      "value": "resultsRelevant"
+    }, {
+      "id": "21",
+      "comment": "Assert search results are relevant",
+      "command": "assert",
+      "target": "resultsRelevant",
+      "targets": [],
+      "value": "true"
+    }, {
+      "id": "22",
+      "comment": "Test search with different term",
+      "command": "click",
+      "target": "css=[data-testid=\"search-input\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "23",
+      "comment": "Clear previous search",
+      "command": "runScript",
+      "target": "var input = document.querySelector('[data-testid=\"search-input\"]'); input.value = ''; input.focus(); return true;",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "24",
+      "comment": "Enter new search term",
+      "command": "type",
+      "target": "css=[data-testid=\"search-input\"]",
+      "targets": [],
+      "value": "legal"
+    }, {
+      "id": "25",
+      "comment": "Submit new search",
+      "command": "runScript",
+      "target": "var searchBtn = document.querySelector('[data-testid=\"search-button\"]'); var searchInput = document.querySelector('[data-testid=\"search-input\"]'); if(searchBtn) { searchBtn.click(); } else { var event = new KeyboardEvent('keydown', {key: 'Enter'}); searchInput.dispatchEvent(event); } return true;",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "26",
+      "comment": "Wait for new search results",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"document-card\"], [data-testid=\"search-result\"]",
+      "targets": [],
+      "value": "10000"
+    }, {
+      "id": "27",
+      "comment": "Verify new search results",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"document-card\"], [data-testid=\"search-result\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "28",
+      "comment": "Test empty search to show all documents",
+      "command": "runScript",
+      "target": "var input = document.querySelector('[data-testid=\"search-input\"]'); input.value = ''; input.focus(); return true;",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "29",
+      "comment": "Submit empty search",
+      "command": "runScript",
+      "target": "var searchBtn = document.querySelector('[data-testid=\"search-button\"]'); var searchInput = document.querySelector('[data-testid=\"search-input\"]'); if(searchBtn) { searchBtn.click(); } else { var event = new KeyboardEvent('keydown', {key: 'Enter'}); searchInput.dispatchEvent(event); } return true;",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "30",
+      "comment": "Wait for all documents to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"document-card\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "31",
+      "comment": "Verify all documents are shown",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"document-card\"]",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "document-search-suite",
+    "name": "Document Search Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["document-search"]
+  }],
+  "urls": ["http://localhost:3000"],
+  "plugins": []
+}

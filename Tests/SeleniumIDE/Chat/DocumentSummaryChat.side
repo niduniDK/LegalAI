@@ -1,0 +1,268 @@
+{
+  "id": "document-summary-chat-test",
+  "version": "2.0",
+  "name": "Document Summary Chat Interface Test",
+  "url": "http://localhost:3000",
+  "tests": [{
+    "id": "document-summary-chat",
+    "name": "Document Summary Chat Interface",
+    "commands": [{
+      "id": "1",
+      "comment": "Navigate to home page",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2",
+      "comment": "Wait for page to load",
+      "command": "waitForElementVisible",
+      "target": "css=body",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "3",
+      "comment": "Ensure user is logged in",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"logout-button\"]') !== null",
+      "targets": [],
+      "value": "isLoggedIn"
+    }, {
+      "id": "4",
+      "comment": "If not logged in, perform login",
+      "command": "if",
+      "target": "!${isLoggedIn}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5",
+      "command": "click",
+      "target": "css=[data-testid=\"login-button\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "6",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "7",
+      "command": "type",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "test@example.com"
+    }, {
+      "id": "8",
+      "command": "type",
+      "target": "css=[data-testid=\"password-input\"]",
+      "targets": [],
+      "value": "testpassword123"
+    }, {
+      "id": "9",
+      "command": "click",
+      "target": "css=[data-testid=\"login-submit\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "10",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"dashboard\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "11",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "12",
+      "comment": "Navigate to discover interface first",
+      "command": "click",
+      "target": "css=[data-testid=\"discover-nav\"]",
+      "targets": [
+        ["css=[data-testid=\"discover-nav\"]", "css:data-testid"],
+        ["css=.discover-nav", "css:class"],
+        ["linkText=Discover", "linkText"]
+      ],
+      "value": ""
+    }, {
+      "id": "13",
+      "comment": "Wait for discover interface to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"discover-interface\"]",
+      "targets": [
+        ["css=[data-testid=\"discover-interface\"]", "css:data-testid"],
+        ["css=.discover-interface", "css:class"]
+      ],
+      "value": "5000"
+    }, {
+      "id": "14",
+      "comment": "Wait for documents to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"document-card\"]",
+      "targets": [
+        ["css=[data-testid=\"document-card\"]", "css:data-testid"],
+        ["css=.document-card", "css:class"]
+      ],
+      "value": "5000"
+    }, {
+      "id": "15",
+      "comment": "Click on first document's chat button",
+      "command": "click",
+      "target": "css=[data-testid=\"document-card\"]:first-child [data-testid=\"chat-with-document\"]",
+      "targets": [
+        ["css=[data-testid=\"chat-with-document\"]", "css:data-testid"],
+        ["css=.chat-with-doc-btn", "css:class"],
+        ["css=button:contains(\"Chat\")", "css:contains"]
+      ],
+      "value": ""
+    }, {
+      "id": "16",
+      "comment": "Wait for document summary chat interface to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"document-chat-interface\"]",
+      "targets": [
+        ["css=[data-testid=\"document-chat-interface\"]", "css:data-testid"],
+        ["css=.document-chat-interface", "css:class"]
+      ],
+      "value": "5000"
+    }, {
+      "id": "17",
+      "comment": "Verify document information is displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"document-title\"]",
+      "targets": [
+        ["css=[data-testid=\"document-title\"]", "css:data-testid"],
+        ["css=.document-title", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "18",
+      "comment": "Verify document summary is displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"document-summary\"]",
+      "targets": [
+        ["css=[data-testid=\"document-summary\"]", "css:data-testid"],
+        ["css=.document-summary", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "19",
+      "comment": "Wait for chat input to be available",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"chat-input\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "20",
+      "comment": "Type a question about the document",
+      "command": "type",
+      "target": "css=[data-testid=\"chat-input\"]",
+      "targets": [],
+      "value": "Can you summarize the main points of this document?"
+    }, {
+      "id": "21",
+      "comment": "Send the message",
+      "command": "click",
+      "target": "css=[data-testid=\"send-button\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "22",
+      "comment": "Wait for user message to appear",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"user-message\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "23",
+      "comment": "Verify user message is displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"user-message\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "24",
+      "comment": "Wait for AI response",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"ai-message\"]",
+      "targets": [],
+      "value": "15000"
+    }, {
+      "id": "25",
+      "comment": "Verify AI response is displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"ai-message\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "26",
+      "comment": "Verify the response is contextual to the document",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"ai-message\"]').textContent.trim().length > 10",
+      "targets": [],
+      "value": "hasSubstantialResponse"
+    }, {
+      "id": "27",
+      "comment": "Assert response has substantial content",
+      "command": "assert",
+      "target": "hasSubstantialResponse",
+      "targets": [],
+      "value": "true"
+    }, {
+      "id": "28",
+      "comment": "Test another question specific to document",
+      "command": "type",
+      "target": "css=[data-testid=\"chat-input\"]",
+      "targets": [],
+      "value": "What are the key legal provisions mentioned?"
+    }, {
+      "id": "29",
+      "comment": "Send second message",
+      "command": "click",
+      "target": "css=[data-testid=\"send-button\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "30",
+      "comment": "Wait for second user message",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"user-message\"]:nth-of-type(2)",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "31",
+      "comment": "Wait for second AI response",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"ai-message\"]:nth-of-type(2)",
+      "targets": [],
+      "value": "15000"
+    }, {
+      "id": "32",
+      "comment": "Verify chat history shows both messages",
+      "command": "runScript",
+      "target": "return document.querySelectorAll('[data-testid=\"user-message\"]').length >= 2",
+      "targets": [],
+      "value": "hasMultipleMessages"
+    }, {
+      "id": "33",
+      "comment": "Assert multiple messages exist",
+      "command": "assert",
+      "target": "hasMultipleMessages",
+      "targets": [],
+      "value": "true"
+    }]
+  }],
+  "suites": [{
+    "id": "document-chat-suite",
+    "name": "Document Summary Chat Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["document-summary-chat"]
+  }],
+  "urls": ["http://localhost:3000"],
+  "plugins": []
+}

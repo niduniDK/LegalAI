@@ -1,0 +1,151 @@
+{
+  "id": "valid-login-test",
+  "version": "2.0",
+  "name": "Valid Login Test",
+  "url": "http://localhost:3000",
+  "tests": [{
+    "id": "valid-login",
+    "name": "Valid Login",
+    "commands": [{
+      "id": "1",
+      "comment": "Navigate to login page",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2",
+      "comment": "Wait for page to load",
+      "command": "waitForElementVisible",
+      "target": "css=body",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "3",
+      "comment": "Check if already logged in, if so logout first",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"logout-button\"]') !== null",
+      "targets": [],
+      "value": "isLoggedIn"
+    }, {
+      "id": "4",
+      "comment": "Logout if already logged in",
+      "command": "if",
+      "target": "${isLoggedIn}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5",
+      "comment": "Click logout button",
+      "command": "click",
+      "target": "css=[data-testid=\"logout-button\"]",
+      "targets": [
+        ["css=[data-testid=\"logout-button\"]", "css:data-testid"],
+        ["css=.logout-btn", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "6",
+      "comment": "Wait for logout to complete",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"login-button\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "7",
+      "comment": "End logout conditional",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "8",
+      "comment": "Click login button",
+      "command": "click",
+      "target": "css=[data-testid=\"login-button\"]",
+      "targets": [
+        ["css=[data-testid=\"login-button\"]", "css:data-testid"],
+        ["css=.login-btn", "css:class"],
+        ["linkText=Login", "linkText"]
+      ],
+      "value": ""
+    }, {
+      "id": "9",
+      "comment": "Wait for login form to appear",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "10",
+      "comment": "Enter email address",
+      "command": "type",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [
+        ["css=[data-testid=\"email-input\"]", "css:data-testid"],
+        ["css=input[type=\"email\"]", "css:type"],
+        ["name=email", "name"]
+      ],
+      "value": "test@example.com"
+    }, {
+      "id": "11",
+      "comment": "Enter password",
+      "command": "type",
+      "target": "css=[data-testid=\"password-input\"]",
+      "targets": [
+        ["css=[data-testid=\"password-input\"]", "css:data-testid"],
+        ["css=input[type=\"password\"]", "css:type"],
+        ["name=password", "name"]
+      ],
+      "value": "testpassword123"
+    }, {
+      "id": "12",
+      "comment": "Click submit login",
+      "command": "click",
+      "target": "css=[data-testid=\"login-submit\"]",
+      "targets": [
+        ["css=[data-testid=\"login-submit\"]", "css:data-testid"],
+        ["css=button[type=\"submit\"]", "css:type"],
+        ["css=.login-submit-btn", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "13",
+      "comment": "Wait for successful login redirect",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"dashboard\"]",
+      "targets": [
+        ["css=[data-testid=\"dashboard\"]", "css:data-testid"],
+        ["css=.dashboard", "css:class"]
+      ],
+      "value": "5000"
+    }, {
+      "id": "14",
+      "comment": "Verify successful login by checking dashboard presence",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"dashboard\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "15",
+      "comment": "Verify user menu or profile is visible",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"user-menu\"]",
+      "targets": [
+        ["css=[data-testid=\"user-menu\"]", "css:data-testid"],
+        ["css=.user-menu", "css:class"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "auth-suite",
+    "name": "Authentication Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["valid-login"]
+  }],
+  "urls": ["http://localhost:3000"],
+  "plugins": []
+}

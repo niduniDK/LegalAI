@@ -1,0 +1,163 @@
+{
+  "id": "user-registration-test",
+  "version": "2.0",
+  "name": "User Registration Test",
+  "url": "http://localhost:3000",
+  "tests": [{
+    "id": "user-registration",
+    "name": "User Registration",
+    "commands": [{
+      "id": "1",
+      "comment": "Navigate to home page",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2",
+      "comment": "Wait for page to load",
+      "command": "waitForElementVisible",
+      "target": "css=body",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "3",
+      "comment": "Click register/signup button",
+      "command": "click",
+      "target": "css=[data-testid=\"register-button\"]",
+      "targets": [
+        ["css=[data-testid=\"register-button\"]", "css:data-testid"],
+        ["css=.register-btn", "css:class"],
+        ["linkText=Register", "linkText"],
+        ["linkText=Sign Up", "linkText"]
+      ],
+      "value": ""
+    }, {
+      "id": "4",
+      "comment": "Wait for registration form to appear",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"register-form\"]",
+      "targets": [
+        ["css=[data-testid=\"register-form\"]", "css:data-testid"],
+        ["css=.register-form", "css:class"]
+      ],
+      "value": "3000"
+    }, {
+      "id": "5",
+      "comment": "Enter first name",
+      "command": "type",
+      "target": "css=[data-testid=\"firstname-input\"]",
+      "targets": [
+        ["css=[data-testid=\"firstname-input\"]", "css:data-testid"],
+        ["css=input[name=\"firstName\"]", "css:name"],
+        ["css=.firstname-input", "css:class"]
+      ],
+      "value": "Test"
+    }, {
+      "id": "6",
+      "comment": "Enter last name",
+      "command": "type",
+      "target": "css=[data-testid=\"lastname-input\"]",
+      "targets": [
+        ["css=[data-testid=\"lastname-input\"]", "css:data-testid"],
+        ["css=input[name=\"lastName\"]", "css:name"],
+        ["css=.lastname-input", "css:class"]
+      ],
+      "value": "User"
+    }, {
+      "id": "7",
+      "comment": "Generate unique email with timestamp",
+      "command": "runScript",
+      "target": "return 'testuser' + Date.now() + '@example.com'",
+      "targets": [],
+      "value": "uniqueEmail"
+    }, {
+      "id": "8",
+      "comment": "Enter unique email address",
+      "command": "type",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [
+        ["css=[data-testid=\"email-input\"]", "css:data-testid"],
+        ["css=input[type=\"email\"]", "css:type"],
+        ["css=input[name=\"email\"]", "css:name"]
+      ],
+      "value": "${uniqueEmail}"
+    }, {
+      "id": "9",
+      "comment": "Enter password",
+      "command": "type",
+      "target": "css=[data-testid=\"password-input\"]",
+      "targets": [
+        ["css=[data-testid=\"password-input\"]", "css:data-testid"],
+        ["css=input[type=\"password\"]", "css:type"],
+        ["css=input[name=\"password\"]", "css:name"]
+      ],
+      "value": "TestPassword123!"
+    }, {
+      "id": "10",
+      "comment": "Enter confirm password",
+      "command": "type",
+      "target": "css=[data-testid=\"confirm-password-input\"]",
+      "targets": [
+        ["css=[data-testid=\"confirm-password-input\"]", "css:data-testid"],
+        ["css=input[name=\"confirmPassword\"]", "css:name"],
+        ["css=.confirm-password-input", "css:class"]
+      ],
+      "value": "TestPassword123!"
+    }, {
+      "id": "11",
+      "comment": "Accept terms and conditions if checkbox exists",
+      "command": "runScript",
+      "target": "var checkbox = document.querySelector('[data-testid=\"terms-checkbox\"]'); if(checkbox) checkbox.click(); return true;",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "12",
+      "comment": "Click submit registration",
+      "command": "click",
+      "target": "css=[data-testid=\"register-submit\"]",
+      "targets": [
+        ["css=[data-testid=\"register-submit\"]", "css:data-testid"],
+        ["css=button[type=\"submit\"]", "css:type"],
+        ["css=.register-submit-btn", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "13",
+      "comment": "Wait for registration success or redirect",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"success-message\"], [data-testid=\"dashboard\"]",
+      "targets": [
+        ["css=[data-testid=\"success-message\"]", "css:data-testid"],
+        ["css=[data-testid=\"dashboard\"]", "css:data-testid"],
+        ["css=.success-message", "css:class"],
+        ["css=.dashboard", "css:class"]
+      ],
+      "value": "5000"
+    }, {
+      "id": "14",
+      "comment": "Verify registration success - either success message or dashboard",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"success-message\"]') !== null || document.querySelector('[data-testid=\"dashboard\"]') !== null",
+      "targets": [],
+      "value": "registrationSuccess"
+    }, {
+      "id": "15",
+      "comment": "Assert registration was successful",
+      "command": "assert",
+      "target": "registrationSuccess",
+      "targets": [],
+      "value": "true"
+    }]
+  }],
+  "suites": [{
+    "id": "registration-suite",
+    "name": "User Registration Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["user-registration"]
+  }],
+  "urls": ["http://localhost:3000"],
+  "plugins": []
+}

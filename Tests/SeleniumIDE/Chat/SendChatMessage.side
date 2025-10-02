@@ -1,0 +1,216 @@
+{
+  "id": "send-chat-message-test",
+  "version": "2.0",
+  "name": "Send Chat Message Test",
+  "url": "http://localhost:3000",
+  "tests": [{
+    "id": "send-chat-message",
+    "name": "Send Chat Message to Chatbot",
+    "commands": [{
+      "id": "1",
+      "comment": "Navigate to home page",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2",
+      "comment": "Wait for page to load",
+      "command": "waitForElementVisible",
+      "target": "css=body",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "3",
+      "comment": "Ensure user is logged in - if not, perform login",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"logout-button\"]') !== null || document.querySelector('[data-testid=\"chat-interface\"]') !== null",
+      "targets": [],
+      "value": "isLoggedIn"
+    }, {
+      "id": "4",
+      "comment": "If not logged in, perform login",
+      "command": "if",
+      "target": "!${isLoggedIn}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5",
+      "command": "click",
+      "target": "css=[data-testid=\"login-button\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "6",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "7",
+      "command": "type",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "test@example.com"
+    }, {
+      "id": "8",
+      "command": "type",
+      "target": "css=[data-testid=\"password-input\"]",
+      "targets": [],
+      "value": "testpassword123"
+    }, {
+      "id": "9",
+      "command": "click",
+      "target": "css=[data-testid=\"login-submit\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "10",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"dashboard\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "11",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "12",
+      "comment": "Navigate to chat interface",
+      "command": "click",
+      "target": "css=[data-testid=\"chat-nav\"]",
+      "targets": [
+        ["css=[data-testid=\"chat-nav\"]", "css:data-testid"],
+        ["css=.chat-nav", "css:class"],
+        ["linkText=Chat", "linkText"]
+      ],
+      "value": ""
+    }, {
+      "id": "13",
+      "comment": "Wait for chat interface to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"chat-interface\"]",
+      "targets": [
+        ["css=[data-testid=\"chat-interface\"]", "css:data-testid"],
+        ["css=.chat-interface", "css:class"]
+      ],
+      "value": "5000"
+    }, {
+      "id": "14",
+      "comment": "Wait for chat input to be available",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"chat-input\"]",
+      "targets": [
+        ["css=[data-testid=\"chat-input\"]", "css:data-testid"],
+        ["css=.chat-input", "css:class"],
+        ["css=textarea", "css:tag"],
+        ["css=input[type=\"text\"]", "css:type"]
+      ],
+      "value": "3000"
+    }, {
+      "id": "15",
+      "comment": "Clear any existing text in chat input",
+      "command": "runScript",
+      "target": "document.querySelector('[data-testid=\"chat-input\"]').value = ''; return true;",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "16",
+      "comment": "Type test message",
+      "command": "type",
+      "target": "css=[data-testid=\"chat-input\"]",
+      "targets": [
+        ["css=[data-testid=\"chat-input\"]", "css:data-testid"],
+        ["css=.chat-input", "css:class"]
+      ],
+      "value": "What is the Constitution of India about?"
+    }, {
+      "id": "17",
+      "comment": "Click send button",
+      "command": "click",
+      "target": "css=[data-testid=\"send-button\"]",
+      "targets": [
+        ["css=[data-testid=\"send-button\"]", "css:data-testid"],
+        ["css=.send-btn", "css:class"],
+        ["css=button[type=\"submit\"]", "css:type"]
+      ],
+      "value": ""
+    }, {
+      "id": "18",
+      "comment": "Wait for message to appear in chat",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"user-message\"]",
+      "targets": [
+        ["css=[data-testid=\"user-message\"]", "css:data-testid"],
+        ["css=.user-message", "css:class"],
+        ["css=.message-user", "css:class"]
+      ],
+      "value": "5000"
+    }, {
+      "id": "19",
+      "comment": "Verify user message is displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"user-message\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "20",
+      "comment": "Verify message content contains our test message",
+      "command": "assertText",
+      "target": "css=[data-testid=\"user-message\"]",
+      "targets": [],
+      "value": "*Constitution of India*"
+    }, {
+      "id": "21",
+      "comment": "Wait for AI response to appear",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"ai-message\"]",
+      "targets": [
+        ["css=[data-testid=\"ai-message\"]", "css:data-testid"],
+        ["css=.ai-message", "css:class"],
+        ["css=.message-ai", "css:class"]
+      ],
+      "value": "15000"
+    }, {
+      "id": "22",
+      "comment": "Verify AI response is displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"ai-message\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "23",
+      "comment": "Verify AI response is not empty",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"ai-message\"]').textContent.trim().length > 0",
+      "targets": [],
+      "value": "hasAIResponse"
+    }, {
+      "id": "24",
+      "comment": "Assert AI response is not empty",
+      "command": "assert",
+      "target": "hasAIResponse",
+      "targets": [],
+      "value": "true"
+    }, {
+      "id": "25",
+      "comment": "Verify chat input is cleared after sending",
+      "command": "assertValue",
+      "target": "css=[data-testid=\"chat-input\"]",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "chat-message-suite",
+    "name": "Send Chat Message Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["send-chat-message"]
+  }],
+  "urls": ["http://localhost:3000"],
+  "plugins": []
+}

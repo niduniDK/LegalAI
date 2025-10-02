@@ -1,0 +1,359 @@
+{
+  "id": "recommendation-interface-test",
+  "version": "2.0",
+  "name": "Recommendation System Interface Test",
+  "url": "http://localhost:3000",
+  "tests": [{
+    "id": "recommendation-interface",
+    "name": "Recommendation System Interface",
+    "commands": [{
+      "id": "1",
+      "comment": "Navigate to home page",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2",
+      "comment": "Wait for page to load",
+      "command": "waitForElementVisible",
+      "target": "css=body",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "3",
+      "comment": "Ensure user is logged in",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"logout-button\"]') !== null",
+      "targets": [],
+      "value": "isLoggedIn"
+    }, {
+      "id": "4",
+      "comment": "If not logged in, perform login",
+      "command": "if",
+      "target": "!${isLoggedIn}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5",
+      "command": "click",
+      "target": "css=[data-testid=\"login-button\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "6",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "7",
+      "command": "type",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "test@example.com"
+    }, {
+      "id": "8",
+      "command": "type",
+      "target": "css=[data-testid=\"password-input\"]",
+      "targets": [],
+      "value": "testpassword123"
+    }, {
+      "id": "9",
+      "command": "click",
+      "target": "css=[data-testid=\"login-submit\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "10",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"dashboard\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "11",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "12",
+      "comment": "Navigate to recommendation interface",
+      "command": "click",
+      "target": "css=[data-testid=\"recommendation-nav\"]",
+      "targets": [
+        ["css=[data-testid=\"recommendation-nav\"]", "css:data-testid"],
+        ["css=.recommendation-nav", "css:class"],
+        ["linkText=Recommendations", "linkText"],
+        ["linkText=Recommend", "linkText"]
+      ],
+      "value": ""
+    }, {
+      "id": "13",
+      "comment": "Wait for recommendation interface to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"recommendation-interface\"]",
+      "targets": [
+        ["css=[data-testid=\"recommendation-interface\"]", "css:data-testid"],
+        ["css=.recommendation-interface", "css:class"],
+        ["css=.recommendations", "css:class"]
+      ],
+      "value": "10000"
+    }, {
+      "id": "14",
+      "comment": "Verify recommendation interface is displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"recommendation-interface\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "15",
+      "comment": "Wait for recommended documents to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"recommended-document\"], [data-testid=\"document-card\"], [data-testid=\"no-recommendations\"]",
+      "targets": [
+        ["css=[data-testid=\"recommended-document\"]", "css:data-testid"],
+        ["css=[data-testid=\"document-card\"]", "css:data-testid"],
+        ["css=.recommended-document", "css:class"],
+        ["css=.document-card", "css:class"]
+      ],
+      "value": "10000"
+    }, {
+      "id": "16",
+      "comment": "Check if recommendations are available",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"recommended-document\"], [data-testid=\"document-card\"]') !== null;",
+      "targets": [],
+      "value": "hasRecommendations"
+    }, {
+      "id": "17",
+      "comment": "If recommendations exist, test them",
+      "command": "if",
+      "target": "${hasRecommendations}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "18",
+      "comment": "Verify recommended documents are displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"recommended-document\"], [data-testid=\"document-card\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "19",
+      "comment": "Verify recommendation has title",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"recommended-document\"] [data-testid=\"document-title\"], [data-testid=\"document-card\"] [data-testid=\"document-title\"]",
+      "targets": [
+        ["css=[data-testid=\"document-title\"]", "css:data-testid"],
+        ["css=.document-title", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "20",
+      "comment": "Verify recommendation has summary",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"recommended-document\"] [data-testid=\"document-summary\"], [data-testid=\"document-card\"] [data-testid=\"document-summary\"]",
+      "targets": [
+        ["css=[data-testid=\"document-summary\"]", "css:data-testid"],
+        ["css=.document-summary", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "21",
+      "comment": "Verify summary is in bullet point format",
+      "command": "runScript",
+      "target": "var summaries = document.querySelectorAll('[data-testid=\"document-summary\"]'); return Array.from(summaries).some(summary => summary.innerHTML.includes('•') || summary.innerHTML.includes('<li>') || summary.innerHTML.includes('\\n•'));",
+      "targets": [],
+      "value": "hasBulletPointSummary"
+    }, {
+      "id": "22",
+      "comment": "Assert summary is formatted as bullet points",
+      "command": "assert",
+      "target": "hasBulletPointSummary",
+      "targets": [],
+      "value": "true"
+    }, {
+      "id": "23",
+      "comment": "Test interaction with first recommendation",
+      "command": "click",
+      "target": "css=[data-testid=\"recommended-document\"]:first-child [data-testid=\"view-document\"], [data-testid=\"document-card\"]:first-child [data-testid=\"view-document\"]",
+      "targets": [
+        ["css=[data-testid=\"view-document\"]", "css:data-testid"],
+        ["css=.view-doc-btn", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "24",
+      "comment": "Wait for document view or action",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"document-view\"], [data-testid=\"document-details\"], [data-testid=\"chat-interface\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "25",
+      "comment": "Verify interaction worked",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"document-view\"], [data-testid=\"document-details\"], [data-testid=\"chat-interface\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "26",
+      "comment": "Navigate back to recommendations",
+      "command": "click",
+      "target": "css=[data-testid=\"recommendation-nav\"], [data-testid=\"back-button\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "27",
+      "comment": "Wait for recommendations to reload",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"recommendation-interface\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "28",
+      "comment": "Test chat with recommended document",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"recommended-document\"] [data-testid=\"chat-with-document\"], [data-testid=\"document-card\"] [data-testid=\"chat-with-document\"]') !== null;",
+      "targets": [],
+      "value": "hasChatOption"
+    }, {
+      "id": "29",
+      "comment": "If chat option exists, test it",
+      "command": "if",
+      "target": "${hasChatOption}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "30",
+      "comment": "Click chat with document",
+      "command": "click",
+      "target": "css=[data-testid=\"recommended-document\"]:first-child [data-testid=\"chat-with-document\"], [data-testid=\"document-card\"]:first-child [data-testid=\"chat-with-document\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "31",
+      "comment": "Wait for chat interface",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"document-chat-interface\"], [data-testid=\"chat-interface\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "32",
+      "comment": "Verify chat interface loaded",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"document-chat-interface\"], [data-testid=\"chat-interface\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "33",
+      "comment": "Navigate back to recommendations",
+      "command": "click",
+      "target": "css=[data-testid=\"recommendation-nav\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "34",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "35",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "36",
+      "comment": "If no recommendations, verify appropriate message",
+      "command": "if",
+      "target": "!${hasRecommendations}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "37",
+      "comment": "Verify no recommendations message is shown",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"no-recommendations\"], [data-testid=\"empty-recommendations\"]",
+      "targets": [
+        ["css=[data-testid=\"no-recommendations\"]", "css:data-testid"],
+        ["css=[data-testid=\"empty-recommendations\"]", "css:data-testid"],
+        ["css=.no-recommendations", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "38",
+      "comment": "Verify message has helpful content",
+      "command": "runScript",
+      "target": "var message = document.querySelector('[data-testid=\"no-recommendations\"], [data-testid=\"empty-recommendations\"]'); return message && message.textContent.trim().length > 0;",
+      "targets": [],
+      "value": "hasNoRecommendationsMessage"
+    }, {
+      "id": "39",
+      "comment": "Assert no recommendations message exists",
+      "command": "assert",
+      "target": "hasNoRecommendationsMessage",
+      "targets": [],
+      "value": "true"
+    }, {
+      "id": "40",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "41",
+      "comment": "Test refresh or reload functionality",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"refresh-recommendations\"], [data-testid=\"reload-recommendations\"]') !== null;",
+      "targets": [],
+      "value": "hasRefreshOption"
+    }, {
+      "id": "42",
+      "comment": "If refresh option exists, test it",
+      "command": "if",
+      "target": "${hasRefreshOption}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "43",
+      "comment": "Click refresh button",
+      "command": "click",
+      "target": "css=[data-testid=\"refresh-recommendations\"], [data-testid=\"reload-recommendations\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "44",
+      "comment": "Wait for refresh to complete",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"recommendation-interface\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "45",
+      "comment": "Verify interface is still functional after refresh",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"recommendation-interface\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "46",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "recommendation-interface-suite",
+    "name": "Recommendation System Interface Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["recommendation-interface"]
+  }],
+  "urls": ["http://localhost:3000"],
+  "plugins": []
+}

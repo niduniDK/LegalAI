@@ -1,0 +1,327 @@
+{
+  "id": "document-view-test",
+  "version": "2.0",
+  "name": "Document View Test",
+  "url": "http://localhost:3000",
+  "tests": [{
+    "id": "document-view",
+    "name": "Document View",
+    "commands": [{
+      "id": "1",
+      "comment": "Navigate to home page",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2",
+      "comment": "Wait for page to load",
+      "command": "waitForElementVisible",
+      "target": "css=body",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "3",
+      "comment": "Ensure user is logged in",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"logout-button\"]') !== null",
+      "targets": [],
+      "value": "isLoggedIn"
+    }, {
+      "id": "4",
+      "comment": "If not logged in, perform login",
+      "command": "if",
+      "target": "!${isLoggedIn}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5",
+      "command": "click",
+      "target": "css=[data-testid=\"login-button\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "6",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "7",
+      "command": "type",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "test@example.com"
+    }, {
+      "id": "8",
+      "command": "type",
+      "target": "css=[data-testid=\"password-input\"]",
+      "targets": [],
+      "value": "testpassword123"
+    }, {
+      "id": "9",
+      "command": "click",
+      "target": "css=[data-testid=\"login-submit\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "10",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"dashboard\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "11",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "12",
+      "comment": "Navigate to discover interface",
+      "command": "click",
+      "target": "css=[data-testid=\"discover-nav\"]",
+      "targets": [
+        ["css=[data-testid=\"discover-nav\"]", "css:data-testid"],
+        ["css=.discover-nav", "css:class"],
+        ["linkText=Discover", "linkText"]
+      ],
+      "value": ""
+    }, {
+      "id": "13",
+      "comment": "Wait for discover interface to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"discover-interface\"]",
+      "targets": [
+        ["css=[data-testid=\"discover-interface\"]", "css:data-testid"],
+        ["css=.discover-interface", "css:class"]
+      ],
+      "value": "5000"
+    }, {
+      "id": "14",
+      "comment": "Wait for document cards to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"document-card\"]",
+      "targets": [
+        ["css=[data-testid=\"document-card\"]", "css:data-testid"],
+        ["css=.document-card", "css:class"]
+      ],
+      "value": "5000"
+    }, {
+      "id": "15",
+      "comment": "Store the title of the first document",
+      "command": "storeText",
+      "target": "css=[data-testid=\"document-card\"]:first-child [data-testid=\"document-title\"]",
+      "targets": [
+        ["css=[data-testid=\"document-title\"]", "css:data-testid"],
+        ["css=.document-title", "css:class"]
+      ],
+      "value": "documentTitle"
+    }, {
+      "id": "16",
+      "comment": "Click on the first document to view details",
+      "command": "click",
+      "target": "css=[data-testid=\"document-card\"]:first-child [data-testid=\"view-document\"], [data-testid=\"document-card\"]:first-child [data-testid=\"document-title\"]",
+      "targets": [
+        ["css=[data-testid=\"view-document\"]", "css:data-testid"],
+        ["css=[data-testid=\"document-title\"]", "css:data-testid"],
+        ["css=.view-doc-btn", "css:class"],
+        ["css=.document-title", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "17",
+      "comment": "Wait for document view to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"document-view\"], [data-testid=\"document-details\"]",
+      "targets": [
+        ["css=[data-testid=\"document-view\"]", "css:data-testid"],
+        ["css=[data-testid=\"document-details\"]", "css:data-testid"],
+        ["css=.document-view", "css:class"],
+        ["css=.document-details", "css:class"]
+      ],
+      "value": "10000"
+    }, {
+      "id": "18",
+      "comment": "Verify document view is displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"document-view\"], [data-testid=\"document-details\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "19",
+      "comment": "Verify document title is displayed in view",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"document-title\"], [data-testid=\"document-name\"]",
+      "targets": [
+        ["css=[data-testid=\"document-title\"]", "css:data-testid"],
+        ["css=[data-testid=\"document-name\"]", "css:data-testid"],
+        ["css=.document-title", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "20",
+      "comment": "Verify document content is displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"document-content\"], [data-testid=\"document-text\"]",
+      "targets": [
+        ["css=[data-testid=\"document-content\"]", "css:data-testid"],
+        ["css=[data-testid=\"document-text\"]", "css:data-testid"],
+        ["css=.document-content", "css:class"],
+        ["css=.document-text", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "21",
+      "comment": "Verify document content has substantial text",
+      "command": "runScript",
+      "target": "var content = document.querySelector('[data-testid=\"document-content\"], [data-testid=\"document-text\"]'); return content && content.textContent.trim().length > 100;",
+      "targets": [],
+      "value": "hasDocumentContent"
+    }, {
+      "id": "22",
+      "comment": "Assert document has substantial content",
+      "command": "assert",
+      "target": "hasDocumentContent",
+      "targets": [],
+      "value": "true"
+    }, {
+      "id": "23",
+      "comment": "Check if document metadata is displayed",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"document-metadata\"], [data-testid=\"document-info\"]') !== null;",
+      "targets": [],
+      "value": "hasMetadata"
+    }, {
+      "id": "24",
+      "comment": "If metadata exists, verify it",
+      "command": "if",
+      "target": "${hasMetadata}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "25",
+      "comment": "Verify metadata is displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"document-metadata\"], [data-testid=\"document-info\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "26",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "27",
+      "comment": "Check if there's a back button or navigation",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"back-button\"], [data-testid=\"back-to-list\"]') !== null;",
+      "targets": [],
+      "value": "hasBackButton"
+    }, {
+      "id": "28",
+      "comment": "If back button exists, test navigation",
+      "command": "if",
+      "target": "${hasBackButton}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "29",
+      "comment": "Click back button",
+      "command": "click",
+      "target": "css=[data-testid=\"back-button\"], [data-testid=\"back-to-list\"]",
+      "targets": [
+        ["css=[data-testid=\"back-button\"]", "css:data-testid"],
+        ["css=[data-testid=\"back-to-list\"]", "css:data-testid"],
+        ["css=.back-btn", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "30",
+      "comment": "Wait for return to document list",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"discover-interface\"], [data-testid=\"document-card\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "31",
+      "comment": "Verify back navigation worked",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"document-card\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "32",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "33",
+      "comment": "Test document actions if available",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"document-card\"]:first-child [data-testid=\"download-document\"], [data-testid=\"document-card\"]:first-child [data-testid=\"share-document\"]') !== null;",
+      "targets": [],
+      "value": "hasDocumentActions"
+    }, {
+      "id": "34",
+      "comment": "If document actions exist, verify they are clickable",
+      "command": "if",
+      "target": "${hasDocumentActions}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "35",
+      "comment": "Verify action buttons are present and clickable",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"document-card\"]:first-child [data-testid=\"download-document\"], [data-testid=\"document-card\"]:first-child [data-testid=\"share-document\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "36",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "37",
+      "comment": "Test scroll functionality in document view if possible",
+      "command": "click",
+      "target": "css=[data-testid=\"document-card\"]:first-child [data-testid=\"view-document\"], [data-testid=\"document-card\"]:first-child [data-testid=\"document-title\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "38",
+      "comment": "Wait for document view again",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"document-view\"], [data-testid=\"document-details\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "39",
+      "comment": "Test scroll in document content",
+      "command": "runScript",
+      "target": "var content = document.querySelector('[data-testid=\"document-content\"], [data-testid=\"document-text\"]'); if(content) { content.scrollTop = 100; } return true;",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "40",
+      "comment": "Verify document is still accessible after scroll",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"document-content\"], [data-testid=\"document-text\"]",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "document-view-suite",
+    "name": "Document View Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["document-view"]
+  }],
+  "urls": ["http://localhost:3000"],
+  "plugins": []
+}

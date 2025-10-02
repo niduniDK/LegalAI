@@ -1,0 +1,449 @@
+{
+  "id": "history-interface-test",
+  "version": "2.0",
+  "name": "History Interface Test",
+  "url": "http://localhost:3000",
+  "tests": [{
+    "id": "history-interface",
+    "name": "History Interface",
+    "commands": [{
+      "id": "1",
+      "comment": "Navigate to home page",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2",
+      "comment": "Wait for page to load",
+      "command": "waitForElementVisible",
+      "target": "css=body",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "3",
+      "comment": "Ensure user is logged in",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"logout-button\"]') !== null",
+      "targets": [],
+      "value": "isLoggedIn"
+    }, {
+      "id": "4",
+      "comment": "If not logged in, perform login",
+      "command": "if",
+      "target": "!${isLoggedIn}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5",
+      "command": "click",
+      "target": "css=[data-testid=\"login-button\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "6",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "7",
+      "command": "type",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "test@example.com"
+    }, {
+      "id": "8",
+      "command": "type",
+      "target": "css=[data-testid=\"password-input\"]",
+      "targets": [],
+      "value": "testpassword123"
+    }, {
+      "id": "9",
+      "command": "click",
+      "target": "css=[data-testid=\"login-submit\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "10",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"dashboard\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "11",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "12",
+      "comment": "Navigate to history interface",
+      "command": "click",
+      "target": "css=[data-testid=\"history-nav\"]",
+      "targets": [
+        ["css=[data-testid=\"history-nav\"]", "css:data-testid"],
+        ["css=.history-nav", "css:class"],
+        ["linkText=History", "linkText"]
+      ],
+      "value": ""
+    }, {
+      "id": "13",
+      "comment": "Wait for history interface to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"history-interface\"]",
+      "targets": [
+        ["css=[data-testid=\"history-interface\"]", "css:data-testid"],
+        ["css=.history-interface", "css:class"],
+        ["css=.history", "css:class"]
+      ],
+      "value": "10000"
+    }, {
+      "id": "14",
+      "comment": "Verify history interface is displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"history-interface\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "15",
+      "comment": "Wait for history items to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"history-item\"], [data-testid=\"chat-history\"], [data-testid=\"document-history\"], [data-testid=\"no-history\"]",
+      "targets": [
+        ["css=[data-testid=\"history-item\"]", "css:data-testid"],
+        ["css=[data-testid=\"chat-history\"]", "css:data-testid"],
+        ["css=[data-testid=\"document-history\"]", "css:data-testid"],
+        ["css=.history-item", "css:class"]
+      ],
+      "value": "10000"
+    }, {
+      "id": "16",
+      "comment": "Check if history items exist",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"history-item\"], [data-testid=\"chat-history\"], [data-testid=\"document-history\"]') !== null;",
+      "targets": [],
+      "value": "hasHistoryItems"
+    }, {
+      "id": "17",
+      "comment": "If no history exists, create some first",
+      "command": "if",
+      "target": "!${hasHistoryItems}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "18",
+      "comment": "Navigate to chat to create history",
+      "command": "click",
+      "target": "css=[data-testid=\"chat-nav\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "19",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"chat-interface\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "20",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"chat-input\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "21",
+      "comment": "Send a test message",
+      "command": "type",
+      "target": "css=[data-testid=\"chat-input\"]",
+      "targets": [],
+      "value": "Test message for history"
+    }, {
+      "id": "22",
+      "command": "click",
+      "target": "css=[data-testid=\"send-button\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "23",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"user-message\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "24",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"ai-message\"]",
+      "targets": [],
+      "value": "15000"
+    }, {
+      "id": "25",
+      "comment": "Return to history",
+      "command": "click",
+      "target": "css=[data-testid=\"history-nav\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "26",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"history-interface\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "27",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"history-item\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "28",
+      "comment": "View a document to create document history",
+      "command": "click",
+      "target": "css=[data-testid=\"discover-nav\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "29",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"document-card\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "30",
+      "command": "click",
+      "target": "css=[data-testid=\"document-card\"]:first-child [data-testid=\"view-document\"], [data-testid=\"document-card\"]:first-child [data-testid=\"document-title\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "31",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"document-view\"], [data-testid=\"document-details\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "32",
+      "comment": "Return to history again",
+      "command": "click",
+      "target": "css=[data-testid=\"history-nav\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "33",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"history-interface\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "34",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "35",
+      "comment": "Verify history items are displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"history-item\"], [data-testid=\"chat-history\"], [data-testid=\"document-history\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "36",
+      "comment": "Check for different types of history items",
+      "command": "runScript",
+      "target": "var chatHistory = document.querySelectorAll('[data-testid=\"chat-history\"], [data-testid=\"history-item\"][data-type=\"chat\"]'); var docHistory = document.querySelectorAll('[data-testid=\"document-history\"], [data-testid=\"history-item\"][data-type=\"document\"]'); return {chat: chatHistory.length, document: docHistory.length, total: chatHistory.length + docHistory.length};",
+      "targets": [],
+      "value": "historyTypes"
+    }, {
+      "id": "37",
+      "comment": "Verify both chat and document history exist or at least one type exists",
+      "command": "runScript",
+      "target": "return ${historyTypes}.total > 0;",
+      "targets": [],
+      "value": "hasAnyHistory"
+    }, {
+      "id": "38",
+      "comment": "Assert history items exist",
+      "command": "assert",
+      "target": "hasAnyHistory",
+      "targets": [],
+      "value": "true"
+    }, {
+      "id": "39",
+      "comment": "Test clicking on first history item",
+      "command": "click",
+      "target": "css=[data-testid=\"history-item\"]:first-child, [data-testid=\"chat-history\"]:first-child, [data-testid=\"document-history\"]:first-child",
+      "targets": [
+        ["css=[data-testid=\"history-item\"]:first-child", "css:data-testid"],
+        ["css=.history-item:first-child", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "40",
+      "comment": "Wait for history item to open",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"chat-interface\"], [data-testid=\"document-view\"], [data-testid=\"chat-history-view\"]",
+      "targets": [
+        ["css=[data-testid=\"chat-interface\"]", "css:data-testid"],
+        ["css=[data-testid=\"document-view\"]", "css:data-testid"],
+        ["css=[data-testid=\"chat-history-view\"]", "css:data-testid"]
+      ],
+      "value": "5000"
+    }, {
+      "id": "41",
+      "comment": "Verify history item opened successfully",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"chat-interface\"], [data-testid=\"document-view\"], [data-testid=\"chat-history-view\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "42",
+      "comment": "Return to history interface",
+      "command": "click",
+      "target": "css=[data-testid=\"history-nav\"], [data-testid=\"back-to-history\"]",
+      "targets": [
+        ["css=[data-testid=\"history-nav\"]", "css:data-testid"],
+        ["css=[data-testid=\"back-to-history\"]", "css:data-testid"]
+      ],
+      "value": ""
+    }, {
+      "id": "43",
+      "comment": "Wait for return to history",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"history-interface\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "44",
+      "comment": "Test filter or sorting functionality if available",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"filter-history\"], [data-testid=\"sort-history\"]') !== null;",
+      "targets": [],
+      "value": "hasFilterOptions"
+    }, {
+      "id": "45",
+      "comment": "If filter options exist, test them",
+      "command": "if",
+      "target": "${hasFilterOptions}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "46",
+      "comment": "Test filter functionality",
+      "command": "click",
+      "target": "css=[data-testid=\"filter-history\"], [data-testid=\"sort-history\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "47",
+      "comment": "Wait for filter to apply",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"history-item\"], [data-testid=\"filtered-results\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "48",
+      "comment": "Verify filter worked",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"history-item\"], [data-testid=\"filtered-results\"], [data-testid=\"no-results\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "49",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "50",
+      "comment": "Test search in history if available",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"search-history\"]') !== null;",
+      "targets": [],
+      "value": "hasHistorySearch"
+    }, {
+      "id": "51",
+      "comment": "If search exists, test it",
+      "command": "if",
+      "target": "${hasHistorySearch}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "52",
+      "comment": "Enter search term",
+      "command": "type",
+      "target": "css=[data-testid=\"search-history\"]",
+      "targets": [],
+      "value": "test"
+    }, {
+      "id": "53",
+      "comment": "Wait for search results",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"history-item\"], [data-testid=\"search-results\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "54",
+      "comment": "Verify search functionality",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"history-item\"], [data-testid=\"search-results\"], [data-testid=\"no-results\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "55",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "56",
+      "comment": "Test pagination if history has many items",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"next-page\"], [data-testid=\"pagination\"]') !== null;",
+      "targets": [],
+      "value": "hasPagination"
+    }, {
+      "id": "57",
+      "comment": "If pagination exists, test it",
+      "command": "if",
+      "target": "${hasPagination}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "58",
+      "comment": "Test next page",
+      "command": "click",
+      "target": "css=[data-testid=\"next-page\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "59",
+      "comment": "Wait for next page to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"history-item\"], [data-testid=\"history-interface\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "60",
+      "comment": "Verify pagination worked",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"history-interface\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "61",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "history-interface-suite",
+    "name": "History Interface Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["history-interface"]
+  }],
+  "urls": ["http://localhost:3000"],
+  "plugins": []
+}

@@ -1,0 +1,281 @@
+{
+  "id": "summary-view-test",
+  "version": "2.0",
+  "name": "Summary View Test",
+  "url": "http://localhost:3000",
+  "tests": [{
+    "id": "summary-view",
+    "name": "Summary View",
+    "commands": [{
+      "id": "1",
+      "comment": "Navigate to home page",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2",
+      "comment": "Wait for page to load",
+      "command": "waitForElementVisible",
+      "target": "css=body",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "3",
+      "comment": "Ensure user is logged in",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"logout-button\"]') !== null",
+      "targets": [],
+      "value": "isLoggedIn"
+    }, {
+      "id": "4",
+      "comment": "If not logged in, perform login",
+      "command": "if",
+      "target": "!${isLoggedIn}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5",
+      "command": "click",
+      "target": "css=[data-testid=\"login-button\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "6",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "7",
+      "command": "type",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "test@example.com"
+    }, {
+      "id": "8",
+      "command": "type",
+      "target": "css=[data-testid=\"password-input\"]",
+      "targets": [],
+      "value": "testpassword123"
+    }, {
+      "id": "9",
+      "command": "click",
+      "target": "css=[data-testid=\"login-submit\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "10",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"dashboard\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "11",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "12",
+      "comment": "Navigate to discover interface",
+      "command": "click",
+      "target": "css=[data-testid=\"discover-nav\"]",
+      "targets": [
+        ["css=[data-testid=\"discover-nav\"]", "css:data-testid"],
+        ["css=.discover-nav", "css:class"],
+        ["linkText=Discover", "linkText"]
+      ],
+      "value": ""
+    }, {
+      "id": "13",
+      "comment": "Wait for discover interface to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"discover-interface\"]",
+      "targets": [
+        ["css=[data-testid=\"discover-interface\"]", "css:data-testid"],
+        ["css=.discover-interface", "css:class"]
+      ],
+      "value": "5000"
+    }, {
+      "id": "14",
+      "comment": "Wait for document cards to load",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"document-card\"]",
+      "targets": [
+        ["css=[data-testid=\"document-card\"]", "css:data-testid"],
+        ["css=.document-card", "css:class"]
+      ],
+      "value": "5000"
+    }, {
+      "id": "15",
+      "comment": "Verify document summary is visible on card",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"document-card\"] [data-testid=\"document-summary\"]",
+      "targets": [
+        ["css=[data-testid=\"document-summary\"]", "css:data-testid"],
+        ["css=.document-summary", "css:class"],
+        ["css=.summary", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "16",
+      "comment": "Verify summary has content",
+      "command": "runScript",
+      "target": "var summary = document.querySelector('[data-testid=\"document-summary\"]'); return summary && summary.textContent.trim().length > 0;",
+      "targets": [],
+      "value": "hasSummaryContent"
+    }, {
+      "id": "17",
+      "comment": "Assert summary has content",
+      "command": "assert",
+      "target": "hasSummaryContent",
+      "targets": [],
+      "value": "true"
+    }, {
+      "id": "18",
+      "comment": "Check if Read More button exists",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"read-more-button\"]') !== null || document.querySelector('[data-testid=\"summary-read-more\"]') !== null;",
+      "targets": [],
+      "value": "hasReadMoreButton"
+    }, {
+      "id": "19",
+      "comment": "If Read More button exists, test it",
+      "command": "if",
+      "target": "${hasReadMoreButton}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "20",
+      "comment": "Click Read More button",
+      "command": "click",
+      "target": "css=[data-testid=\"read-more-button\"], [data-testid=\"summary-read-more\"]",
+      "targets": [
+        ["css=[data-testid=\"read-more-button\"]", "css:data-testid"],
+        ["css=[data-testid=\"summary-read-more\"]", "css:data-testid"],
+        ["css=.read-more-btn", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "21",
+      "comment": "Wait for expanded summary or modal to appear",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"full-summary\"], [data-testid=\"summary-modal\"], [data-testid=\"summary-dialog\"]",
+      "targets": [
+        ["css=[data-testid=\"full-summary\"]", "css:data-testid"],
+        ["css=[data-testid=\"summary-modal\"]", "css:data-testid"],
+        ["css=[data-testid=\"summary-dialog\"]", "css:data-testid"],
+        ["css=.summary-modal", "css:class"],
+        ["css=.modal", "css:class"]
+      ],
+      "value": "5000"
+    }, {
+      "id": "22",
+      "comment": "Verify expanded summary is displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"full-summary\"], [data-testid=\"summary-modal\"], [data-testid=\"summary-dialog\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "23",
+      "comment": "Verify expanded summary has more content than card summary",
+      "command": "runScript",
+      "target": "var fullSummary = document.querySelector('[data-testid=\"full-summary\"], [data-testid=\"summary-modal\"] .summary-content, [data-testid=\"summary-dialog\"] .summary-content'); return fullSummary && fullSummary.textContent.trim().length > 50;",
+      "targets": [],
+      "value": "hasFullSummaryContent"
+    }, {
+      "id": "24",
+      "comment": "Assert full summary has substantial content",
+      "command": "assert",
+      "target": "hasFullSummaryContent",
+      "targets": [],
+      "value": "true"
+    }, {
+      "id": "25",
+      "comment": "Close the modal/dialog",
+      "command": "runScript",
+      "target": "var closeBtn = document.querySelector('[data-testid=\"close-modal\"], [data-testid=\"close-dialog\"], .modal-close, .dialog-close'); if(closeBtn) { closeBtn.click(); } else { var modal = document.querySelector('[data-testid=\"summary-modal\"], [data-testid=\"summary-dialog\"]'); if(modal) { var event = new KeyboardEvent('keydown', {key: 'Escape'}); document.dispatchEvent(event); } } return true;",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "26",
+      "comment": "Wait for modal to close",
+      "command": "waitForElementNotVisible",
+      "target": "css=[data-testid=\"summary-modal\"], [data-testid=\"summary-dialog\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "27",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "28",
+      "comment": "Test summary display in different document card",
+      "command": "runScript",
+      "target": "return document.querySelectorAll('[data-testid=\"document-card\"]').length > 1;",
+      "targets": [],
+      "value": "hasMultipleCards"
+    }, {
+      "id": "29",
+      "comment": "If multiple cards exist, test second card summary",
+      "command": "if",
+      "target": "${hasMultipleCards}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "30",
+      "comment": "Verify second card has summary",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"document-card\"]:nth-child(2) [data-testid=\"document-summary\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "31",
+      "comment": "Verify second card summary has content",
+      "command": "runScript",
+      "target": "var secondSummary = document.querySelector('[data-testid=\"document-card\"]:nth-child(2) [data-testid=\"document-summary\"]'); return secondSummary && secondSummary.textContent.trim().length > 0;",
+      "targets": [],
+      "value": "hasSecondSummaryContent"
+    }, {
+      "id": "32",
+      "comment": "Assert second summary has content",
+      "command": "assert",
+      "target": "hasSecondSummaryContent",
+      "targets": [],
+      "value": "true"
+    }, {
+      "id": "33",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "34",
+      "comment": "Verify summaries are formatted as bullet points",
+      "command": "runScript",
+      "target": "var summaries = document.querySelectorAll('[data-testid=\"document-summary\"]'); return Array.from(summaries).some(summary => summary.innerHTML.includes('•') || summary.innerHTML.includes('<li>') || summary.innerHTML.includes('\\n•'));",
+      "targets": [],
+      "value": "hasBulletPoints"
+    }, {
+      "id": "35",
+      "comment": "Assert summaries are in bullet point format",
+      "command": "assert",
+      "target": "hasBulletPoints",
+      "targets": [],
+      "value": "true"
+    }]
+  }],
+  "suites": [{
+    "id": "summary-view-suite",
+    "name": "Summary View Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["summary-view"]
+  }],
+  "urls": ["http://localhost:3000"],
+  "plugins": []
+}

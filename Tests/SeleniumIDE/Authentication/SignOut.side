@@ -1,0 +1,182 @@
+{
+  "id": "sign-out-test",
+  "version": "2.0",
+  "name": "Sign Out Test",
+  "url": "http://localhost:3000",
+  "tests": [{
+    "id": "sign-out",
+    "name": "Sign Out",
+    "commands": [{
+      "id": "1",
+      "comment": "Navigate to home page",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2",
+      "comment": "Wait for page to load",
+      "command": "waitForElementVisible",
+      "target": "css=body",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "3",
+      "comment": "Check if user is logged in",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"logout-button\"]') !== null || document.querySelector('[data-testid=\"user-menu\"]') !== null",
+      "targets": [],
+      "value": "isLoggedIn"
+    }, {
+      "id": "4",
+      "comment": "If not logged in, perform login first",
+      "command": "if",
+      "target": "!${isLoggedIn}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5",
+      "comment": "Click login button",
+      "command": "click",
+      "target": "css=[data-testid=\"login-button\"]",
+      "targets": [
+        ["css=[data-testid=\"login-button\"]", "css:data-testid"],
+        ["css=.login-btn", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "6",
+      "comment": "Wait for login form",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "7",
+      "comment": "Enter email",
+      "command": "type",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "test@example.com"
+    }, {
+      "id": "8",
+      "comment": "Enter password",
+      "command": "type",
+      "target": "css=[data-testid=\"password-input\"]",
+      "targets": [],
+      "value": "testpassword123"
+    }, {
+      "id": "9",
+      "comment": "Submit login",
+      "command": "click",
+      "target": "css=[data-testid=\"login-submit\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "10",
+      "comment": "Wait for login success",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"dashboard\"], [data-testid=\"logout-button\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "11",
+      "comment": "End login conditional",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "12",
+      "comment": "Look for user menu button",
+      "command": "runScript",
+      "target": "return document.querySelector('[data-testid=\"user-menu\"]') !== null",
+      "targets": [],
+      "value": "hasUserMenu"
+    }, {
+      "id": "13",
+      "comment": "If user menu exists, click it first",
+      "command": "if",
+      "target": "${hasUserMenu}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "14",
+      "comment": "Click user menu to open dropdown",
+      "command": "click",
+      "target": "css=[data-testid=\"user-menu\"]",
+      "targets": [
+        ["css=[data-testid=\"user-menu\"]", "css:data-testid"],
+        ["css=.user-menu", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "15",
+      "comment": "Wait for dropdown to appear",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"logout-button\"]",
+      "targets": [],
+      "value": "2000"
+    }, {
+      "id": "16",
+      "comment": "End user menu conditional",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "17",
+      "comment": "Click logout/sign out button",
+      "command": "click",
+      "target": "css=[data-testid=\"logout-button\"]",
+      "targets": [
+        ["css=[data-testid=\"logout-button\"]", "css:data-testid"],
+        ["css=.logout-btn", "css:class"],
+        ["linkText=Logout", "linkText"],
+        ["linkText=Sign Out", "linkText"]
+      ],
+      "value": ""
+    }, {
+      "id": "18",
+      "comment": "Wait for logout to complete and redirect",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"login-button\"]",
+      "targets": [
+        ["css=[data-testid=\"login-button\"]", "css:data-testid"],
+        ["css=.login-btn", "css:class"]
+      ],
+      "value": "5000"
+    }, {
+      "id": "19",
+      "comment": "Verify user is logged out - login button should be visible",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"login-button\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "20",
+      "comment": "Verify logout button is no longer visible",
+      "command": "assertElementNotPresent",
+      "target": "css=[data-testid=\"logout-button\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "21",
+      "comment": "Verify dashboard is not accessible",
+      "command": "assertElementNotPresent",
+      "target": "css=[data-testid=\"dashboard\"]",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "sign-out-suite",
+    "name": "Sign Out Test Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["sign-out"]
+  }],
+  "urls": ["http://localhost:3000"],
+  "plugins": []
+}

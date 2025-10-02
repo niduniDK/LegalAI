@@ -1,0 +1,204 @@
+{
+  "id": "invalid-login-test",
+  "version": "2.0",
+  "name": "Invalid Login Test",
+  "url": "http://localhost:3000",
+  "tests": [{
+    "id": "invalid-login-wrong-password",
+    "name": "Invalid Login - Wrong Password",
+    "commands": [{
+      "id": "1",
+      "comment": "Navigate to login page",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2",
+      "comment": "Wait for page to load",
+      "command": "waitForElementVisible",
+      "target": "css=body",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "3",
+      "comment": "Click login button",
+      "command": "click",
+      "target": "css=[data-testid=\"login-button\"]",
+      "targets": [
+        ["css=[data-testid=\"login-button\"]", "css:data-testid"],
+        ["css=.login-btn", "css:class"],
+        ["linkText=Login", "linkText"]
+      ],
+      "value": ""
+    }, {
+      "id": "4",
+      "comment": "Wait for login form to appear",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "5",
+      "comment": "Enter valid email address",
+      "command": "type",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [
+        ["css=[data-testid=\"email-input\"]", "css:data-testid"],
+        ["css=input[type=\"email\"]", "css:type"],
+        ["name=email", "name"]
+      ],
+      "value": "test@example.com"
+    }, {
+      "id": "6",
+      "comment": "Enter wrong password",
+      "command": "type",
+      "target": "css=[data-testid=\"password-input\"]",
+      "targets": [
+        ["css=[data-testid=\"password-input\"]", "css:data-testid"],
+        ["css=input[type=\"password\"]", "css:type"],
+        ["name=password", "name"]
+      ],
+      "value": "wrongpassword"
+    }, {
+      "id": "7",
+      "comment": "Click submit login",
+      "command": "click",
+      "target": "css=[data-testid=\"login-submit\"]",
+      "targets": [
+        ["css=[data-testid=\"login-submit\"]", "css:data-testid"],
+        ["css=button[type=\"submit\"]", "css:type"],
+        ["css=.login-submit-btn", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "8",
+      "comment": "Wait for error message to appear",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"error-message\"]",
+      "targets": [
+        ["css=[data-testid=\"error-message\"]", "css:data-testid"],
+        ["css=.error-message", "css:class"],
+        ["css=.alert-danger", "css:class"]
+      ],
+      "value": "3000"
+    }, {
+      "id": "9",
+      "comment": "Verify error message is displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"error-message\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "10",
+      "comment": "Verify error message contains expected text",
+      "command": "assertText",
+      "target": "css=[data-testid=\"error-message\"]",
+      "targets": [],
+      "value": "*Invalid*"
+    }, {
+      "id": "11",
+      "comment": "Verify user is still on login page (not redirected)",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"login-submit\"]",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "invalid-login-wrong-email",
+    "name": "Invalid Login - Wrong Email",
+    "commands": [{
+      "id": "1",
+      "comment": "Navigate to login page",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2",
+      "comment": "Wait for page to load",
+      "command": "waitForElementVisible",
+      "target": "css=body",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "3",
+      "comment": "Click login button",
+      "command": "click",
+      "target": "css=[data-testid=\"login-button\"]",
+      "targets": [
+        ["css=[data-testid=\"login-button\"]", "css:data-testid"],
+        ["css=.login-btn", "css:class"]
+      ],
+      "value": ""
+    }, {
+      "id": "4",
+      "comment": "Wait for login form to appear",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "5",
+      "comment": "Enter non-existent email",
+      "command": "type",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [
+        ["css=[data-testid=\"email-input\"]", "css:data-testid"],
+        ["css=input[type=\"email\"]", "css:type"]
+      ],
+      "value": "nonexistent@example.com"
+    }, {
+      "id": "6",
+      "comment": "Enter any password",
+      "command": "type",
+      "target": "css=[data-testid=\"password-input\"]",
+      "targets": [
+        ["css=[data-testid=\"password-input\"]", "css:data-testid"],
+        ["css=input[type=\"password\"]", "css:type"]
+      ],
+      "value": "anypassword"
+    }, {
+      "id": "7",
+      "comment": "Click submit login",
+      "command": "click",
+      "target": "css=[data-testid=\"login-submit\"]",
+      "targets": [
+        ["css=[data-testid=\"login-submit\"]", "css:data-testid"],
+        ["css=button[type=\"submit\"]", "css:type"]
+      ],
+      "value": ""
+    }, {
+      "id": "8",
+      "comment": "Wait for error message",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"error-message\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "9",
+      "comment": "Verify error message is displayed",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"error-message\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "10",
+      "comment": "Verify still on login page",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"login-submit\"]",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "invalid-login-suite",
+    "name": "Invalid Login Test Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["invalid-login-wrong-password", "invalid-login-wrong-email"]
+  }],
+  "urls": ["http://localhost:3000"],
+  "plugins": []
+}

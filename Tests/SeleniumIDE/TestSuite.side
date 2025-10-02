@@ -1,0 +1,277 @@
+{
+  "id": "legalai-complete-test-suite",
+  "version": "2.0",
+  "name": "LegalAI Complete Test Suite",
+  "url": "http://localhost:3000",
+  "tests": [{
+    "id": "complete-authentication-flow",
+    "name": "Complete Authentication Flow",
+    "commands": [{
+      "id": "1",
+      "comment": "Test Valid Login",
+      "command": "run",
+      "target": "Authentication/ValidLogin",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2",
+      "comment": "Test Sign Out",
+      "command": "run",
+      "target": "Authentication/SignOut",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "3",
+      "comment": "Test Invalid Login",
+      "command": "run",
+      "target": "Authentication/InvalidLogin",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "4",
+      "comment": "Test User Registration",
+      "command": "run",
+      "target": "Authentication/UserRegistration",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "complete-chat-functionality",
+    "name": "Complete Chat Functionality",
+    "commands": [{
+      "id": "1",
+      "comment": "Test Send Chat Message",
+      "command": "run",
+      "target": "Chat/SendChatMessage",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2",
+      "comment": "Test Document Summary Chat",
+      "command": "run",
+      "target": "Chat/DocumentSummaryChat",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "3",
+      "comment": "Test View Previous Chat",
+      "command": "run",
+      "target": "Chat/ViewPreviousChat",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "complete-document-functionality",
+    "name": "Complete Document Functionality",
+    "commands": [{
+      "id": "1",
+      "comment": "Test Document Search",
+      "command": "run",
+      "target": "Documents/DocumentSearch",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2",
+      "comment": "Test Summary View",
+      "command": "run",
+      "target": "Documents/SummaryView",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "3",
+      "comment": "Test Document View",
+      "command": "run",
+      "target": "Documents/DocumentView",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "complete-navigation-functionality",
+    "name": "Complete Navigation Functionality",
+    "commands": [{
+      "id": "1",
+      "comment": "Test Recommendation Interface",
+      "command": "run",
+      "target": "Navigation/RecommendationInterface",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2",
+      "comment": "Test History Interface",
+      "command": "run",
+      "target": "Navigation/HistoryInterface",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "quick-smoke-test",
+    "name": "Quick Smoke Test",
+    "commands": [{
+      "id": "1",
+      "comment": "Navigate to home page",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2",
+      "comment": "Wait for page load",
+      "command": "waitForElementVisible",
+      "target": "css=body",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "3",
+      "comment": "Quick login test",
+      "command": "click",
+      "target": "css=[data-testid=\"login-button\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "4",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "3000"
+    }, {
+      "id": "5",
+      "command": "type",
+      "target": "css=[data-testid=\"email-input\"]",
+      "targets": [],
+      "value": "test@example.com"
+    }, {
+      "id": "6",
+      "command": "type",
+      "target": "css=[data-testid=\"password-input\"]",
+      "targets": [],
+      "value": "testpassword123"
+    }, {
+      "id": "7",
+      "command": "click",
+      "target": "css=[data-testid=\"login-submit\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "8",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"dashboard\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "9",
+      "comment": "Test navigation to each interface",
+      "command": "click",
+      "target": "css=[data-testid=\"discover-nav\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "10",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"discover-interface\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "11",
+      "command": "click",
+      "target": "css=[data-testid=\"chat-nav\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "12",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"chat-interface\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "13",
+      "command": "click",
+      "target": "css=[data-testid=\"recommendation-nav\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "14",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"recommendation-interface\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "15",
+      "command": "click",
+      "target": "css=[data-testid=\"history-nav\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "16",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"history-interface\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "17",
+      "comment": "Test logout",
+      "command": "runScript",
+      "target": "var userMenu = document.querySelector('[data-testid=\"user-menu\"]'); if(userMenu) userMenu.click(); return true;",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "18",
+      "command": "click",
+      "target": "css=[data-testid=\"logout-button\"]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "19",
+      "command": "waitForElementVisible",
+      "target": "css=[data-testid=\"login-button\"]",
+      "targets": [],
+      "value": "5000"
+    }, {
+      "id": "20",
+      "comment": "Verify successful logout",
+      "command": "assertElementPresent",
+      "target": "css=[data-testid=\"login-button\"]",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "full-regression-suite",
+    "name": "Full Regression Test Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 600,
+    "tests": [
+      "complete-authentication-flow",
+      "complete-chat-functionality", 
+      "complete-document-functionality",
+      "complete-navigation-functionality"
+    ]
+  }, {
+    "id": "smoke-test-suite",
+    "name": "Smoke Test Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 180,
+    "tests": ["quick-smoke-test"]
+  }, {
+    "id": "authentication-suite",
+    "name": "Authentication Test Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["complete-authentication-flow"]
+  }, {
+    "id": "functional-suite",
+    "name": "Functional Test Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 450,
+    "tests": [
+      "complete-chat-functionality",
+      "complete-document-functionality",
+      "complete-navigation-functionality"
+    ]
+  }],
+  "urls": ["http://localhost:3000"],
+  "plugins": []
+}
