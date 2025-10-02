@@ -1,0 +1,667 @@
+[
+  {
+    "input": "How is murder defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 294",
+    "output": "Except in the cases hereinafter excepted, culpable homicide is murder—Firstly—If the act by which the death is caused is done with the intention of causing death; or Secondly—If it is done with the intention of causing such bodily injury as the offender knows to be likely to cause the death of the person to whom the harm is caused; or Thirdly—If it is done with the intention of causing bodily injury to any person and the bodily injury intended to be inflicted is sufficient in the ordinary course of nature to cause death; or Fourthly—If the person committing the act knows that it is so imminently dangerous that it must, in all probability, cause death, or such bodily injury as is likely to cause death, and commits such act without any excuse for incurring the risk of causing death or such injury as aforesaid."
+  },
+  {
+    "input": "What is the definition of culpable homicide in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 293",
+    "output": "Whoever causes death by doing an act with the intention of causing death, or with the intention of causing such bodily injury as is likely to cause death, or with the knowledge that he is likely by such act to cause death, commits the offence of culpable homicide."
+  },
+  {
+    "input": "How is attempt to murder defined under the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 299",
+    "output": "Whoever attempts to commit murder, and in such attempt does any act under such circumstances that if he by that act caused death he would be guilty of murder, shall be punished with imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine; and if hurt is caused to any person thereby, the offender shall be liable either to imprisonment for life or to such punishment as is hereinbefore mentioned."
+  },
+  {
+    "input": "Define attempt to commit culpable homicide in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 298",
+    "output": "Whoever attempts to commit culpable homicide, and in such attempt does any act under such circumstances that if he by that act caused death he would be guilty of culpable homicide, shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both; and if hurt is caused to any person thereby, the offender shall be liable either to imprisonment for life or to such punishment as is hereinbefore mentioned."
+  },
+  {
+    "input": "What constitutes theft according to the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 366",
+    "output": "Whoever, intending to take dishonestly any movable property out of the possession of any person without that person's consent, moves that property in order to such taking, is said to commit 'theft'."
+  },
+  {
+    "input": "How is robbery defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 379",
+    "output": "In all robbery there is either theft or extortion. Theft is 'robbery' if, in order to the committing of the theft, or in committing the theft, or in carrying away or attempting to carry away property obtained by theft, the offender, at the time of or immediately before or immediately after the commission of that act, voluntarily causes or attempts to cause to any person death or hurt or wrongful restraint, or fear of instant death or of instant hurt or of instant wrongful restraint."
+  },
+  {
+    "input": "Define extortion under the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 372",
+    "output": "Whoever intentionally puts any person in fear of any injury to that person or to any other, and thereby dishonestly induces the person so put in fear to deliver to any person any property or valuable security, or anything signed or sealed which may be converted into a valuable security, commits 'extortion'."
+  },
+  {
+    "input": "What is criminal breach of trust as per the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 388",
+    "output": "Whoever, being in any manner entrusted with property, or with any dominion over property, dishonestly misappropriates or converts to his own use that property, or dishonestly uses or disposes of that property in violation of any direction of law prescribing the mode in which such trust is to be discharged, or of any legal contract, express or implied, which he has made touching the discharge of such trust, or wilfully suffers any other person so to do, commits 'criminal breach of trust'."
+  },
+  {
+    "input": "How is cheating defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 398",
+    "output": "Whoever, by deceiving any person, fraudulently or dishonestly induces the person so deceived to deliver any property to any person, or to consent that any person shall retain any property, or intentionally induces the person so deceived to do or omit to do anything which he would not do or omit if he were not so deceived, and which act or omission causes or is likely to cause damage or harm to that person in body, mind, reputation or property, is said to 'cheat'."
+  },
+  {
+    "input": "Define mischief in the context of the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 408",
+    "output": "Whoever, with intent to cause, or knowing that he is likely to cause, wrongful loss or damage to the public or to any person, causes the destruction of any property, or any such change in any property or in the situation thereof as destroys or diminishes its value or utility or affects it injuriously, commits 'mischief'."
+  },
+  {
+    "input": "What is the legal definition of criminal trespass in Sri Lanka?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 427",
+    "output": "Whoever enters into or upon property in the possession of another with intent to commit an offence or to intimidate, insult, or annoy any such person, or with intent to commit an offence, is said to commit 'criminal trespass'."
+  },
+  {
+    "input": "How does the Sri Lanka Penal Code define defamation?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 479",
+    "output": "Whoever, by words either spoken or intended to be read, or by signs or by visible representations, makes or publishes any imputation concerning any person, intending to harm, or knowing or having reason to believe that such imputation will harm the reputation of such person, is said, except in the cases hereinafter excepted, to defame that person."
+  },
+  {
+    "input": "Define rape under the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 363",
+    "output": "A man is said to commit 'rape' who has sexual intercourse with a woman under circumstances falling under any of the following descriptions: First—Against her will; Secondly—Without her consent; Thirdly—With her consent, when her consent has been obtained by putting her in fear of death or of hurt; Fourthly—With her consent, when the man knows that he is not her husband and that her consent is given because she believes that he is another man to whom she is or believes herself to be lawfully married; Fifthly—With or without her consent, when she is under sixteen years of age."
+  },
+  {
+    "input": "What constitutes an assault according to the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 342",
+    "output": "Whoever makes any gesture, or any preparation intending or knowing it to be likely that such gesture or preparation will cause any person present to apprehend that he who makes that gesture or preparation is about to use criminal force to that person, is said to commit 'an assault'."
+  },
+  {
+    "input": "How is rioting defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 143",
+    "output": "Whenever force or violence is used by an unlawful assembly, or by any member thereof, in prosecution of the common object of such assembly, every member of such assembly is guilty of the offence of rioting."
+  },
+  {
+    "input": "Define unlawful assembly under the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 138",
+    "output": "An assembly of five or more persons is designated an 'unlawful assembly' if the common object of the persons composing that assembly—Firstly—To overawe by criminal force, or show of criminal force, the Government of Sri Lanka, or any public servant in the exercise of the lawful power of such public servant; or Secondly—To resist the execution of any law, or of any legal process; or Thirdly—To commit any mischief or criminal trespass, or other offence; or Fourthly—By means of criminal force, or show of criminal force, to any person, to take or obtain possession of any property, or to deprive any person of the enjoyment of a right of way, or of the use of water or other incorporeal right of which he is in possession or enjoyment, or to enforce any right or supposed right; or Fifthly—By means of criminal force, or show of criminal force, to compel any person to do what he is legally bound to do, or to omit to do what he is legally entitled to do."
+  },
+  {
+    "input": "What is forgery as defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 450",
+    "output": "Whoever makes any false document or part of a document with intent to cause damage or injury, to the public or to any person, or to support any claim or title, or to cause any person to part with property, or to enter into any express or implied contract, or with intent to commit fraud, or that fraud may be committed, commits forgery."
+  },
+  {
+    "input": "Define counterfeiting of coin in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 218",
+    "output": "Whoever counterfeits or knowingly performs any part of the process of counterfeiting any coin."
+  },
+  {
+    "input": "How is a public servant defined under the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 19",
+    "output": "The words 'public servant' denote a person falling under any of the descriptions hereinafter following, namely: Firstly—Every person holding any office in Sri Lanka by virtue of any commission or warrant granted by the President or under the President's authority. Secondly—Every member of the Sri Lanka Administrative Service. Thirdly—Every commissioned officer in the naval, military or air forces of the Republic. Fourthly—Every judge. Fifthly—Every officer of a Court whose duty it is, as such officer, to investigate or report on any matter of law or fact, or to make, authenticate, or keep any document, or to take charge or dispose of any property, or to execute any judicial process, or to administer any oath, or to interpret, or to preserve order in the Court, and every person specially authorized by a Court to perform any of such duties. [And further descriptions up to Twelfthly—Every person who is empowered to prepare, publish, maintain, or revise an electoral roll or to conduct an election or part of an election.]"
+  },
+  {
+    "input": "What is bribery in connection with elections in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 169D",
+    "output": "Whoever gives a gratification to any person with the object of inducing him or any other person to exercise any electoral right or of rewarding him or any other person for having exercised an electoral right, or for inducing or attempting to induce any other person to exercise any such right; commits the offence of bribery."
+  },
+  {
+    "input": "Define abetment of an offence in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 102",
+    "output": "A person abets the doing of a thing, who—First—Instigates any person to do that thing; or Secondly—Engages with one or more other person or persons in any conspiracy for the doing of that thing, if an act or illegal omission takes place in pursuance of that conspiracy, and in order to the doing of that thing; or Thirdly—Intentionally aids, by any act or illegal omission, the doing of that thing."
+  },
+  {
+    "input": "How is wrongful confinement defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 334",
+    "output": "Whoever wrongfully restrains any person in such a manner as to prevent that person from proceeding beyond certain circumscribing limits is said to 'wrongfully confine' that person."
+  },
+  {
+    "input": "What constitutes voluntarily causing hurt in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 311",
+    "output": "Whoever voluntarily causes hurt, if the hurt which he intends to cause or knows himself to be likely to cause is grievous hurt, and if the hurt which he causes is grievous hurt, is said 'voluntarily to cause grievous hurt'. Explanation.—A person is not said voluntarily to cause hurt except when he intentionally or knowingly causes hurt."
+  },
+  {
+    "input": "Define grievous hurt under the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 310",
+    "output": "The following kinds of hurt only are designated as 'grievous': First—Emasculation; Secondly—Permanent privation of the sight of either eye; Thirdly—Permanent privation of the hearing of either ear; Fourthly—Privation of any member or joint; Fifthly—Destruction or permanent impairing of the powers of any member or joint; Sixthly—Permanent disfiguration of the head or face; Seventhly—Fracture or dislocation of a bone or tooth; Eighthly—Any hurt which endangers life or which causes the sufferer to be during twenty days in severe bodily pain, or unable to follow his ordinary pursuits."
+  },
+  {
+    "input": "How is house-trespass defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 437",
+    "output": "Whoever commits criminal trespass by entering into or remaining in any building, tent or vessel used as a human dwelling or any building used as a place for worship, or as a place for the custody of property, is said to commit 'house-trespass'."
+  },
+  {
+    "input": "Define lurking house-trespass in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 440",
+    "output": "Whoever commits house-trespass having taken precautions to conceal such house-trespass from some person who has a right to exclude or eject the trespasser from the building, tent or vessel which is the subject of the house-trespass, is said to commit 'lurking house-trespass'."
+  },
+  {
+    "input": "What is criminal intimidation as per the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 483",
+    "output": "Whoever threatens another with any injury to his person, reputation or property, or to the person or reputation of any one in whom that person is interested, with intent to cause alarm to that person, or to cause that person to do any act which he is not legally bound to do, or to omit to do any act which that person is legally entitled to do, as the means of avoiding the execution of such threat, commits criminal intimidation."
+  },
+  {
+    "input": "Define insult with intent to provoke a breach of the peace in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 485",
+    "output": "Whoever intentionally insults, and thereby disturbs the public peace, or with intent to provoke a breach of the peace, or to provoke any other person to commit an offence, shall be punished with simple imprisonment for a term which may extend to two years, or with fine, or with both."
+  },
+  {
+    "input": "How is public nuisance defined under the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 270",
+    "output": "Whoever does any act, or is guilty of an illegal omission which causes any injury, danger or annoyance to the public or to the people in general who dwell or occupy property in the vicinity, or which must necessarily cause injury, obstruction, danger or annoyance to persons who may have occasion to use any public right of way, line of navigation or place dedicated publicly for amusement or recreation, commits a 'common nuisance' and is said to commit a 'public nuisance'."
+  },
+  {
+    "input": "Define adultery in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 362",
+    "output": "Whoever has sexual intercourse with a person who is and whom he knows or has reason to believe to be the wife of another man, without the consent or connivance of that man, such sexual intercourse not amounting to the offence of rape, is guilty of the offence of adultery."
+  },
+  {
+    "input": "What constitutes bigamy under the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 361",
+    "output": "Whoever, having a husband or wife living, marries in any case in which such marriage is void by reason of its taking place during the life of such husband or wife, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine."
+  },
+  {
+    "input": "Define enticement of a married woman in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 496",
+    "output": "Whoever takes or entices away any woman who is and whom he knows or has reason to believe to be the wife of any other man, from that man, without the consent of such man, shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both."
+  },
+  {
+    "input": "How is dacoity defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 395",
+    "output": "When five or more persons conjointly commit or attempt to commit a robbery, or where the whole number of persons conjointly committing or attempting to commit a robbery, and persons present and aiding such commission or attempt, amount to five or more, every person so committing, attempting or aiding, is said to commit 'dacoity'."
+  },
+  {
+    "input": "Define receiving stolen property under the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 393",
+    "output": "Property, the possession whereof has been transferred by theft, or by extortion, or by robbery, or by forgery, or by cheating, and property which has been criminally misappropriated or in respect of which criminal breach of trust has been committed, is designated as 'stolen property', whether the transfer has been made, or the misappropriation or breach of trust has been committed, within or without Sri Lanka. Whoever dishonestly receives or retains any stolen property, knowing or having reason to believe the same to have been stolen, shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both."
+  },
+  {
+    "input": "What is dishonest misappropriation of property in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 386",
+    "output": "Whoever dishonestly misappropriates or converts to his own use any movable property, shall be punished with imprisonment of either description for a term which shall not be less than six weeks but which may extend to two years, and shall also be liable to fine."
+  },
+  {
+    "input": "Define criminal misappropriation of property under the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 386",
+    "output": "Whoever dishonestly misappropriates or converts to his own use any movable property, shall be punished with imprisonment of either description for a term which shall not be less than six weeks but which may extend to two years, and shall also be liable to fine."
+  },
+  {
+    "input": "How is house-breaking defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 432",
+    "output": "A person is said to commit 'house-breaking' who commits house-trespass if he effects his entrance into the house or any part of it in any of the six ways hereinafter mentioned; or If he effects his entrance into the house or any part of it after having made any preparation for causing hurt, or for assaulting or putting any person in confinement, or for putting any person in fear of hurt or of assault or of wrongful restraint."
+  },
+  {
+    "input": "Define voluntarily causing grievous hurt in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 312",
+    "output": "Whoever voluntarily causes hurt, if the hurt which he intends to cause or knows himself to be likely to cause is grievous hurt, and if the hurt which he causes is grievous hurt, is said 'voluntarily to cause grievous hurt'."
+  },
+  {
+    "input": "What constitutes kidnapping from Sri Lanka in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 357",
+    "output": "Whoever conveys any person beyond the limits of Sri Lanka without the consent of that person, or of some person legally authorized to consent on behalf of that person, is said to kidnap that person from Sri Lanka."
+  },
+  {
+    "input": "Define kidnapping from lawful guardianship under the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 356",
+    "output": "Whoever takes or entices away any minor or any person of unsound mind out of the keeping of the lawful guardian of such minor or person of unsound mind, without the consent of such guardian, is said to kidnap such minor or person from lawful guardianship."
+  },
+  {
+    "input": "How is abduction defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 362",
+    "output": "Whoever by force compels, or by any deceitful means induces any person to go from any place, is said to abduct that person."
+  },
+  {
+    "input": "Define using criminal force under the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 340",
+    "output": "A person is said to use force to another if he causes motion, change of motion, or cessation of the motion of any substance by controlling some actual or virtual power over that substance, and such act is done in order to the committing of an offence."
+  },
+  {
+    "input": "What is wrongful restraint as per the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 331",
+    "output": "Whoever voluntarily obstructs any person so as to prevent that person from proceeding in any direction in which that person has a right to proceed, is said wrongfully to restrain that person."
+  },
+  {
+    "input": "Define affray in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 153",
+    "output": "When two or more persons, by fighting in a public place, disturb the public peace, they are said to 'commit an affray'."
+  },
+  {
+    "input": "How is promoting enmity between different groups defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 120",
+    "output": "Whoever—(a) by words either spoken or written, or by signs or by visible representations or otherwise,—(i) promotes or attempts to promote, feelings of enmity or hatred between different classes of persons; or (ii) commits any act which is prejudicial to the maintenance of harmony between Sri Lankans or persons of different religious faiths and beliefs and which disturbs or is likely to disturb the public tranquillity; or (b) organizes, promotes, or participates in any activity which is prejudicial to the maintenance of harmony between Sri Lankans or persons of different religious faiths and beliefs and which disturbs or is likely to disturb the public tranquillity; shall be punished with imprisonment of either description for a term which may extend to five years."
+  },
+  {
+    "input": "Define false evidence in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 191",
+    "output": "Whoever, either in a Court of Justice or in any other matter in which an oath or affirmation is required or authorized by law, or in any affidavit, solemn declaration or other writing made under any provision of law for the purpose of being used in any Court of Justice or in any other matter in which an oath or affirmation is required or authorized by law, swears, affirms or declares falsely any matter, knowing it to be false, or not believing it to be true, is said to give false evidence."
+  },
+  {
+    "input": "What is fabrication of false evidence under the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 192",
+    "output": "Whoever causes any circumstance to exist, or makes any false entry in any book or record, or electronic record, or gives any information touching any matter, intending that such circumstance, false entry, or information shall appear in evidence in a judicial proceeding, or in any stage of a judicial proceeding, as genuine, or shall be believed to have so appeared in evidence, is said to 'fabricate false evidence'."
+  },
+  {
+    "input": "Define giving false information respecting an offence in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 180",
+    "output": "Whoever, knowing or having reason to believe that an offence has been committed, gives any information respecting that offence which he knows or believes to be false, shall be punished with imprisonment of either description for a term which may extend to six months, or with fine which may extend to one thousand rupees, or with both."
+  },
+  {
+    "input": "How is false personation defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 399",
+    "output": "Whoever cheats by personation shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both."
+  },
+  {
+    "input": "Define dishonestly receiving stolen property in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 394",
+    "output": "Whoever dishonestly receives or retains any stolen property, knowing or having reason to believe the same to have been stolen, shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both."
+  },
+  {
+    "input": "What constitutes assisting in concealment of stolen property under the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 395",
+    "output": "Whoever, knowing or having reason to believe that any property has been obtained, retained or disposed of by means of any act, omission or connivance which constitutes an offence, voluntarily assists in concealing or disposing of such property, shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both."
+  },
+  {
+    "input": "Define dishonestly removing or concealing property in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 406",
+    "output": "Whoever dishonestly or fraudulently conceals, removes, or transfers any property, knowing that such property has been attached or is intended to be attached by a Court of Justice, or is so disposed of as to prevent it from being taken in execution of a decree, shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both."
+  },
+  {
+    "input": "How is causing miscarriage defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 303",
+    "output": "Whoever voluntarily causes a woman with child to miscarry, shall, if such miscarriage be not caused in good faith for the purpose of saving the life of the woman, be punished with imprisonment of either description for a term which may extend to seven years, or with fine, or with both."
+  },
+  {
+    "input": "Define child-stealing in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 308",
+    "output": "Whoever sells, lets to hire, or otherwise disposes of any child under the age of twelve years with intent that such child shall at any age be employed or used for the purpose of prostitution or illicit intercourse with any person or for any unlawful and immoral purpose, or knowing it to be likely that such child will at any age be employed or used for any such purpose, shall be punished with imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine."
+  },
+  {
+    "input": "What is unnatural offence under the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 365",
+    "output": "Whoever voluntarily has carnal intercourse against the order of nature with any man, woman or animal, shall be punished with imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine."
+  },
+  {
+    "input": "Define selling minor for purposes of prostitution in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 360",
+    "output": "Whoever sells, lets to hire, or otherwise disposes of any child under the age of eighteen years with intent that such child shall at any age be employed or used for the purpose of prostitution or illicit intercourse with any person or for any unlawful and immoral purpose, or knowing it to be likely that such child will at any age be employed or used for any such purpose, shall be punished with imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine."
+  },
+  {
+    "input": "How is buying minor for purposes of prostitution defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 361",
+    "output": "Whoever buys, hires or otherwise obtains possession of any child under the age of eighteen years with intent that such child shall at any age be employed or used for the purpose of prostitution or illicit intercourse with any person or for any unlawful and immoral purpose, or knowing it to be likely that such child will at any age be employed or used for any such purpose, shall be punished with imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine."
+  },
+  {
+    "input": "Define importing girl or boy from foreign country in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 362A",
+    "output": "Whoever imports into Sri Lanka from any country outside Sri Lanka any girl or boy under the age of twenty-one years with intent that she or he may be, or knowing it to be likely that she or he will be, used as a prostitute or in any other unlawful and immoral purpose, shall be punished with imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine."
+  },
+  {
+    "input": "What constitutes causing death by negligence in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 298A",
+    "output": "Whoever causes the death of any person by doing any rash or negligent act not amounting to culpable homicide shall be punished with imprisonment of either description for a term which may extend to five years, or with fine, or with both."
+  },
+  {
+    "input": "Define rash and negligent acts endangering human life in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 336",
+    "output": "Whoever does any act so rashly or negligently as to endanger human life, or the personal safety of others, shall be punished with imprisonment of either description for a term which may extend to three months, or with fine which may extend to two hundred and fifty rupees, or with both."
+  },
+  {
+    "input": "How is endangering life or personal safety of others defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 337",
+    "output": "Whoever does any act so rashly or negligently as to endanger human life, or the personal safety of others, or to be likely to cause hurt or grievous hurt to any person, shall be punished with imprisonment of either description for a term which may extend to three months, or with fine which may extend to two hundred and fifty rupees, or with both."
+  },
+  {
+    "input": "Define omission to give notice of offence in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 112",
+    "output": "Whoever, knowing or having reason to believe that any offence has been committed, intentionally omits to give any information respecting that offence which he is legally bound to give, shall be punished with imprisonment of either description for a term which may extend to six months, or with fine which may extend to one thousand rupees, or with both."
+  },
+  {
+    "input": "What is harbouring an offender in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 109",
+    "output": "Whoever, knowing or having reason to believe that an offence has been committed, harbours or conceals the offender with intent to screen him from legal punishment, shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both."
+  },
+  {
+    "input": "Define taking gift to screen an offender from punishment in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 110",
+    "output": "Whoever accepts or agrees to accept any gratification for himself or any other person, or any restitution of property to himself or any other person, in consideration of his screening any offender from punishment, or of his omitting to do what is in his power to do to bring an offender to justice, shall be punished with imprisonment of either description for a term which may extend to seven years, or with fine, or with both."
+  },
+  {
+    "input": "How is offering gift to public servant in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 162",
+    "output": "Whoever offers any gratification to a public servant, with the object of inducing that public servant to do any act contrary to his duty, or to forbear to do any act required by his duty, shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both."
+  },
+  {
+    "input": "Define taking gratification by public servant in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 161",
+    "output": "Whoever, being a public servant, accepts or obtains, or agrees to accept or attempts to obtain, for himself or for any other person, any gratification whatever, other than legal remuneration, as a motive or reward for doing or forbearing to do any official act, or for showing or forbearing to show, in the exercise of his official functions, favour or disfavour to any person, or for rendering or attempting to render any service or disservice to any person, with the Parliament or with any public officer, as such, shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both."
+  },
+  {
+    "input": "What is disobedience to order duly promulgated by public servant in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 174",
+    "output": "Whoever, being legally bound to attend in person or by an agent at a certain place and time in obedience to a summons, notice, order, or proclamation proceeding from any public servant legally competent, as such public servant, to issue the same, intentionally omits to attend at that place or time, or departs from the place where he is bound to attend before the time at which it is lawful for him to depart, shall be punished with simple imprisonment for a term which may extend to one month, or with fine which may extend to five hundred rupees, or with both."
+  },
+  {
+    "input": "Define neglect of duty by public servant in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 408",
+    "output": "Whoever, being a public servant and being, as such public servant, charged with the performance of any duty, intentionally omits to perform such duty, or intentionally performs it in a negligent manner, shall be punished with simple imprisonment for a term which may extend to one year, or with fine, or with both."
+  },
+  {
+    "input": "How is screening offender from punishment defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 201",
+    "output": "Whoever, knowing or having reason to believe that any act has been done which constitutes an offence, voluntarily secretes, destroys, alters or causes any destruction, alteration, or secretion of any property, or gives any information respecting the offence which he knows or believes to be false, with intent to screen the offender from legal punishment, shall be punished with imprisonment of either description for a term which may extend to seven years, or with fine, or with both."
+  },
+  {
+    "input": "Define intentional omission to apprehend in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 202",
+    "output": "Whoever, knowing of the commission of any offence, intentionally omits to give any information respecting that offence which he is legally bound to give, shall be punished with imprisonment of either description for a term which may extend to six months, or with fine which may extend to one thousand rupees, or with both."
+  },
+  {
+    "input": "What is fraudulent claim to property in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 403",
+    "output": "Whoever fraudulently, or in order to the conversion to his own use of any property, makes or publishes any false claim, intending that such claim shall be believed, and thereby to procure the disposition of such property, shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both."
+  },
+  {
+    "input": "Define tampering with or destroying will in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 477",
+    "output": "Whoever, in the exercise of his employment as a clerk or servant, fraudulently or dishonestly destroys, defaces, or alters any will or other testamentary document, or any valuable security, knowing the same to be in the possession of his master or employer, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine."
+  },
+  {
+    "input": "How is fraudulent removal or concealment of property defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 424",
+    "output": "Whoever dishonestly or fraudulently conceals, removes, or transfers any property, knowing that such property has been attached or is intended to be attached by a Court of Justice, or is so disposed of as to prevent it from being taken in execution of a decree, shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both."
+  },
+  {
+    "input": "Define mischief by killing or maiming animal in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 428",
+    "output": "Whoever commits mischief by killing, poisoning, maiming or rendering useless, any animal or animals of the value of fifty rupees or upwards, shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both."
+  },
+  {
+    "input": "What is mischief by injury to works of irrigation in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 430",
+    "output": "Whoever commits mischief by doing any act which causes, or is likely to cause, a diminution of the supply of water for agricultural purposes, or for food or drink for human beings or animals, or for any other purpose, shall be punished with imprisonment of either description for a term which may extend to five years, or with fine, or with both."
+  },
+  {
+    "input": "Define dishonestly removing boundary mark in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 434",
+    "output": "Whoever commits mischief by removing, destroying, defacing or otherwise altering any land-mark fixed by public authority, shall be punished with imprisonment of either description for a term which may extend to one year, or with fine, or with both."
+  },
+  {
+    "input": "How is making or possessing counterfeit seal defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 472",
+    "output": "Whoever makes or has in his possession any die, plate or other instrument for the purpose of counterfeiting any seal, with intent to use the same for the purpose of committing any forgery punishable under section 456, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine."
+  },
+  {
+    "input": "Define having possession of forged document in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 474",
+    "output": "Whoever has in his possession or control any document, knowing or having reason to believe that the same is forged, and intending that the same shall be fraudulently or dishonestly used as a genuine, shall be punished with imprisonment of either description for a term which may extend to seven years, or with fine, or with both."
+  },
+  {
+    "input": "What constitutes counterfeiting property-mark in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 479",
+    "output": "Whoever counterfeits any property-mark used by any other person with intent to cause damage or injury to the value or affecting the property of the owner of such mark, shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both."
+  },
+  {
+    "input": "Define using a false property-mark in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 480",
+    "output": "Whoever marks any movable property or goods or any animal with a false trade-mark or property-mark, or uses as a trade-mark or property-mark for goods or things any mark in imitation of or similar to the trade-mark or property-mark of another person, with intent to cause injury to the business of that person, or with intent to deceive the public into believing that the goods are the goods of that person, shall be punished with imprisonment of either description for a term which may extend to one year, or with fine, or with both."
+  },
+  {
+    "input": "How is counterfeiting currency notes defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 489A",
+    "output": "Whoever forges or counterfeits, or knowingly performs any part of the process of forging or counterfeiting, any currency note or bank note shall be punished with imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine."
+  },
+  {
+    "input": "Define abetment of mutiny in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 131",
+    "output": "Whoever abets the mutiny, or attempts to seduce any officer, sailor, soldier, or airman in the Sri Lanka Navy, Sri Lanka Army or Sri Lanka Air Force from his duty or allegiance to the Republic, shall be punished with imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine."
+  },
+  {
+    "input": "What is sedition under the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 120",
+    "output": "No direct definition found in search, but related to promoting enmity or hatred between classes."
+  },
+  {
+    "input": "Define contempt of the lawful authority of public servants in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 176",
+    "output": "Whoever intentionally offers any resistance or illegal obstruction to the lawful apprehension of himself or any other person, or intentionally neglects or refuses to aid or assist a public officer in the discharge of his duty when so required by such public officer, shall be punished with imprisonment of either description for a term which may extend to six months, or with fine which may extend to one thousand rupees, or with both."
+  },
+  {
+    "input": "How is disobedience to summons defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 174",
+    "output": "Whoever, being legally bound to attend in person or by an agent at a certain place and time in obedience to a summons, notice, order, or proclamation proceeding from any public servant legally competent, as such public servant, to issue the same, intentionally omits to attend at that place or time, shall be punished with simple imprisonment for a term which may extend to one month, or with fine which may extend to five hundred rupees, or with both."
+  },
+  {
+    "input": "Define non-attendance in obedience to an order from public servant in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 175",
+    "output": "Whoever, being legally bound to attend at a certain place and time in obedience to a summons, notice, order, or proclamation proceeding from any public servant legally competent, as such public servant, to issue the same, intentionally omits to attend at that place or time, or departs from the place where he is bound to attend before the time at which it is lawful for him to depart, shall be punished with simple imprisonment for a term which may extend to six months, or with fine which may extend to one thousand rupees, or with both."
+  },
+  {
+    "input": "What is false information with intent to cause public servant to use his lawful power to the injury of another person in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 182",
+    "output": "Whoever gives to any public servant any information which he knows or believes to be false, intending thereby to cause, or knowing it to be likely that he will thereby cause, such public servant—(a) to do or omit anything which such public servant ought not to do or omit if the true state of facts respecting which such information is given were known by him; or (b) to use the lawful power of such public servant to the injury or annoyance of any person; shall be punished with imprisonment of either description for a term which may extend to six months, or with fine which may extend to one thousand rupees, or with both."
+  },
+  {
+    "input": "Define resistance or obstruction by distress to lawful apprehension in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 183",
+    "output": "Whoever offers any resistance to the taking of any property by the lawful authority of any public servant, knowing or having reason to believe that he is such public servant, shall be punished with imprisonment of either description for a term which may extend to six months, or with fine which may extend to one thousand rupees, or with both."
+  },
+  {
+    "input": "How is threatening a public servant in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 189",
+    "output": "Whoever holds out any threat of injury to any public servant, or to any person in whom any such public servant is interested, for the purpose of inducing that public servant to do any act, or to forbear or delay to do any act, connected with the exercise of the public functions of such public servant, shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both."
+  },
+  {
+    "input": "Define false statement on oath or affirmation in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 190",
+    "output": "Whoever, in any judicial proceeding, or in any proceeding taken under any law for the time being in force for the collection of revenue, or in any statement required or authorized by law to be made under penalty of perjury, swears, affirms or declares falsely any matter, knowing it to be false, or not believing it to be true, is said to give false evidence."
+  },
+  {
+    "input": "What is fabrication of false evidence in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 192",
+    "output": "Whoever causes any circumstance to exist, or makes any false entry in any book or record, or gives any information touching any matter, intending that such circumstance, false entry, or information shall appear in evidence in a judicial proceeding, or in any stage of a judicial proceeding, as genuine, or shall be believed to have so appeared in evidence, is said to 'fabricate false evidence'."
+  },
+  {
+    "input": "Define threatening any person to give false evidence in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 194",
+    "output": "Whoever threatens any person with any injury, with intent to induce such person to give false evidence in any stage of a judicial proceeding, shall be punished with imprisonment of either description for a term which may extend to seven years, or with fine, or with both."
+  },
+  {
+    "input": "How is issuing false certificate by public servant defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 197",
+    "output": "Whoever, being a public servant, knowingly issues any false certificate or other public document, or makes or signs any false statement in any public document, with intent to cause injury to any person, or to deceive any person, shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both."
+  },
+  {
+    "input": "Define personation of a public servant in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 179",
+    "output": "Whoever falsely personates any public servant, and in such assumed character does or attempts to do any act or takes or attempts to take any proceeding under colour of such assumed office, shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both."
+  },
+  {
+    "input": "What is wearing garb or carrying token used by public servant in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 178",
+    "output": "Whoever, not belonging to a certain class of public servants, wears any garb or carries any token resembling any garb or token used by that class of public servants, with intent that it may be believed, or with reason to believe that it will be believed, that he belongs to that class of public servants, shall be punished with imprisonment of either description for a term which may extend to three months, or with fine which may extend to two hundred rupees, or with both."
+  },
+  {
+    "input": "Define refusal to answer public servant authorized to question in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 173",
+    "output": "Whoever, being legally bound to state the truth on any subject to any public servant, refuses to answer any question demanded of him touching that subject by such public servant in the exercise of the legal powers of such public servant, shall be punished with simple imprisonment for a term which may extend to six months, or with fine which may extend to one thousand rupees, or with both."
+  },
+  {
+    "input": "How is false information with intent to defeat the provisions of any law defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 177",
+    "output": "Whoever, being legally bound to furnish information on any subject to any public servant, as such, furnishes, as true, information on the subject which he knows or has reason to believe to be false, with intent to defeat the provisions of any law, shall be punished with imprisonment of either description for a term which may extend to six months, or with fine which may extend to one thousand rupees, or with both."
+  },
+  {
+    "input": "Define disobedience to order duly promulgated by public servant in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 188",
+    "output": "Whoever, being bound by law to do or to forbear from doing anything, intentionally disobeys such direction, shall, if such disobedience causes or tends to cause obstruction, annoyance or injury, or risk of obstruction, annoyance or injury, to any persons lawfully employed, be punished with simple imprisonment for a term which may extend to one month or with fine which may extend to two hundred rupees, or with both; and if such disobedience causes or tends to cause danger to human life, health or safety, or causes or tends to cause a disturbance of the public peace or public tranquillity, or does by any act or omission interfere with or obstruct or is likely to interfere with or obstruct or cause inconvenience to any person in the lawful exercise of his right, shall be punished with imprisonment of either description for a term which may extend to three months or with fine which may extend to five hundred rupees, or with both."
+  },
+  {
+    "input": "What is omission to assist public servant when bound by law to give assistance in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 187",
+    "output": "Whoever, being legally bound to give any notice or to furnish information on any subject to any public servant, as such, intentionally omits to give such notice or to furnish such information in the manner and at the time required by law, shall be punished with simple imprisonment for a term which may extend to one month, or with fine which may extend to two hundred rupees, or with both."
+  },
+  {
+    "input": "Define fraudulent cancellation, destruction, etc., of valuable security in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 477A",
+    "output": "Whoever fraudulently or dishonestly destroys, mutilates, defaces, or secretes, or attempts to destroy, mutilate, deface, or secrete, any valuable security, will, or authority for paying money, with intent to cause damage or injury, to the public or to any person, or to support any claim or title, or to cause any person to part with property, or to enter into any express or implied contract, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine."
+  },
+  {
+    "input": "How is falsification of accounts defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 407",
+    "output": "Whoever, being a clerk or servant or employed or acting in the capacity of a clerk or servant, does any act in respect of any property in the possession of his master or employer, which act, if done by the master or employer himself, would be a criminal breach of trust, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine."
+  },
+  {
+    "input": "Define breach of trust by carrier, etc., in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 407",
+    "output": "Whoever, being a carrier, wharfinger or warehouse-keeper, commits criminal breach of trust in respect of any property committed to his charge, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine."
+  },
+  {
+    "input": "What is criminal breach of trust by clerk or servant in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 392",
+    "output": "Whoever, being a clerk or servant or employed or acting in the capacity of a clerk or servant, does any act in respect of any property in the possession of his master or employer, which act, if done by the master or employer himself, would be a criminal breach of trust, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine."
+  },
+  {
+    "input": "Define criminal breach of trust by public servant or officer in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 392",
+    "output": "Any public officer or any officer of a Court, who, being charged with the receiving, delivery or accounting for any moneys, valuable security or other property on behalf of the Government, fails to receive, deliver or account for the same according to law, or who is guilty of criminal breach of trust in respect of the same, shall be punished with imprisonment for life, or with imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine."
+  },
+  {
+    "input": "How is dishonest misappropriation of property possessed by deceased person defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 410",
+    "output": "Whoever dishonestly misappropriates or converts to his own use any movable property of a deceased person, knowing that such property was in the possession of the deceased person at the time of his decease, shall be punished with imprisonment of either description for a term which may extend to three years, and shall also be liable to fine."
+  },
+  {
+    "input": "Define staving valuable security in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 478",
+    "output": "Whoever fraudulently or dishonestly causes a document which is a valuable security to be lost, destroyed, or rendered useless, with intent to cause damage or injury to the public or to any person, or to support any claim or title, or to cause any person to part with property, shall be punished with imprisonment of either description for a term which may extend to seven years, or with fine, or with both."
+  },
+  {
+    "input": "What is fraudulent destruction of an account in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 477A",
+    "output": "Whoever fraudulently or dishonestly, or with intent to cause damage or injury to the public or to any person, destroys, mutilates, defaces, or secretes any account, register or other document kept or made in any public office for public purposes, shall be punished with imprisonment of either description for a term which may extend to seven years, or with fine, or with both."
+  },
+  {
+    "input": "Define counterfeiting a device or mark used for authenticating documents in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 472A",
+    "output": "Whoever counterfeits any device or mark used for the purpose of authenticating any document described in section 456, or possesses a counterfeit marked material, knowing that the device or mark is counterfeit, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine."
+  },
+  {
+    "input": "How is using a forged document as genuine defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 471",
+    "output": "Whoever fraudulently or dishonestly uses as genuine any document which he knows or has reason to believe to be a forged document, shall be punished in the same manner as if he had forged such document."
+  },
+  {
+    "input": "Define making or possessing counterfeit seal in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 473",
+    "output": "Whoever makes or has in his possession any die, plate or other instrument for the purpose of counterfeiting a seal, with intent to use the same for the purpose of committing any forgery punishable under section 456, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine."
+  },
+  {
+    "input": "What is counterfeiting a property-mark used by another in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 482",
+    "output": "Whoever counterfeits any property-mark used by any other person with intent to cause damage or injury to the value or affecting the property of the owner of such mark, shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both."
+  },
+  {
+    "input": "Define using a false property-mark with intent to deceive in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 483",
+    "output": "Whoever marks any movable property or goods or any animal with a false trade-mark or property-mark, or uses as a trade-mark or property-mark for goods or things any mark in imitation of or similar to the trade-mark or property-mark of another person, with intent to cause injury to the business of that person, or with intent to deceive the public into believing that the goods are the goods of that person, shall be punished with imprisonment of either description for a term which may extend to one year, or with fine, or with both."
+  },
+  {
+    "input": "How is counterfeiting a property-mark used by a public officer defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 484",
+    "output": "Whoever counterfeits any property-mark used by a public officer, or any mark used by a public officer to denote the manufacture, quality, strength, origin or purity of any goods, with intent to cause damage or injury to the public or to any person, shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both."
+  },
+  {
+    "input": "Define making or possession of any instrument for counterfeiting a property-mark in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 485",
+    "output": "Whoever makes or has in his possession any die, plate or other instrument for the purpose of counterfeiting any property-mark, or has in his possession any such property-mark for the purpose of denoting the manufacture of any goods, but not being intended to be used as such, shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both."
+  },
+  {
+    "input": "What is selling goods marked with a counterfeit property-mark in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 486",
+    "output": "Whoever sells, or exposes, or has in possession for sale, any goods or things with a counterfeit property-mark affixed to or impressed upon the same, or with a counterfeit trade-mark affixed to or inserted in the same, or with a counterfeit trade description attached to, inserted in, or impressed upon the same, shall, unless he proves—(a) that, having taken all reasonable precautions against committing an offence against this section, he had no reason to suspect the genuineness of the mark, or trade-mark, or trade description; and (b) that, on demand by or on behalf of the prosecutor, he gave all the information in his power with respect to the person from whom he obtained such goods or things; or (c) that otherwise he had acted innocently; be punished with imprisonment of either description for a term which may extend to one year, or with fine, or with both."
+  },
+  {
+    "input": "Define marrying again during lifetime of husband or wife in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 361",
+    "output": "Whoever, having a husband or wife living, marries in any case in which such marriage is void by reason of its taking place during the life of such husband or wife, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine."
+  },
+  {
+    "input": "How is enticing or taking away a married woman defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 496",
+    "output": "Whoever takes or entices away any woman who is and whom he knows or has reason to believe to be the wife of any other man, from that man, without the consent of such man, shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both."
+  },
+  {
+    "input": "Define defamation of a deceased person in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 479, Explanation 1",
+    "output": "It may amount to defamation to impute anything to a deceased person if the imputation would harm the reputation of that person if living, and is intended to hurt the feelings of his family or other near relatives."
+  },
+  {
+    "input": "What is defamation of a company or association in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 479, Explanation 2",
+    "output": "It may amount to defamation to make an imputation concerning a company or an association or collection of persons as such."
+  },
+  {
+    "input": "Define imputation in the form of an alternative or expressed ironically in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 479, Explanation 3",
+    "output": "An imputation in the form of an alternative, or expressed ironically, may amount to defamation."
+  },
+  {
+    "input": "How is harm to a person's reputation defined in defamation under the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 479, Explanation 4",
+    "output": "No imputation is said to harm a person's reputation, unless that imputation directly or indirectly, in the estimation of others, lowers the moral or intellectual character of that person, or lowers the character of that person in respect of his caste or of his calling, or lowers the credit of that person, or causes it to be believed that the body of that person is in a loathsome state or in a state generally considered as disgraceful."
+  },
+  {
+    "input": "What constitutes good faith publication of true report of public proceedings in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 479, First Exception",
+    "output": "It is not defamation to publish a substantially true report of the proceedings of a Court of Justice, or of the result of any such proceedings."
+  },
+  {
+    "input": "Define good faith opinion on public conduct of public servant in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 479, Second Exception",
+    "output": "It is not defamation to express in good faith any opinion whatever respecting the conduct of any public servant in the discharge of his public functions, or respecting his character, so far as his character appears in that conduct, and no further."
+  },
+  {
+    "input": "How is good faith opinion on merits of public performance defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 479, Third Exception",
+    "output": "It is not defamation to express in good faith any opinion respecting the merits of any performance submitted by any person to the judgment of the public, or respecting the character of the author so far as his character appears in such performance and no further, or respecting the character of the painter, sculptor, musician, or other artist so far as his character appears in his work and no further."
+  },
+  {
+    "input": "Define good faith accusation to lawful authority in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 479, Eighth Exception",
+    "output": "It is not defamation to prefer in good faith an accusation against any person to any of those who have lawful authority over that person with respect to the subject-matter of the accusation."
+  },
+  {
+    "input": "What is good faith imputation on character for protection of interests in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 479, Ninth Exception",
+    "output": "It is not defamation to make an imputation on the character of another, provided that the imputation be made in good faith for the protection of the interests of the person making it, or of any other person, or for the public good."
+  },
+  {
+    "input": "Define good faith caution against another person in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 479, Tenth Exception",
+    "output": "It is not defamation to convey a caution, in good faith, to one person against another, provided that such caution be intended for the good of the person to whom it is conveyed, or of some person in whom that person is interested, or for the public good."
+  },
+  {
+    "input": "How is punishment for defamation defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 484",
+    "output": "Whoever defames another shall be punished with simple imprisonment for a term which may extend to two years, or with fine, or with both."
+  },
+  {
+    "input": "Define printing or engraving matter known to be defamatory in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 485",
+    "output": "Whoever prints or engraves any matter, knowing or having good reason to believe that such matter is defamatory of any person, shall be punished with simple imprisonment for a term which may extend to two years, or with fine, or with both."
+  },
+  {
+    "input": "What is sale of printed or engraved substance containing defamatory matter in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 486",
+    "output": "Whoever sells or offers for sale any printed or engraved substance containing defamatory matter, knowing that it contains such matter, shall be punished with simple imprisonment for a term which may extend to two years, or with fine, or with both."
+  },
+  {
+    "input": "Define punishment of persons reconvicted under defamation chapter in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 487",
+    "output": "Whoever has been previously convicted of an offence under this Chapter and is again convicted of any such offence shall be punished with imprisonment of either description for a term which may extend to two years, and shall also be liable to fine."
+  },
+  {
+    "input": "How is attempt to commit offences punishable with imprisonment for life defined in the Sri Lanka Penal Code?",
+    "legalDoc": "Penal Code of Sri Lanka, Section 511",
+    "output": "Whoever attempts to commit an offence punishable by this Code with imprisonment for life or imprisonment, or to cause such an offence to be committed, and in such attempt does any act towards the commission of the offence shall, where no express provision is made by this Code for the punishment of such attempt, be punished with imprisonment of either description provided for the offence, for a term which may extend to one-half of the imprisonment for life or, as the case may be, one-half of the longest term of imprisonment provided for that offence, or with such fine as is provided for the offence, or with both."
+  },
+  {
+    "input": "Define general provision for punishment of attempt in the Sri Lanka Penal Code.",
+    "legalDoc": "Penal Code of Sri Lanka, Section 511",
+    "output": "Whoever attempts to commit an offence punishable by this Code with imprisonment for life or imprisonment, or to cause such an offence to be committed, and in such attempt does any act towards the commission of the offence shall, where no express provision is made by this Code for the punishment of such attempt, be punished with imprisonment of either description provided for the offence, for a term which may extend to one-half of the longest term of imprisonment provided for that offence, or with such fine as is provided for the offence, or with both."
+  }
+]

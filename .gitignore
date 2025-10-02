@@ -1,7 +1,6 @@
 venv/
 **/.env
 **/__pycache__/
-utils/
 .venv
 **/.venv
 
