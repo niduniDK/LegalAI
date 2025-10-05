@@ -8,6 +8,9 @@ The backend service for LegalAI - a FastAPI-based REST API that powers the legal
 - **Document Retrieval**: FAISS-based vector search for relevant legal documents
 - **Intent Detection**: Smart query analysis and routing
 - **Personalized Recommendations**: User-specific legal content suggestions
+- **User Authentication**: JWT-based authentication with secure password hashing
+- **Database Integration**: Supabase PostgreSQL for data persistence
+- **Email Services**: SMTP integration for user verification and notifications
 - **CORS Support**: Configured for cross-origin requests from the frontend
 - **Async Processing**: High-performance async request handling
 
@@ -51,7 +54,9 @@ Backend/
 
 - Python 3.8 or higher
 - pip package manager
+- Supabase account (for database)
 - Google Gemini API key
+- Gmail account (for email services)
 
 ### Installation
 
@@ -79,12 +84,7 @@ Backend/
 
 4. **Set up environment variables**
 
-   Create a `.env` file in the `Backend` directory with the following content:
-
-   ```env
-   GEMINI_API_KEY=your_google_gemini_api_key # https://aistudio.google.com/apikey
-   GROQ_API_KEY=your_groq_api_key # https://console.groq.com/keys
-   ```
+   Copy the `.env.example` file to `.env` and fill in your actual values.
 
 5. **Run the server**
    ```bash
@@ -190,11 +190,21 @@ Get personalized legal content recommendations.
 - **FAISS**: Vector similarity search for documents
 - **Transformers**: NLP model handling
 
+### Database & Authentication
+
+- **Supabase PostgreSQL**: Cloud database for data persistence
+- **JWT**: JSON Web Tokens for secure authentication
+- **bcrypt**: Password hashing for security
+
 ### Data Processing
 
 - **Pandas**: Data manipulation and analysis
 - **Beautiful Soup**: HTML/XML parsing
 - **Requests**: HTTP library for external API calls
+
+### Communication
+
+- **SMTP**: Email services for user notifications
 
 ### Utilities
 
@@ -206,18 +216,7 @@ Get personalized legal content recommendations.
 
 ### Environment Variables
 
-Create a `.env` file in the Backend directory:
-
-```env
-# Required
-GEMINI_API_KEY=your_google_gemini_api_key # https://aistudio.google.com/apikey
-GROQ_API_KEY=your_groq_api_key # https://console.groq.com/keys
-
-# Optional
-HOST=0.0.0.0
-PORT=8000
-RELOAD=True
-```
+See the `.env.example` file for all required environment variables.
 
 ### CORS Configuration
 
@@ -293,9 +292,12 @@ For a complete list, see `requirements.txt`.
 ### Common Issues
 
 1. **Import Errors**: Ensure all dependencies are installed and virtual environment is activated
-2. **API Key Issues**: Verify your Google Gemini API key is set correctly in `.env`
-3. **Port Conflicts**: Change the port in `main.py` if 8000 is already in use
-4. **CORS Errors**: Check CORS configuration for your frontend URL
+2. **Database Connection**: Verify your Supabase DATABASE_URL is correct and database is accessible
+3. **JWT Issues**: Ensure JWT_SECRET_KEY is set and secure
+4. **Email Errors**: Check SMTP credentials and Gmail app password setup
+5. **API Key Issues**: Verify your Google Gemini API key is set correctly in `.env`
+6. **Port Conflicts**: Change the port in `main.py` if 8000 is already in use
+7. **CORS Errors**: Check CORS configuration for your frontend URL
 
 ### Logs
 

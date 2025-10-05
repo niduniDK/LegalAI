@@ -19,7 +19,10 @@ The system follows a modern microservices architecture with:
 
 - **Frontend**: Next.js React application with Tailwind CSS
 - **Backend**: FastAPI Python server with AI integration
+- **Database**: Supabase PostgreSQL for data persistence
+- **Authentication**: JWT-based user authentication
 - **AI Services**: Google Gemini integration for intelligent responses
+- **Email Services**: SMTP integration for notifications
 - **Document Processing**: FAISS vector database and BM25 for semantic and keyword-based search
 
 ## Quick Start
@@ -28,7 +31,9 @@ The system follows a modern microservices architecture with:
 
 - Node.js 18+ and npm
 - Python 3.8+
+- Supabase account (for database)
 - Google Gemini API key
+- Gmail account (for email services)
 
 ### Installation
 
@@ -54,12 +59,7 @@ The system follows a modern microservices architecture with:
    pip install -r requirements.txt
    ```
 
-   Set up environment variables by creating a `.env` file in the Backend directory:
-
-   ```env
-   GEMINI_API_KEY=your_google_gemini_api_key # https://aistudio.google.com/apikey
-   GROQ_API_KEY=your_groq_api_key # https://console.groq.com/keys
-   ```
+   Set up environment variables by copying the `.env.example` file to `.env` and filling in your actual values.
 
    Run the server:
 
@@ -99,7 +99,10 @@ The system follows a modern microservices architecture with:
 ### Backend
 
 - **Framework**: FastAPI
+- **Database**: Supabase PostgreSQL
+- **Authentication**: JWT with bcrypt password hashing
 - **AI Integration**: Google Gemini AI
+- **Email Services**: SMTP (Gmail)
 - **Vector Search**: FAISS
 - **Document Processing**: Beautiful Soup, pandas
 - **Environment**: Python 3.8+
