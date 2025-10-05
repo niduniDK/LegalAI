@@ -1,4 +1,4 @@
-# LegalAI Backend 
+# LegalAI Backend
 
 The backend service for LegalAI - a FastAPI-based REST API that powers the legal information retrieval system with AI integration, document search, and personalized recommendations.
 
@@ -22,12 +22,27 @@ Backend/
 ├── routers/               # API route handlers
 │   ├── get_ai_response.py    # AI chat endpoints
 │   ├── handle_search.py      # Document search endpoints
-│   └── get_recommendations.py # Recommendation endpoints
-└── services/              # Business logic layer
-    ├── llm_handler.py        # AI model integration
-    ├── query_processor.py    # Query processing and retrieval
-    ├── intent_detector.py    # Query intent analysis
-    └── get_relevant_docs.py  # Document retrieval logic
+│   ├── get_recommendations.py # Recommendation endpoints
+│   ├── auth.py              # Authentication endpoints
+│   ├── chat_history.py      # Chat history management
+│   └── generate_summary.py  # Document summary generation
+├── services/              # Business logic layer
+│   ├── llm_handler.py        # AI model integration
+│   ├── query_processor.py    # Query processing and retrieval
+│   ├── get_relevant_docs.py  # Document retrieval logic
+│   ├── get_doc_chunks.py     # Document chunking utilities
+│   └── translator.py         # Language translation services
+├── database/              # Database layer
+│   ├── connection.py         # Database connection management
+│   ├── models.py            # Database models and schemas
+│   ├── queries.sql          # SQL query templates
+│   └── schema.sql           # Database schema definitions
+├── schemas/               # Pydantic data models
+│   └── auth.py             # Authentication schemas
+├── utils/                 # Utility functions
+│   └── auth.py            # Authentication utilities
+└── docs/                  # API documentation
+    └── bills.tsv          # Legal document metadata
 ```
 
 ## Quick Start
@@ -64,12 +79,12 @@ Backend/
 
 4. **Set up environment variables**
 
-    Create a `.env` file in the `Backend` directory with the following content:
+   Create a `.env` file in the `Backend` directory with the following content:
 
-    ```env
-    GEMINI_API_KEY=your_google_gemini_api_key # https://aistudio.google.com/apikey
-    GROQ_API_KEY=your_groq_api_key # https://console.groq.com/keys
-    ```
+   ```env
+   GEMINI_API_KEY=your_google_gemini_api_key # https://aistudio.google.com/apikey
+   GROQ_API_KEY=your_groq_api_key # https://console.groq.com/keys
+   ```
 
 5. **Run the server**
    ```bash
