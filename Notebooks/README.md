@@ -11,6 +11,7 @@ This directory contains Jupyter notebooks and scripts used for data processing, 
 - **[dp-1-download-pdf-acts-bills.ipynb](dp-1-download-pdf-acts-bills.ipynb)**: Downloads PDF documents for acts and bills from legal sources
 - **[dp-1-preprocess bills.ipynb](dp-1-preprocess%20bills.ipynb)**: Preprocesses bill documents for text extraction and analysis
 - **[acts-batch-ocr.ipynb](acts-batch-ocr.ipynb)**: Batch OCR processing for scanned act documents
+- **[dsep-acts-sinhala-extraction.ipynb](dsep-acts-sinhala-extraction.ipynb)**: Extracts and processes Sinhala language legal acts for the system
 
 #### Gazette Processing
 
