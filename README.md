@@ -19,7 +19,10 @@ The system follows a modern microservices architecture with:
 
 - **Frontend**: Next.js React application with Tailwind CSS
 - **Backend**: FastAPI Python server with AI integration
+- **Database**: Supabase PostgreSQL for data persistence
+- **Authentication**: JWT-based user authentication
 - **AI Services**: Google Gemini integration for intelligent responses
+- **Email Services**: SMTP integration for notifications
 - **Document Processing**: FAISS vector database and BM25 for semantic and keyword-based search
 
 ## Quick Start
@@ -28,7 +31,9 @@ The system follows a modern microservices architecture with:
 
 - Node.js 18+ and npm
 - Python 3.8+
+- Supabase account (for database)
 - Google Gemini API key
+- Gmail account (for email services)
 
 ### Installation
 
@@ -41,31 +46,26 @@ The system follows a modern microservices architecture with:
 
 2. **Set up the Backend**
 
-    Create a virtual environment (recommended):
+   Create a virtual environment (recommended):
 
-    ```bash
-    cd backend
-    python -m venv venv
-    # On Windows
-    venv\Scripts\activate
-    # On macOS/Linux
-    source venv/bin/activate
-    # Install dependencies
-    pip install -r requirements.txt
-    ```
+   ```bash
+   cd backend
+   python -m venv venv
+   # On Windows
+   venv\Scripts\activate
+   # On macOS/Linux
+   source venv/bin/activate
+   # Install dependencies
+   pip install -r requirements.txt
+   ```
 
-    Set up environment variables by creating a `.env` file in the Backend directory:
+   Set up environment variables by copying the `.env.example` file to `.env` and filling in your actual values.
 
-    ```env
-    GEMINI_API_KEY=your_google_gemini_api_key # https://aistudio.google.com/apikey
-    GROQ_API_KEY=your_groq_api_key # https://console.groq.com/keys
-    ```
+   Run the server:
 
-    Run the server:
-
-    ```bash
-    python main.py
-    ```
+   ```bash
+   python main.py
+   ```
 
 3. **Set up the Frontend**
 
@@ -99,7 +99,10 @@ The system follows a modern microservices architecture with:
 ### Backend
 
 - **Framework**: FastAPI
+- **Database**: Supabase PostgreSQL
+- **Authentication**: JWT with bcrypt password hashing
 - **AI Integration**: Google Gemini AI
+- **Email Services**: SMTP (Gmail)
 - **Vector Search**: FAISS
 - **Document Processing**: Beautiful Soup, pandas
 - **Environment**: Python 3.8+
@@ -112,12 +115,22 @@ LegalAI/
 │   ├── main.py             # Application entry point
 │   ├── requirements.txt    # Python dependencies
 │   ├── routers/            # API route handlers
-│   └── services/           # Business logic services
+│   ├── services/           # Business logic services
+│   ├── database/           # Database connection and models
+│   ├── schemas/            # Pydantic schemas
+│   └── utils/              # Utility functions
 ├── frontend/               # Next.js React frontend
 │   ├── src/app/           # Application pages and components
 │   ├── components/        # Reusable UI components
 │   └── package.json       # Node.js dependencies
-└── docs/                  # Project documentation
+├── docs/                  # Project documentation and assets
+│   ├── assets/            # Diagrams and images
+│   ├── *.pdf              # Technical documents
+│   └── *.json             # Fine-tuning datasets
+├── Notebooks/             # Jupyter notebooks for data processing
+│   ├── *.ipynb            # Data preprocessing and analysis
+│   └── extractor6.py      # Data extraction utilities
+└── README.md              # Project overview
 ```
 
 ## API Endpoints

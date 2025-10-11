@@ -1,6 +1,6 @@
 from .query_processor import retrieve_doc
 
-def get_pdfs(query: str, top_k: int = 10):
+def get_pdfs(query: str, language: str, top_k: int = 10):
     print(f"\n> GET_PDFS: Processing query: '{query}' with top_k={top_k}")
     content, filenames = retrieve_doc(query, top_k)
     pdf_urls = []
@@ -11,8 +11,17 @@ def get_pdfs(query: str, top_k: int = 10):
     for filename in filenames:
         name_split = filename.split('.')[0]
         name = name_split[:-7].replace("-", "/")
-        year = name_split[-7:]
-        url = f"https://documents.gov.lk/view/{name}{year}.pdf"
+        year = name_split[-7:-2]
+        lang = name_split[-1]
+
+        if language == "en":
+            lang = "E"
+        elif language == "si":
+            lang = "S"
+        elif language == "ta":
+            lang = "T"
+
+        url = f"https://documents.gov.lk/view/{name}{year}_{lang}.pdf"
         pdf_urls.append(url)
         print(f"Generated URL for {filename}: {url}")
 

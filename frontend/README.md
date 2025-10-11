@@ -27,20 +27,41 @@ frontend/
 │   │   │   ├── ChatInterface.jsx
 │   │   │   ├── ChatBox.jsx
 │   │   │   ├── AppsideBar.jsx
+│   │   │   ├── AppsideBarNew.jsx
+│   │   │   ├── ChatSessionsInterface.jsx
+│   │   │   ├── DocumentSummaryChatInterface.jsx
 │   │   │   ├── DiscoverInterface.jsx
-│   │   │   ├── HistoryInterface.jsx
-│   │   │   └── RecommendationInterface.jsx
-│   │   ├── discover/          # Discovery page
-│   │   ├── history/           # History page
+│   │   │   ├── HistroyInterface.jsx
+│   │   │   ├── RecommendationInterface.jsx
+│   │   │   └── chatPage.jsx
+│   │   ├── api/               # API routes
+│   │   │   └── route.js       # API proxy endpoints
+│   │   ├── chat/              # Dynamic chat pages
+│   │   │   └── [id]/         # Individual chat sessions
+│   │   ├── chat-sessions/     # Chat sessions page
+│   │   │   └── page.jsx
+│   │   ├── discover/          # Document discovery page
+│   │   ├── document-summary/  # Document summary page
+│   │   ├── history/           # Query history page
+│   │   ├── login/             # Authentication pages
 │   │   ├── recommendations/   # Recommendations page
-│   │   └── api/              # API routes
+│   │   ├── register/          # User registration
+│   │   └── reset-password/    # Password reset
 │   ├── components/           # Reusable UI components
-│   │   └── ui/              # Shadcn/ui components
+│   │   ├── ui/               # Shadcn/ui components
+│   │   └── ProtectedRoute.jsx # Route protection
+│   ├── contexts/             # React contexts
+│   │   └── AuthContext.js    # Authentication context
 │   ├── hooks/               # Custom React hooks
+│   │   └── use-mobile.js     # Mobile detection hook
 │   └── lib/                 # Utility functions
+│       └── utils.js         # General utilities
 ├── public/                  # Static assets
 ├── package.json            # Dependencies and scripts
-└── next.config.mjs         # Next.js configuration
+├── next.config.mjs         # Next.js configuration
+├── jsconfig.json           # JavaScript configuration
+├── postcss.config.mjs      # PostCSS configuration
+└── eslint.config.mjs       # ESLint configuration
 ```
 
 ## Quick Start
@@ -97,6 +118,18 @@ npm start
 - **Quick Start**: Get started with sample questions
 - **Modern Design**: Clean, professional interface optimized for legal professionals
 
+### Chat Sessions (`/chat-sessions`)
+
+- **Session Management**: View and manage all chat conversations
+- **Session Details**: Access individual chat histories
+- **Organized Conversations**: Keep track of multiple legal discussions
+
+### Document Summary (`/document-summary`)
+
+- **Summary Generation**: AI-powered document summarization
+- **Key Points Extraction**: Identify important legal concepts
+- **Quick Overview**: Get condensed information from lengthy documents
+
 ### Discovery Page (`/discover`)
 
 - **Document Explorer**: Browse available legal documents
@@ -114,6 +147,12 @@ npm start
 - **Personalized Content**: Legal topics tailored to your interests
 - **Trending Topics**: Popular legal queries and topics
 - **Smart Suggestions**: AI-powered content recommendations
+
+### Authentication Pages
+
+- **Login (`/login`)**: User authentication
+- **Register (`/register`)**: New user registration
+- **Reset Password (`/reset-password`)**: Password recovery
 
 ## Technology Stack
 
@@ -164,16 +203,16 @@ The project uses a custom Tailwind configuration in `tailwind.config.js`:
 ```javascript
 module.exports = {
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
       // Custom theme extensions
     },
   },
-  plugins: [require("tailwind-scrollbar-hide")],
+  plugins: [require('tailwind-scrollbar-hide')],
 };
 ```
 
@@ -187,8 +226,8 @@ The main chat component for legal queries:
 
 ```jsx
 <ChatInterface
-  initialQuery="Your legal question"
-  initialResponse="AI response"
+  initialQuery='Your legal question'
+  initialResponse='AI response'
   isLoading={false}
 />
 ```
@@ -200,7 +239,7 @@ Quick start component for initiating conversations:
 ```jsx
 <ChatBox
   onStartChat={(query) => handleQuery(query)}
-  placeholder="Ask a legal question..."
+  placeholder='Ask a legal question...'
 />
 ```
 
@@ -209,7 +248,7 @@ Quick start component for initiating conversations:
 Navigation sidebar with menu items:
 
 ```jsx
-<AppsideBar currentPath="/discover" onNavigate={(path) => router.push(path)} />
+<AppsideBar currentPath='/discover' onNavigate={(path) => router.push(path)} />
 ```
 
 ### UI Components
@@ -263,14 +302,14 @@ npm run lint
 Example component structure:
 
 ```jsx
-"use client";
+'use client';
 
-import React from "react";
-import { cn } from "@/lib/utils";
+import React from 'react';
+import { cn } from '@/lib/utils';
 
 export function MyComponent({ className, children, ...props }) {
   return (
-    <div className={cn("base-styles", className)} {...props}>
+    <div className={cn('base-styles', className)} {...props}>
       {children}
     </div>
   );
@@ -283,23 +322,23 @@ The frontend communicates with the backend through REST API calls:
 
 ```javascript
 // Chat API
-const response = await fetch("/api/chat/get_ai_response", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
+const response = await fetch('/api/chat/get_ai_response', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ query, history }),
 });
 
 // Search API
-const documents = await fetch("/api/get_docs/search", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
+const documents = await fetch('/api/get_docs/search', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ query }),
 });
 
 // Recommendations API
-const recommendations = await fetch("/api/recommendations", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
+const recommendations = await fetch('/api/recommendations', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ username }),
 });
 ```
@@ -346,10 +385,10 @@ npm install --save-dev @testing-library/react @testing-library/jest-dom jest jes
 ### Example Test
 
 ```javascript
-import { render, screen } from "@testing-library/react";
-import { ChatInterface } from "../components/ChatInterface";
+import { render, screen } from '@testing-library/react';
+import { ChatInterface } from '../components/ChatInterface';
 
-test("renders chat interface", () => {
+test('renders chat interface', () => {
   render(<ChatInterface />);
   const chatInput = screen.getByPlaceholderText(/ask a legal question/i);
   expect(chatInput).toBeInTheDocument();

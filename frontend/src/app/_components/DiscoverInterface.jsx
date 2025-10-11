@@ -1,13 +1,21 @@
 "use client"
 
 import * as React from "react"
-import { Search, FileText, Calendar, ExternalLink, MessageCircle } from 'lucide-react'
+import { Search, FileText, Calendar, ExternalLink, MessageCircle, X } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { useAuth } from "@/contexts/AuthContext"
 
 const legalDocuments = [
@@ -39,8 +47,75 @@ export function DiscoverInterface() {
   const [selectedCategory, setSelectedCategory] = React.useState("All")
   const [urls, setUrls] = React.useState([])
   const [filteredDocuments, setFilteredDocuments] = React.useState([])
+  const [language, setLanguage] = React.useState("en")
+  const [docHighlights, setDocHighlights] = React.useState({})
+  const [docSummaries, setDocSummaries] = React.useState({})
+  const [selectedDocument, setSelectedDocument] = React.useState(null)
+  const [showSummaryDialog, setShowSummaryDialog] = React.useState(false)
 
   let i = 0;
+
+  // Function to fetch highlights for a document
+  const fetchHighlights = async (filename) => {
+    try {
+      const response = await fetch("http://localhost:8000/summary/highlights", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ file_name: filename })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        return data.highlights || []
+      } else {
+        console.error(`Failed to fetch highlights for ${filename}`)
+        return []
+      }
+    } catch (error) {
+      console.error(`Error fetching highlights for ${filename}:`, error)
+      return []
+    }
+  }
+
+  // Function to fetch summary for a document
+  const fetchSummary = async (filename) => {
+    try {
+      const response = await fetch("http://localhost:8000/summary/summary", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ file_name: filename })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        return data.summary || ""
+      } else {
+        console.error(`Failed to fetch summary for ${filename}`)
+        return ""
+      }
+    } catch (error) {
+      console.error(`Error fetching summary for ${filename}:`, error)
+      return ""
+    }
+  }
+
+  // Function to format summary into bullet points
+  const formatSummaryAsPoints = (summary) => {
+    if (!summary) return []
+    
+    // Split by sentences and clean up
+    const sentences = summary
+      .split(/[.!?]+/)
+      .map(s => s.trim())
+      .filter(s => s.length > 10) // Filter out very short fragments
+      .slice(0, 4) // Limit to 4 points for card display
+    
+    return sentences
+  }
 
   const updateHistory = async () => {
     if (!token) {
@@ -112,7 +187,7 @@ export function DiscoverInterface() {
           "Content-Type": "application/json",
           ...(token && { "Authorization": `Bearer ${token}` })
         },
-        body: JSON.stringify({ query: searchQuery })
+        body: JSON.stringify({ query: searchQuery, language: language })
       })
       
       if (!response.ok) {
@@ -144,20 +219,28 @@ export function DiscoverInterface() {
     // Track document view
     trackDocumentView(document)
     
-    // Create a query about the document
-    const documentContext = `Document: ${document.title}\nCategory: ${document.category}\nSummary: ${document.summary}`
-    const query = `I have a question about "${document.title}". `
+    // Extract filename from URL for backend processing
+    let filename = ""
+    const basePath = "https://documents.gov.lk/view/"
+    if (document.url && document.url.startsWith(basePath)) {
+      const afterBase = document.url.slice(basePath.length)
+      const parts = afterBase.split("/")
+      if (parts.length > 1) {
+        filename = parts.slice(1).join("/")
+      }
+    }
     
-    // Store the document context and query in localStorage for the chat interface
+    // Store the document context and summary request in localStorage
     localStorage.setItem('chatContext', JSON.stringify({
       document: document,
-      initialQuery: query,
-      documentContext: documentContext
+      initialQuery: "Give a summary on this document",
+      documentContext: `Document: ${document.title}\nCategory: ${document.category}\nURL: ${document.url}`,
+      filename: filename,
+      requestType: 'summary'
     }))
     
-    // Navigate to chat interface - assuming it's at /chat route
-    // You might need to adjust this based on your routing structure
-    window.location.href = '/'
+    // Navigate to the dedicated document summary interface
+    window.location.href = '/document-summary'
   }
 
   const handleViewDocument = (document) => {
@@ -269,14 +352,15 @@ export function DiscoverInterface() {
         title: filename || `${docType} Document ${index + 1}`,
         category: category,
         date: extractedDate,
-        summary: `Official ${docType.toLowerCase()} document from Sri Lankan government portal`,
-        highlights: [
+        summary: docSummaries[filename] || `Loading summary for ${docType.toLowerCase()} document...`,
+        highlights: docHighlights[filename] || [
+          "Loading highlights...",
           "Government document",
-          "Official publication", 
-          "PDF format available"
+          "Official publication"
         ],
         source: "documents.gov.lk",
         url: url,
+        filename: filename,
         isSearchResult: true
       }
     })
@@ -314,6 +398,46 @@ export function DiscoverInterface() {
     setFilteredDocuments(filtered)
   }, [searchQuery, selectedCategory, urls])
 
+  // Effect to fetch highlights and summaries for documents
+  React.useEffect(() => {
+    const fetchAllData = async () => {
+      const newHighlights = { ...docHighlights }
+      const newSummaries = { ...docSummaries }
+      let needsUpdate = false
+
+      for (const doc of filteredDocuments) {
+        if (doc.filename) {
+          // Fetch highlights if not already loaded
+          if (!docHighlights[doc.filename]) {
+            const highlights = await fetchHighlights(doc.filename)
+            if (highlights.length > 0) {
+              newHighlights[doc.filename] = highlights
+              needsUpdate = true
+            }
+          }
+          
+          // Fetch summary if not already loaded
+          if (!docSummaries[doc.filename]) {
+            const summary = await fetchSummary(doc.filename)
+            if (summary) {
+              newSummaries[doc.filename] = summary
+              needsUpdate = true
+            }
+          }
+        }
+      }
+
+      if (needsUpdate) {
+        setDocHighlights(newHighlights)
+        setDocSummaries(newSummaries)
+      }
+    }
+
+    if (filteredDocuments.length > 0) {
+      fetchAllData()
+    }
+  }, [filteredDocuments])
+
   return (
     <div className="flex h-screen flex-col overflow-y-auto">
       {/* Header */}
@@ -327,6 +451,7 @@ export function DiscoverInterface() {
             <select 
               className="text-sm border border-border rounded-md px-2 py-1 bg-background text-foreground hover:bg-muted/50 transition-colors"
               defaultValue="en"
+              onClick={(e) => setLanguage(e.target.value)}
             >
               <option value="en">English</option>
               <option value="si">සිංහල</option>
@@ -402,31 +527,60 @@ export function DiscoverInterface() {
                       </div>
                     </div>
                   </div>
-                  <CardDescription className="text-sm">
-                    {document.summary || 'No description available'}
-                  </CardDescription>
+                  <div className="mb-3">
+                    <h4 className="text-sm font-medium text-foreground mb-2">Summary</h4>
+                    <div className="text-sm">
+                      {(() => {
+                        // Use fetched summary if available, otherwise fall back to document summary
+                        const summary = document.filename && docSummaries[document.filename] 
+                          ? docSummaries[document.filename] 
+                          : (document.summary || 'No description available')
+                        
+                        // Format summary as bullet points
+                        const summaryPoints = formatSummaryAsPoints(summary)
+                        
+                        // Show first 2-3 points in card
+                        const displayPoints = summaryPoints.slice(0, 2)
+                        const hasMorePoints = summaryPoints.length > 2
+                        
+                        return (
+                          <div>
+                            {displayPoints.length > 0 ? (
+                              <ul className="space-y-1 text-muted-foreground">
+                                {displayPoints.map((point, index) => (
+                                  <li key={index} className="flex items-start gap-2">
+                                    <span className="text-primary mt-1 text-xs">•</span>
+                                    <span className="text-xs">{point}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <span className="text-muted-foreground text-xs">No description available</span>
+                            )}
+                            {(hasMorePoints || summary.length > 200) && (
+                              <Button
+                                variant="link"
+                                size="sm"
+                                className="h-auto p-0 ml-2 text-xs text-primary hover:underline mt-1"
+                                onClick={() => {
+                                  setSelectedDocument({
+                                    ...document,
+                                    fullSummary: summary
+                                  })
+                                  setShowSummaryDialog(true)
+                                }}
+                              >
+                                Read more
+                              </Button>
+                            )}
+                          </div>
+                        )
+                      })()}
+                    </div>
+                  </div>
                 </CardHeader>
 
                 <CardContent className="pt-0">
-                  <div className="mb-4">
-                    <div className="text-xs font-medium text-muted-foreground mb-2">
-                      Key Highlights:
-                    </div>
-                    <ul className="space-y-1">
-                      {(document.highlights || []).map((highlight, index) => (
-                        <li key={index} className="text-xs text-muted-foreground flex items-start gap-1">
-                          <span className="text-primary">•</span>
-                          {highlight}
-                        </li>
-                      ))}
-                      {(!document.highlights || document.highlights.length === 0) && (
-                        <li className="text-xs text-muted-foreground">
-                          No highlights available
-                        </li>
-                      )}
-                    </ul>
-                  </div>
-
                   <div className="flex items-center justify-between">
                     <div className="text-xs text-muted-foreground">
                       Source: {document.source || 'Unknown'}
@@ -469,6 +623,61 @@ export function DiscoverInterface() {
 
         
       </ScrollArea>
+
+      {/* Summary Dialog */}
+      <Dialog open={showSummaryDialog} onOpenChange={setShowSummaryDialog}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-semibold pr-8">
+              {selectedDocument?.title || 'Document Summary'}
+            </DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              {selectedDocument?.category && (
+                <Badge variant="secondary" className="text-xs mr-2">
+                  {selectedDocument.category}
+                </Badge>
+              )}
+              {selectedDocument?.source && `Source: ${selectedDocument.source}`}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4">
+            <div className="prose prose-sm max-w-none">
+              {(() => {
+                const fullSummary = selectedDocument?.fullSummary || 'No summary available'
+                const summaryPoints = formatSummaryAsPoints(fullSummary)
+                
+                return summaryPoints.length > 0 ? (
+                  <ul className="space-y-2 text-sm">
+                    {summaryPoints.map((point, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm leading-relaxed">
+                    {fullSummary}
+                  </p>
+                )
+              })()}
+            </div>
+            {selectedDocument?.filename && docHighlights[selectedDocument.filename] && (
+              <div className="mt-6 pt-4 border-t">
+                <h4 className="text-sm font-medium mb-3">Key Highlights:</h4>
+                <ul className="space-y-2">
+                  {docHighlights[selectedDocument.filename].map((highlight, index) => (
+                    <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
+                      <span className="text-primary mt-1">•</span>
+                      <span>{highlight}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

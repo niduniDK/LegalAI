@@ -1,0 +1,67 @@
+# Test Checklist for Legal AI
+
+This checklist is based on the Master Test Plan with actual tests extracted from it.
+
+## 3.1 Testing Techniques and Types
+
+- [ ] 3.1.1 Data and Database Integrity Testing
+  - [ ] Invoke database access methods with valid data
+  - [ ] Invoke database access methods with invalid data
+  - [ ] Inspect database for correct data population
+  - [ ] Verify database events occur properly
+  - [ ] Review returned data for correct retrieval
+- [ ] 3.1.2 Function Testing
+  - [ ] Test process_query() function
+  - [ ] Test faiss_retrieve() function
+  - [ ] Test get_pdfs() helper function
+  - [ ] Test input validation with valid legal queries
+  - [ ] Test input validation with invalid/irrelevant queries
+  - [ ] Test output validation for responses
+  - [ ] Verify system does not respond to irrelevant queries
+  - [ ] Verify reasonable responses for legal queries
+  - [ ] Verify relevant document retrieval
+  - [ ] Verify document recommendations match user history
+- [ ] 3.1.3 User Interface Testing
+  - [ ] Test chatbot interface
+  - [ ] Test search interface
+  - [ ] Test recommendation interface
+  - [ ] Test user history interface
+  - [ ] Simulate UI with valid inputs
+  - [ ] Simulate UI with invalid inputs
+  - [ ] Verify accessibility of all features
+  - [ ] Verify functionality of UI components
+- [ ] 3.1.4 Performance Profiling
+  - [ ] Test under normal anticipated workload
+  - [ ] Test under worst-case workload
+  - [ ] Measure response times
+  - [ ] Measure transaction rates
+- [ ] 3.1.5 Load Testing
+  - [ ] Test varying workloads
+  - [ ] Test peak loads
+  - [ ] Test average loads
+  - [ ] Test instantaneous peaks
+  - [ ] Test sustained peaks
+  - [ ] Test under different environment configurations
+- [ ] 3.1.6 Security and Access Control Testing
+  - [ ] Identify user types (admin, manager, user, guest)
+  - [ ] Define permissions for each user type
+  - [ ] Test access for each user type (allowed/denied)
+  - [ ] Modify user roles and re-test permissions
+  - [ ] Test login with valid credentials
+  - [ ] Test login with invalid credentials
+  - [ ] Test unauthorized remote/system access
+- [ ] 3.1.7 Failover and Recovery Testing
+  - [ ] Simulate client power loss
+  - [ ] Simulate server power loss
+  - [ ] Simulate network communication loss
+  - [ ] Simulate DASD/device controller failures
+  - [ ] Simulate interrupted processes
+  - [ ] Simulate database corruption
+  - [ ] Execute recovery processes
+  - [ ] Verify system restoration
+- [ ] 3.1.8 Configuration Testing
+  - [ ] Test different hardware configurations
+  - [ ] Test different software configurations
+  - [ ] Test varying resource loads
+  - [ ] Test with reduced memory
+  - [ ] Test on different OS/hardware setups
