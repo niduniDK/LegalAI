@@ -9,3 +9,6 @@ venv/
 **.faiss
 
 **.tsv.gz
+
+**/.pytest_cache/
+**/.vscode
