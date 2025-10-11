@@ -138,7 +138,7 @@ export function AppSidebar() {
                       size="sm"
                       asChild
                     >
-                      <Link href="/">
+                      <Link href="/?reset=true">
                         <Plus className="h-4 w-4" />
                         New Chat
                       </Link>

@@ -475,7 +475,7 @@ export function RecommendationsInterface() {
                 <p className="text-muted-foreground mb-4">
                   Start your first conversation to see recommendations here.
                 </p>
-                <Link href="/">
+                <Link href="/?reset=true">
                   <Button className="gap-2">
                     <MessageCircle className="h-4 w-4" />
                     Start New Chat

@@ -7,6 +7,19 @@ import { useState } from "react"
 export function ChatBox({ onStartChat }) {
   const [query, setQuery] = useState("")
 
+  const handleSendMessage = () => {
+    if (query.trim()) {
+      onStartChat(query)
+    }
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSendMessage()
+    }
+  }
+
   return (
     <div className="w-full space-y-4">
       <div className="relative">
@@ -15,15 +28,12 @@ export function ChatBox({ onStartChat }) {
           className="w-full h-14 px-4 text-lg bg-card border-border rounded-xl pr-12"
           value={query}
           onChange={e => setQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
         <Button
           size="icon"
           className="absolute right-2 top-2 h-10 w-10 rounded-lg"
-          onClick={() => {
-            if (query.trim()) {
-              onStartChat(query)
-            }
-          }}
+          onClick={handleSendMessage}
         >
           <ArrowRight className="h-4 w-4" />
         </Button>

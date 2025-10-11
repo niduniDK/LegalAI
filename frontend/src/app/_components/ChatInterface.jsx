@@ -17,11 +17,60 @@ export function ChatInterface({ initialQuery, initialResponse, chat_id, session_
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const scrollAreaRef = useRef(null)
+  const initialQuerySentRef = useRef(false)
 
-  // Initialize input with the initial query when component mounts
+  // Initialize and automatically send the initial query when component mounts
   React.useEffect(() => {
-    if (initialQuery) {
-      setInput(initialQuery)
+    if (initialQuery && !initialQuerySentRef.current) {
+      initialQuerySentRef.current = true
+      // Add the initial query as a user message and send it
+      const userMessage = {
+        id: Date.now().toString(),
+        content: initialQuery,
+        role: "user",
+        timestamp: new Date(),
+      }
+
+      setMessages([userMessage])
+      setIsLoading(true)
+
+      // Send the initial query to backend
+      const sendInitialQuery = async () => {
+        try {
+          const response = await fetch('http://localhost:8000/chat/get_ai_response', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ query: initialQuery }),
+          })
+          
+          const data = await response.json()
+          
+          const assistantMessage = {
+            id: (Date.now() + 1).toString(),
+            content: data.response,
+            role: "assistant",
+            timestamp: new Date(),
+          }
+          setResources(data.files || [])      
+
+          setMessages(prev => [...prev, assistantMessage])
+        } catch (error) {
+          console.error('Error:', error)
+          const errorMessage = {
+            id: (Date.now() + 1).toString(),
+            content: "Sorry, I encountered an error. Please try again.",
+            role: "assistant",
+            timestamp: new Date(),
+          }
+          setMessages(prev => [...prev, errorMessage])
+        } finally {
+          setIsLoading(false)
+        }
+      }
+
+      sendInitialQuery()
     }
   }, [initialQuery])
 
@@ -73,7 +122,7 @@ export function ChatInterface({ initialQuery, initialResponse, chat_id, session_
     }
   }
 
-  const handleKeyPress = (e) => {
+  const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
       handleSend()
@@ -194,7 +243,7 @@ export function ChatInterface({ initialQuery, initialResponse, chat_id, session_
           className="flex-1"
           value={input}
           onChange={e => setInput(e.target.value)}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyDown}
           disabled={isLoading || initialLoading}
         />
         <Button onClick={handleSend} disabled={!input.trim() || isLoading || initialLoading}>

@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useCallback } from "react"
+import { useSearchParams } from "next/navigation"
 import { ChatBox } from "./_components/ChatBox"
 import { ChatInterface } from "./_components/ChatInterface"
 import ProtectedRoute from "@/components/ProtectedRoute"
@@ -8,10 +9,25 @@ import { useAuth } from "@/contexts/AuthContext"
 
 export default function HomePage() {
   const { token, logout } = useAuth()
+  const searchParams = useSearchParams()
   const [chatStarted, setChatStarted] = useState(false)
   const [initialQuery, setInitialQuery] = useState("")
   const [sessionName, setSessionName] = useState("")
   const [chat_id, setChatId] = useState(null)
+
+  const handleNewChat = useCallback(() => {
+    setChatStarted(false)
+    setInitialQuery("")
+    setSessionName("")
+    setChatId(null)
+  }, [])
+
+  // Reset chat when navigating with reset parameter
+  useEffect(() => {
+    if (searchParams.get('reset') === 'true') {
+      handleNewChat()
+    }
+  }, [searchParams, handleNewChat])
 
   const handleStartChat = (query) => {
     setInitialQuery(query)
