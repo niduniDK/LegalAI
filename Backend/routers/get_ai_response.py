@@ -21,20 +21,20 @@ class GetAIResponseRequest(BaseModel):
 @router.post("/get_ai_response")
 async def get_ai_response(request: GetAIResponseRequest):
     """
-    Get AI response using LangGraph agent with RAG.
+    Get AI response with RAG.
     
-    This endpoint:
-    1. Translates query if needed
-    2. Retrieves relevant legal documents
-    3. Generates contextual response
-    4. Returns response with source citations
+    Supports:
+    - Multi-turn conversations with context
+    - Multi-language queries (English, Sinhala, Tamil)
+    - Automatic source citation
+    - Session-based conversation memory
     """
     query = request.query
     history = request.history
     language = request.language
     session_id = request.session_id or f"session_{hash(query[:20])}"
 
-    # Convert history to proper format for LangGraph
+    # Convert history to proper format
     formatted_history = []
     if history:
         for msg in history:
@@ -44,7 +44,7 @@ async def get_ai_response(request: GetAIResponseRequest):
                     "content": msg.get("content", "")
                 })
 
-    # Run LangGraph agent
+    # Run AI agent
     result = await run_legal_ai_agent_async(
         query=query,
         language=language,

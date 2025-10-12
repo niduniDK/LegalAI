@@ -31,7 +31,7 @@ class SummaryRequest(BaseModel):
 @router.post("/summary")
 def get_summary(file: FileNameRequest):
     """
-    Get or generate document summary using LangGraph agent.
+    Get or generate document summary.
     First checks CSV cache, then generates using AI if not found.
     """
     file_name = file.file_name.replace(".pdf", ".txt").replace("/", "-")
@@ -54,8 +54,8 @@ def get_summary(file: FileNameRequest):
                     print(f"Found summary for {file_name} in cache")
                     return {"summary": str(summary_text), "status": "success", "source": "cache"}
         
-        # If not in cache, generate using LangGraph
-        print(f"Generating summary using LangGraph agent")
+        # If not in cache, generate new summary
+        print(f"Generating summary for {file_name}")
         file_type = "unknown"
         if "bill" in file_name.lower():
             file_type = "bill"
@@ -105,8 +105,8 @@ def get_highlights(file: FileNameRequest):
                     print(f"Found {len(highlights)} highlights for {file_name} in cache")
                     return {"highlights": highlights[:7], "status": "success", "source": "cache"}
         
-        # If not in cache, generate using LangGraph
-        print(f"Generating highlights using LangGraph agent")
+        # If not in cache, generate new highlights
+        print(f"Generating highlights for {file_name}")
         file_type = "unknown"
         if "bill" in file_name.lower():
             file_type = "bill"
@@ -119,8 +119,7 @@ def get_highlights(file: FileNameRequest):
         
         return {
             "highlights": result["highlights"],
-            "status": "success" if result["success"] else "generated_with_errors",
-            "source": "langgraph"
+            "status": "success" if result["success"] else "generated_with_errors"
         }
         
     except Exception as e:
@@ -153,7 +152,7 @@ def generate_document_summary(
         elif "gazette" in file_name.lower():
             file_type = "gazette"
         
-        # Generate summary using LangGraph
+        # Generate summary
         result = langgraph_summary(file_name, file_type, request.language)
         summary = result["summary"]
         
@@ -181,8 +180,7 @@ def generate_document_summary(
             message_metadata=json.dumps({
                 "document_filename": request.file_name,
                 "request_type": "summary",
-                "language": request.language,
-                "agent": "langgraph"
+                "language": request.language
             })
         )
         
@@ -198,8 +196,7 @@ def generate_document_summary(
                 "document_filename": request.file_name,
                 "highlights_count": len(highlights),
                 "language": request.language,
-                "response_type": "document_summary",
-                "agent": "langgraph"
+                "response_type": "document_summary"
             })
         )
         

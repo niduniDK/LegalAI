@@ -9,12 +9,12 @@ from routers import chat_history
 from routers import generate_summary
 from config.langsmith_config import configure_langsmith
 
-# Initialize LangSmith tracing
+# Initialize observability tracing
 configure_langsmith()
 
 app = FastAPI(
-    title="LegalAI API - Powered by LangGraph",
-    description="AI-powered legal assistant API with LangGraph state machines, RAG, and LangSmith observability",
+    title="LegalAI API",
+    description="AI-powered legal assistant API for Sri Lankan law with RAG and multi-language support",
     version="1.0.0"
 )
 
@@ -38,13 +38,11 @@ app.include_router(generate_summary.router, prefix="/summary", tags=["Summary Ge
 async def root():
     return {
         "message": "LegalAI API is running",
-        "framework": "LangGraph + LangChain",
         "features": [
             "RAG-based legal Q&A",
             "Multi-language support",
             "Document summarization",
-            "Personalized recommendations",
-            "LangSmith observability"
+            "Personalized recommendations"
         ]
     }
 
@@ -52,9 +50,7 @@ async def root():
 async def health_check():
     return {
         "status": "healthy",
-        "service": "LegalAI API",
-        "langchain": "enabled",
-        "langgraph": "enabled"
+        "service": "LegalAI API"
     }
 
 if __name__ == "__main__":

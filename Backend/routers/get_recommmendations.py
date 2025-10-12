@@ -14,7 +14,7 @@ class Recommendation(BaseModel):
 @router.post("/get_recommendations")
 def get_recommendations_endpoint(request: Recommendation):
     """
-    Get personalized document recommendations using LangGraph agent.
+    Get personalized document recommendations.
     
     This endpoint:
     1. Analyzes user preferences and query history
@@ -33,7 +33,7 @@ def get_recommendations_endpoint(request: Recommendation):
     # For now, using preferences as proxy for history
     history = preferences if preferences else []
 
-    # Generate recommendations using LangGraph
+    # Generate recommendations
     result = generate_recommendations(
         username=username,
         preferences=preferences,
