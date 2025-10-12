@@ -5,9 +5,12 @@ from datetime import datetime
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
-import os
 from dotenv import load_dotenv
-import google.generativeai as genai
+
+from services.langgraph_summary_agent import (
+    generate_document_summary as langgraph_summary,
+    generate_document_highlights as langgraph_highlights
+)
 from services.get_doc_chunks import get_doc_chunks
 
 from database.connection import get_db
@@ -15,10 +18,6 @@ from database.models import ChatSession, ChatHistory, User
 from routers.auth import get_current_user
 
 load_dotenv()
-
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
-genai.configure(api_key=GEMINI_API_KEY)
-gemini_client = genai.GenerativeModel("gemini-2.0-flash")
 
 router = APIRouter()
 
@@ -31,117 +30,101 @@ class SummaryRequest(BaseModel):
 
 @router.post("/summary")
 def get_summary(file: FileNameRequest):
+    """
+    Get or generate document summary using LangGraph agent.
+    First checks CSV cache, then generates using AI if not found.
+    """
     file_name = file.file_name.replace(".pdf", ".txt").replace("/", "-")
     print(f"Getting summary for file: {file_name}")
     
     try:
         # Check if summary.csv exists
         csv_path = "docs/summary.csv"
-        if not os.path.exists(csv_path):
-            print(f"Summary CSV not found at {csv_path}")
-            # Return default summary
-            default_summary = "This is an official legal document from the Sri Lankan government portal containing important regulatory information and procedural guidelines."
-            return {"summary": default_summary, "status": "default", "message": "Using default summary"}
+        if os.path.exists(csv_path):
+            summary_df = pd.read_csv(csv_path)
+            print(f"Loaded CSV with {len(summary_df)} rows")
             
-        summary_df = pd.read_csv(csv_path)
-        print(f"Loaded CSV with {len(summary_df)} rows")
-        
-        # Look for the file in the CSV
-        matching_rows = summary_df[summary_df['name'] == file_name]
-        
-        if len(matching_rows) > 0:
-            summary_text = matching_rows['summary'].iloc[0]
+            # Look for the file in the CSV
+            matching_rows = summary_df[summary_df['name'] == file_name]
             
-            if pd.notna(summary_text):
-                print(f"Found summary for {file_name}")
-                return {"summary": str(summary_text), "status": "success"}
+            if len(matching_rows) > 0:
+                summary_text = matching_rows['summary'].iloc[0]
+                
+                if pd.notna(summary_text):
+                    print(f"Found summary for {file_name} in cache")
+                    return {"summary": str(summary_text), "status": "success", "source": "cache"}
         
-        # If no specific summary found, return default
-        print(f"No summary found for file: {file_name}")
-        default_summary = "This is an official legal document from the Sri Lankan government portal containing important regulatory information and procedural guidelines."
-        return {"summary": default_summary, "status": "default", "message": "No specific summary found"}
+        # If not in cache, generate using LangGraph
+        print(f"Generating summary using LangGraph agent")
+        file_type = "unknown"
+        if "bill" in file_name.lower():
+            file_type = "bill"
+        elif "act" in file_name.lower():
+            file_type = "act"
+        elif "gazette" in file_name.lower():
+            file_type = "gazette"
+        
+        result = langgraph_summary(file_name, file_type, "en")
+        
+        return {
+            "summary": result["summary"],
+            "status": "success" if result["success"] else "generated_with_errors",
+            "source": "langgraph"
+        }
         
     except Exception as e:
         print(f"Error retrieving summary: {e}")
-        # Return default summary on error
-        default_summary = "This document contains important legal information."
+        default_summary = "This is an official legal document from the Sri Lankan government portal containing important regulatory information."
         return {"summary": default_summary, "status": "error", "message": str(e)}
 
 @router.post("/highlights")
 def get_highlights(file: FileNameRequest):
+    """
+    Get or generate document highlights using LangGraph agent.
+    First checks CSV cache, then generates using AI if not found.
+    """
     file_name = file.file_name.replace(".pdf", ".txt").replace("/", "-")
     print(f"Getting highlights for file: {file_name}")
     
     try:
         # Check if summary.csv exists
         csv_path = "docs/summary.csv"
-        if not os.path.exists(csv_path):
-            print(f"Summary CSV not found at {csv_path}")
-            # Return default highlights
-            default_highlights = [
-                "This document contains key legal provisions enacted by the Parliament of Sri Lanka",
-                "It includes important regulatory information and procedural guidelines",
-                "The document may contain statutory requirements and compliance measures"
-            ]
-            return {"highlights": default_highlights, "status": "default", "message": "Using default highlights"}
+        if os.path.exists(csv_path):
+            summary = pd.read_csv(csv_path)
+            print(f"Loaded CSV with {len(summary)} rows")
             
-        summary = pd.read_csv(csv_path)
-        print(f"Loaded CSV with {len(summary)} rows")
-        
-        # Look for the file in the CSV
-        matching_rows = summary[summary['name'] == file_name]
-        
-        if len(matching_rows) > 0:
-            summary_text = matching_rows['summary'].iloc[0]
-            file_type = matching_rows['type'].iloc[0]
-
-            try:
-                content = get_doc_chunks(file_name, file_type)
-                if content:
-                    print(f"Retrieved {len(content)} content chunks")
-                    # Only show first few chunks to avoid too much output
-                    if len(content) > 3:
-                        print(f"Content preview: {content[:3]}...")
-                    else:
-                        print(f"Content: {content}")
-                else:
-                    print("No content retrieved from get_doc_chunks")
-                    content = []
-            except Exception as e:
-                print(f"Error getting document chunks: {e}")
-                content = []
-
-            if pd.notna(summary_text):
-                # Split summary into key highlights
-                highlights = [h.strip() for h in str(summary_text).split('.') if h.strip()]
+            # Look for the file in the CSV
+            matching_rows = summary[summary['name'] == file_name]
+            
+            if len(matching_rows) > 0:
+                summary_text = matching_rows['summary'].iloc[0]
                 
-                # Add content chunks if available, but limit the number
-                if content:
-                    # Limit content to first 5 chunks and truncate each to 200 chars
-                    limited_content = []
-                    for chunk in content[:5]:
-                        if isinstance(chunk, str) and chunk.strip():
-                            truncated = chunk.strip()[:200]
-                            if len(chunk.strip()) > 200:
-                                truncated += "..."
-                            limited_content.append(truncated)
-                    highlights.extend(limited_content)
-
-                print(f"Found {len(highlights)} highlights for {file_name}")
-                return {"highlights": highlights, "status": "success"}
+                if pd.notna(summary_text):
+                    # Split summary into key highlights
+                    highlights = [h.strip() for h in str(summary_text).split('.') if h.strip()]
+                    print(f"Found {len(highlights)} highlights for {file_name} in cache")
+                    return {"highlights": highlights[:7], "status": "success", "source": "cache"}
         
-        # If no specific summary found, return default
-        print(f"No summary found for file: {file_name}")
-        default_highlights = [
-            "This document contains key legal provisions enacted by the Parliament of Sri Lanka",
-            "It includes important regulatory information and procedural guidelines",
-            "The document may contain statutory requirements and compliance measures"
-        ]
-        return {"highlights": default_highlights, "status": "default", "message": "No specific summary found"}
+        # If not in cache, generate using LangGraph
+        print(f"Generating highlights using LangGraph agent")
+        file_type = "unknown"
+        if "bill" in file_name.lower():
+            file_type = "bill"
+        elif "act" in file_name.lower():
+            file_type = "act"
+        elif "gazette" in file_name.lower():
+            file_type = "gazette"
+        
+        result = langgraph_highlights(file_name, file_type, "en")
+        
+        return {
+            "highlights": result["highlights"],
+            "status": "success" if result["success"] else "generated_with_errors",
+            "source": "langgraph"
+        }
         
     except Exception as e:
         print(f"Error retrieving highlights: {e}")
-        # Return default highlights on error
         default_highlights = [
             "This document contains key legal provisions",
             "It includes important regulatory information",
@@ -156,43 +139,27 @@ def generate_document_summary(
     db: Session = Depends(get_db)
 ):
     """
-    Generate a comprehensive summary of a document using LLM and save as chat session
+    Generate a comprehensive summary of a document using LangGraph and save as chat session.
     """
     try:
-        # First get highlights
-        highlights_data = get_highlights(FileNameRequest(file_name=request.file_name))
-        highlights = highlights_data.get("highlights", [])
-
-        print(highlights)
+        file_name = request.file_name.replace(".pdf", ".txt").replace("/", "-")
         
-        # Create a summary query for the LLM with language support
-        language_instruction = ""
-        if request.language == "si":
-            language_instruction = "Please respond in Sinhala (සිංහල)."
-        elif request.language == "ta":
-            language_instruction = "Please respond in Tamil (தமிழ்)."
-        else:
-            language_instruction = "Please respond in English."
-            
-        prompt = f"""{language_instruction}
+        # Determine file type
+        file_type = "unknown"
+        if "bill" in file_name.lower():
+            file_type = "bill"
+        elif "act" in file_name.lower():
+            file_type = "act"
+        elif "gazette" in file_name.lower():
+            file_type = "gazette"
         
-        Generate a comprehensive summary of the document '{request.file_name}' based on the following key highlights:
+        # Generate summary using LangGraph
+        result = langgraph_summary(file_name, file_type, request.language)
+        summary = result["summary"]
         
-        {' '.join(highlights)}
-        
-        Please provide:
-        1. A brief overview of the document's purpose
-        2. Key legal provisions and requirements
-        3. Important procedural information
-        4. Compliance or regulatory aspects
-        5. Any significant implications for citizens or businesses
-        
-        Format the response in a clear, structured manner that's easy to understand. No need of saying that you are unable to access the 
-        external documents, including the PDF you provided, "2023/8/10-2023_E.pdf." Therefore, you cannot provide a comprehensive summary 
-        based on its content."""
-        
-        response = gemini_client.generate_content(prompt)
-        summary = response.text if hasattr(response, "text") and response.text else "Sorry, something went wrong. Please try again later."
+        # Generate highlights
+        highlights_result = langgraph_highlights(file_name, file_type, request.language)
+        highlights = highlights_result.get("highlights", [])
         
         # Create a new chat session for this document summary
         session_name = f"Document Summary: {request.file_name}"
@@ -214,7 +181,8 @@ def generate_document_summary(
             message_metadata=json.dumps({
                 "document_filename": request.file_name,
                 "request_type": "summary",
-                "language": request.language
+                "language": request.language,
+                "agent": "langgraph"
             })
         )
         
@@ -230,7 +198,8 @@ def generate_document_summary(
                 "document_filename": request.file_name,
                 "highlights_count": len(highlights),
                 "language": request.language,
-                "response_type": "document_summary"
+                "response_type": "document_summary",
+                "agent": "langgraph"
             })
         )
         
@@ -260,6 +229,7 @@ def generate_document_summary(
             "filename": request.file_name,
             "language": request.language,
             "status": "error",
+            "error": str(e),
             "session_id": None,
             "session_name": None
         }
