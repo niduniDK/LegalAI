@@ -5,6 +5,7 @@ venv/
 **/.vscode
 
 docs/
+finetune_Tests/
 
 **.tsv
 
