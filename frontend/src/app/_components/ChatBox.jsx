@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { AutoResizeTextarea } from "@/components/ui/textarea"
 import { Focus, Paperclip, Zap, ChevronDown, ArrowRight } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useState } from "react"
@@ -23,9 +23,9 @@ export function ChatBox({ onStartChat }) {
   return (
     <div className="w-full space-y-4">
       <div className="relative">
-        <Input
+        <AutoResizeTextarea
           placeholder="Ask anything..."
-          className="w-full h-14 px-4 text-lg bg-card border-border rounded-xl pr-12"
+          className="w-full min-h-[56px] px-4 py-4 text-lg bg-card border-border rounded-xl pr-12"
           value={query}
           onChange={e => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}

@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react"
 import { Search, FileText, Calendar, ExternalLink, MessageCircle } from 'lucide-react'
 import { Send, Paperclip, Mic, Scale } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { AutoResizeTextarea } from "@/components/ui/textarea"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -375,8 +375,8 @@ export function ChatInterface({ initialQuery, initialResponse, chat_id, session_
       </ScrollArea>
 
       {/* Input Area */}
-      <div className="mt-4 flex items-center space-x-2">
-        <Input
+      <div className="mt-4 flex items-end space-x-2">
+        <AutoResizeTextarea
           placeholder="Ask a question..."
           className="flex-1"
           value={input}
@@ -385,7 +385,7 @@ export function ChatInterface({ initialQuery, initialResponse, chat_id, session_
           disabled={isLoading || initialLoading}
         />
         <select 
-          className="text-sm border border-border rounded-md px-2 py-2 bg-background text-foreground hover:bg-muted/50 transition-colors"
+          className="text-sm border border-border rounded-md px-2 py-2 bg-background text-foreground hover:bg-muted/50 transition-colors h-10"
           value={language}
           onChange={(e) => setLanguage(e.target.value)}
           disabled={isLoading || initialLoading}
@@ -394,7 +394,7 @@ export function ChatInterface({ initialQuery, initialResponse, chat_id, session_
           <option value="si">සිංහල</option>
           <option value="ta">தமிழ்</option>
         </select>
-        <Button onClick={handleSend} disabled={!input.trim() || isLoading || initialLoading}>
+        <Button onClick={handleSend} disabled={!input.trim() || isLoading || initialLoading} className="h-10">
           <Send className="h-4 w-4" />
         </Button>
       </div>
