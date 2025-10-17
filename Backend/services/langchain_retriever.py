@@ -319,7 +319,7 @@ def retrieve_doc(query: str, top_k: int = 5) -> Tuple[List[str], List[str]]:
     Returns (content_list, filename_list)
     """
     retriever = create_hybrid_retriever(k=top_k)
-    docs = retriever.get_relevant_documents(query)
+    docs = retriever.invoke(query)
     
     content_list = [doc.page_content for doc in docs]
     filename_list = [

@@ -10,21 +10,19 @@ from typing import TypedDict, List, Dict, Any
 from dotenv import load_dotenv
 
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
 
 from langgraph.graph import StateGraph, END
 
+from config.llm_config import get_langchain_llm, get_provider_info
 from services.langchain_retriever import create_hybrid_retriever
 
 load_dotenv()
 
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
-llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash-exp",
-    google_api_key=GEMINI_API_KEY,
-    temperature=0.5
-)
+# Initialize LLM based on configuration
+llm = get_langchain_llm(temperature=0.5)
+provider_info = get_provider_info()
+print(f"🤖 Recommendations Agent using: {provider_info['provider']} ({provider_info['model']})")
 
 
 class RecommendationState(TypedDict):
@@ -104,7 +102,7 @@ def retrieve_recommendations_node(state: RecommendationState) -> RecommendationS
     
     try:
         retriever = create_hybrid_retriever(k=10)
-        docs = retriever.get_relevant_documents(state['search_query'])
+        docs = retriever.invoke(state['search_query'])
         
         recommendations = []
         for doc in docs:

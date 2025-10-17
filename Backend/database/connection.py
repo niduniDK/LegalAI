@@ -27,12 +27,18 @@ if DATABASE_URL.startswith("postgresql://"):
 if "?sslmode=" in DATABASE_URL:
     DATABASE_URL = DATABASE_URL.split("?sslmode=")[0]
 
-# Create SQLAlchemy engine
+# Create SQLAlchemy engine with improved connection pooling and error handling
 engine = create_engine(
     DATABASE_URL,
-    pool_pre_ping=True,
-    pool_recycle=300,
-    echo=False  # Set to True for SQL query logging
+    pool_pre_ping=True,        # Verify connections before using them
+    pool_recycle=300,          # Recycle connections after 5 minutes
+    pool_size=5,               # Number of connections to maintain
+    max_overflow=10,           # Maximum overflow connections
+    pool_timeout=30,           # Timeout for getting connection from pool
+    connect_args={
+        "timeout": 10,         # Connection timeout in seconds
+    },
+    echo=False                 # Set to True for SQL query logging
 )
 
 # Create SessionLocal class
@@ -44,11 +50,17 @@ Base = declarative_base()
 # Metadata instance
 metadata = MetaData()
 
-# Dependency to get database session
+# Dependency to get database session with error handling
 def get_db():
     db = SessionLocal()
     try:
+        # Test the connection before yielding
+        db.execute(text("SELECT 1"))
         yield db
+    except Exception as e:
+        print(f"⚠️  Database session error: {e}")
+        db.rollback()
+        raise
     finally:
         db.close()
 

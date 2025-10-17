@@ -8,6 +8,7 @@ from routers import auth
 from routers import chat_history
 from routers import generate_summary
 from config.langsmith_config import configure_langsmith
+from database.connection import test_connection
 
 # Initialize observability tracing
 configure_langsmith()
@@ -17,6 +18,21 @@ app = FastAPI(
     description="AI-powered legal assistant API for Sri Lankan law with RAG and multi-language support",
     version="1.0.0"
 )
+
+@app.on_event("startup")
+async def startup_event():
+    """Check database connection and system health on startup."""
+    print("\n" + "="*60)
+    print("🚀 LegalAI API Starting Up")
+    print("="*60)
+    print("🔍 Testing database connection...")
+    if test_connection():
+        print("✅ Database connected successfully!")
+    else:
+        print("⚠️  WARNING: Database connection failed!")
+        print("   The application will start but database operations will fail.")
+        print("   Please check your database credentials in .env file.")
+    print("="*60 + "\n")
 
 app.add_middleware(
     CORSMiddleware,
@@ -48,9 +64,36 @@ async def root():
 
 @app.get("/health")
 async def health_check():
+    """Health check endpoint with database and LLM provider status."""
+    from database.connection import engine
+    from sqlalchemy import text
+    from config.llm_config import get_provider_info
+    
+    # Check database connection
+    db_status = "disconnected"
+    db_error = None
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+            db_status = "connected"
+    except Exception as e:
+        db_status = "error"
+        db_error = str(e)[:100]
+    
+    # Get LLM provider info
+    provider_info = get_provider_info()
+    
     return {
-        "status": "healthy",
-        "service": "LegalAI API"
+        "status": "healthy" if db_status == "connected" else "degraded",
+        "service": "LegalAI API",
+        "database": {
+            "status": db_status,
+            "error": db_error
+        },
+        "llm": {
+            "provider": provider_info["provider"],
+            "model": provider_info["model"]
+        }
     }
 
 if __name__ == "__main__":

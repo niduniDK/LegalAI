@@ -25,18 +25,27 @@ security = HTTPBearer()
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security), db: Session = Depends(get_db)):
     """Get current authenticated user."""
-    token = credentials.credentials
-    email = verify_token(token)
-    
-    user = db.query(User).filter(User.email == email).first()
-    if user is None:
+    try:
+        token = credentials.credentials
+        email = verify_token(token)
+        
+        user = db.query(User).filter(User.email == email).first()
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User not found",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        
+        return user
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"⚠️  Database error in get_current_user: {e}")
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User not found",
-            headers={"WWW-Authenticate": "Bearer"},
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Database connection error. Please check your connection and try again.",
         )
-    
-    return user
 
 def log_user_activity(db: Session, user_email: str, activity_type: str, description: str, request: Request):
     """Log user activity."""

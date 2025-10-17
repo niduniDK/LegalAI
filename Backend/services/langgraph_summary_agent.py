@@ -10,22 +10,20 @@ from typing import TypedDict, List, Dict, Any
 from dotenv import load_dotenv
 
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.documents import Document
 
 from langgraph.graph import StateGraph, END
 
+from config.llm_config import get_langchain_llm, get_provider_info
 from services.get_doc_chunks import get_doc_chunks
 
 load_dotenv()
 
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
-llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash-exp",
-    google_api_key=GEMINI_API_KEY,
-    temperature=0.2
-)
+# Initialize LLM based on configuration
+llm = get_langchain_llm(temperature=0.2)
+provider_info = get_provider_info()
+print(f"🤖 Summary Agent using: {provider_info['provider']} ({provider_info['model']})")
 
 
 class SummaryState(TypedDict):

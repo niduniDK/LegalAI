@@ -15,7 +15,6 @@ from dotenv import load_dotenv
 
 from langchain_core.messages import HumanMessage, AIMessage, BaseMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 
@@ -23,19 +22,16 @@ from langgraph.graph import StateGraph, END
 from langgraph.graph.message import add_messages
 from langgraph.checkpoint.memory import MemorySaver
 
+from config.llm_config import get_langchain_llm, get_provider_info
 from services.langchain_retriever import create_hybrid_retriever
 from services.translator import translate
 
 load_dotenv()
 
-# Initialize LLM
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
-llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash-exp",
-    google_api_key=GEMINI_API_KEY,
-    temperature=0.3,
-    convert_system_message_to_human=True
-)
+# Initialize LLM based on configuration
+llm = get_langchain_llm(temperature=0.3)
+provider_info = get_provider_info()
+print(f"🤖 LangGraph Agent using: {provider_info['provider']} ({provider_info['model']})")
 
 
 class AgentState(TypedDict):
@@ -80,7 +76,7 @@ def retrieve_node(state: AgentState) -> AgentState:
     print(f"📚 Retrieving documents for: {state['query']}")
     
     retriever = create_hybrid_retriever(k=5)
-    docs = retriever.get_relevant_documents(state["query"])
+    docs = retriever.invoke(state["query"])
     
     # Extract context and metadata
     context_parts = []
