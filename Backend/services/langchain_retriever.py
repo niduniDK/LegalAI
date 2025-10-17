@@ -5,6 +5,8 @@ This module provides a hybrid retrieval system using:
 - FAISS for semantic search (dense retrieval)
 - BM25 for keyword search (sparse retrieval)
 - Reciprocal Rank Fusion for combining results
+
+Features singleton pattern for caching to avoid reloading models on every query.
 """
 
 import os
@@ -22,6 +24,10 @@ import faiss as faiss_lib
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DOCS_DIR = os.path.join(BASE_DIR, "..", "docs")
+
+# Global cache for the retriever instance (type hints added after class definition)
+_RETRIEVER_CACHE = None
+_EMBEDDINGS_CACHE = None
 
 
 def path_magic(path: str) -> bool:
@@ -268,19 +274,18 @@ def load_all_documents(docs_dir: str) -> Tuple[Dict, Dict, Dict]:
     return faiss_indices, bm25_indices, documents_dict
 
 
-def create_hybrid_retriever(k: int = 5) -> HybridRetriever:
+def load_embeddings_model() -> HuggingFaceEmbeddings:
     """
-    Create and initialize a hybrid retriever with FAISS and BM25.
-    
-    Args:
-        k: Number of documents to retrieve
+    Load the embeddings model with caching.
     
     Returns:
-        Initialized HybridRetriever instance
+        Cached or newly loaded HuggingFaceEmbeddings instance
     """
-    print("\n🔧 Initializing Hybrid Retriever...")
+    global _EMBEDDINGS_CACHE
     
-    # Load embeddings model
+    if _EMBEDDINGS_CACHE is not None:
+        return _EMBEDDINGS_CACHE
+    
     print("📦 Loading embeddings model...")
     try:
         embeddings = HuggingFaceEmbeddings(
@@ -296,6 +301,32 @@ def create_hybrid_retriever(k: int = 5) -> HybridRetriever:
         )
         print("✓ Loaded all-MiniLM-L6-v2 (fallback)")
     
+    _EMBEDDINGS_CACHE = embeddings
+    return embeddings
+
+
+def initialize_retriever(force_reload: bool = False) -> HybridRetriever:
+    """
+    Initialize and cache the hybrid retriever.
+    This should be called once at application startup.
+    
+    Args:
+        force_reload: If True, reload even if already cached
+    
+    Returns:
+        Initialized HybridRetriever instance
+    """
+    global _RETRIEVER_CACHE
+    
+    if _RETRIEVER_CACHE is not None and not force_reload:
+        print("✓ Using cached Hybrid Retriever")
+        return _RETRIEVER_CACHE
+    
+    print("\n🔧 Initializing Hybrid Retriever...")
+    
+    # Load embeddings model (with its own caching)
+    embeddings = load_embeddings_model()
+    
     # Load all indices and documents
     faiss_indices, bm25_indices, documents = load_all_documents(DOCS_DIR)
     
@@ -305,11 +336,64 @@ def create_hybrid_retriever(k: int = 5) -> HybridRetriever:
         bm25_indices=bm25_indices,
         documents=documents,
         embeddings=embeddings,
-        k=k
+        k=5  # Default k
     )
     
     print(f"✓ Hybrid Retriever initialized with {len(documents)} document sources")
+    
+    # Cache the retriever
+    _RETRIEVER_CACHE = retriever
+    
     return retriever
+
+
+def create_hybrid_retriever(k: int = 5) -> HybridRetriever:
+    """
+    Get or create a hybrid retriever with FAISS and BM25.
+    Uses cached retriever if available to avoid reloading models.
+    
+    Args:
+        k: Number of documents to retrieve
+    
+    Returns:
+        HybridRetriever instance (cached or newly created)
+    """
+    global _RETRIEVER_CACHE
+    
+    # Initialize retriever if not cached
+    if _RETRIEVER_CACHE is None:
+        initialize_retriever()
+    
+    # Update k if different from cached value
+    if _RETRIEVER_CACHE.k != k:
+        _RETRIEVER_CACHE.k = k
+    
+    return _RETRIEVER_CACHE
+
+
+def clear_retriever_cache():
+    """
+    Clear the cached retriever and embeddings model.
+    Useful for testing or if you need to reload the models.
+    """
+    global _RETRIEVER_CACHE, _EMBEDDINGS_CACHE
+    _RETRIEVER_CACHE = None
+    _EMBEDDINGS_CACHE = None
+    print("🗑️  Retriever cache cleared")
+
+
+def get_cache_status() -> dict:
+    """
+    Get the status of the retriever cache.
+    
+    Returns:
+        Dictionary with cache status information
+    """
+    return {
+        "retriever_cached": _RETRIEVER_CACHE is not None,
+        "embeddings_cached": _EMBEDDINGS_CACHE is not None,
+        "document_sources": len(_RETRIEVER_CACHE.documents) if _RETRIEVER_CACHE else 0
+    }
 
 
 # Legacy function for backward compatibility

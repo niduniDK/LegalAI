@@ -25,6 +25,8 @@ async def startup_event():
     print("\n" + "="*60)
     print("🚀 LegalAI API Starting Up")
     print("="*60)
+    
+    # Test database connection
     print("🔍 Testing database connection...")
     if test_connection():
         print("✅ Database connected successfully!")
@@ -32,6 +34,17 @@ async def startup_event():
         print("⚠️  WARNING: Database connection failed!")
         print("   The application will start but database operations will fail.")
         print("   Please check your database credentials in .env file.")
+    
+    # Pre-load retriever and embeddings model
+    print("\n📚 Pre-loading document retrieval system...")
+    try:
+        from services.langchain_retriever import initialize_retriever
+        initialize_retriever()
+        print("✅ Retriever pre-loaded successfully!")
+    except Exception as e:
+        print(f"⚠️  WARNING: Failed to pre-load retriever: {e}")
+        print("   Retriever will be loaded on first query.")
+    
     print("="*60 + "\n")
 
 app.add_middleware(
@@ -68,6 +81,7 @@ async def health_check():
     from database.connection import engine
     from sqlalchemy import text
     from config.llm_config import get_provider_info
+    from services.langchain_retriever import get_cache_status
     
     # Check database connection
     db_status = "disconnected"
@@ -83,6 +97,9 @@ async def health_check():
     # Get LLM provider info
     provider_info = get_provider_info()
     
+    # Get retriever cache status
+    cache_status = get_cache_status()
+    
     return {
         "status": "healthy" if db_status == "connected" else "degraded",
         "service": "LegalAI API",
@@ -93,6 +110,11 @@ async def health_check():
         "llm": {
             "provider": provider_info["provider"],
             "model": provider_info["model"]
+        },
+        "retriever": {
+            "cached": cache_status["retriever_cached"],
+            "embeddings_cached": cache_status["embeddings_cached"],
+            "document_sources": cache_status["document_sources"]
         }
     }
 
