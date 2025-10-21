@@ -302,32 +302,20 @@ def load_embeddings_model() -> HuggingFaceEmbeddings:
     # Path to Legal-BERT model in data/models folder
     legal_bert_path = os.path.join(MODELS_DIR, "legal-bert-base-uncased")
     
+    if not os.path.exists(legal_bert_path):
+        raise FileNotFoundError(
+            f"Legal-BERT not found at {legal_bert_path}. "
+            f"Run 'python download_models.py' to download it."
+        )
+    
     try:
-        if os.path.exists(legal_bert_path):
-            # Load from local data/models folder (network storage)
-            print(f"📁 Loading Legal-BERT from: {legal_bert_path}")
-            embeddings = HuggingFaceEmbeddings(
-                model_name=legal_bert_path,
-                model_kwargs={'device': 'cpu'}
-            )
-            print("✓ Loaded legal-bert-base-uncased from data/models folder")
-        else:
-            # Fallback: try to download (only if not in data/models folder)
-            print(f"⚠ Legal-BERT not found in: {legal_bert_path}")
-            print("  Attempting to download from HuggingFace...")
-            embeddings = HuggingFaceEmbeddings(
-                model_name='nlpaueb/legal-bert-base-uncased',
-                model_kwargs={'device': 'cpu'}
-            )
-            print("✓ Downloaded legal-bert-base-uncased")
-    except Exception as e:
-        print(f"⚠ Failed to load legal-bert: {e}")
-        print("  Using fallback model: all-MiniLM-L6-v2")
         embeddings = HuggingFaceEmbeddings(
-            model_name='all-MiniLM-L6-v2',
+            model_name=legal_bert_path,
             model_kwargs={'device': 'cpu'}
         )
-        print("✓ Loaded all-MiniLM-L6-v2 (fallback)")
+        print(f"✓ Loaded Legal-BERT from {legal_bert_path}")
+    except Exception as e:
+        raise RuntimeError(f"Failed to load Legal-BERT: {e}")
     
     _EMBEDDINGS_CACHE = embeddings
     return embeddings

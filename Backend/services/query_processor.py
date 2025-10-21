@@ -23,34 +23,17 @@ MODELS_DIR = os.path.join(DATA_DIR, "models")     # For Legal-BERT model
 # Load Sentence Transformer model
 legal_bert_path = os.path.join(MODELS_DIR, "legal-bert-base-uncased")
 
+if not os.path.exists(legal_bert_path):
+    raise FileNotFoundError(
+        f"Legal-BERT not found at {legal_bert_path}. "
+        f"Run 'python download_models.py' to download it."
+    )
+
 try:
-    if os.path.exists(legal_bert_path):
-        # Load from local data/models folder
-        model = SentenceTransformer(legal_bert_path)
-        print(f"Successfully loaded model from: {legal_bert_path}")
-    else:
-        # Try to download from HuggingFace
-        model = SentenceTransformer('nlpaueb/legal-bert-base-uncased')
-        print(f"Successfully loaded model: nlpaueb/legal-bert-base-uncased")
+    model = SentenceTransformer(legal_bert_path)
+    print(f"✓ Loaded Legal-BERT from {legal_bert_path}")
 except Exception as e:
-    print(f"Failed to load nlpaueb/legal-bert-base-uncased: {e}")
-    print("This model exists on Hugging Face but may need to be downloaded first")
-    
-    try:
-        from transformers import AutoModel, AutoTokenizer
-        tokenizer = AutoTokenizer.from_pretrained('nlpaueb/legal-bert-base-uncased')
-        bert_model = AutoModel.from_pretrained('nlpaueb/legal-bert-base-uncased')
-        # Create sentence transformer with mean pooling
-        from sentence_transformers.models import Transformer, Pooling
-        word_embedding_model = Transformer('nlpaueb/legal-bert-base-uncased')
-        pooling_model = Pooling(word_embedding_model.get_word_embedding_dimension())
-        model = SentenceTransformer(modules=[word_embedding_model, pooling_model])
-        print("Successfully created SentenceTransformer with custom pooling")
-    except Exception as e2:
-        print(f"Failed to create custom model: {e2}")
-        print("Falling back to a working model...")
-        model = SentenceTransformer('all-MiniLM-L6-v2')
-        print("Using fallback model: all-MiniLM-L6-v2")
+    raise RuntimeError(f"Failed to load Legal-BERT: {e}")
 
 def safe_read_tsv(path: str) -> pd.DataFrame:
     """
