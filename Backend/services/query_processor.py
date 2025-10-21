@@ -10,15 +10,28 @@ import re
 import csv
 
 # Support both local and Railway/production paths
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 if os.path.exists("/app/data"):
     DATA_DIR = "/app/data"  # Railway Volume mount path
 else:
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     DATA_DIR = os.path.join(BASE_DIR, "..", "data")  # Local development
 
 # Subfolders for different data types
-INDICES_DIR = os.path.join(DATA_DIR, "indices")  # For .faiss, .pkl, .tsv files
-MODELS_DIR = os.path.join(DATA_DIR, "models")     # For Legal-BERT model
+INDICES_DIR = os.path.join(DATA_DIR, "indices")
+MODELS_DIR = os.path.join(DATA_DIR, "models")
+
+# Fallback to root data/ if not found in DATA_DIR
+if not os.path.exists(os.path.join(MODELS_DIR, "legal-bert-base-uncased")):
+    fallback = os.path.join(BASE_DIR, "..", "data", "models")
+    if os.path.exists(os.path.join(fallback, "legal-bert-base-uncased")):
+        MODELS_DIR = fallback
+        print(f"📁 Using fallback models: {MODELS_DIR}")
+
+if not os.path.exists(INDICES_DIR) or not os.listdir(INDICES_DIR):
+    fallback = os.path.join(BASE_DIR, "..", "data", "indices")
+    if os.path.exists(fallback) and os.listdir(fallback):
+        INDICES_DIR = fallback
+        print(f"📁 Using fallback indices: {INDICES_DIR}")
 
 # Load Sentence Transformer model
 legal_bert_path = os.path.join(MODELS_DIR, "legal-bert-base-uncased")

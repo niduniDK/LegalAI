@@ -4,13 +4,21 @@ import os
 from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
 
 # Support both local and Railway/production paths
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 if os.path.exists("/app/data"):
     DATA_DIR = "/app/data"  # Railway Volume mount path
 else:
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     DATA_DIR = os.path.join(BASE_DIR, "..", "data")  # Local development
 
 MODELS_DIR = os.path.join(DATA_DIR, "models")
+
+# Fallback to root data/ if not found in DATA_DIR
+if not os.path.exists(os.path.join(MODELS_DIR, "m2m100_418M")):
+    fallback = os.path.join(BASE_DIR, "..", "data", "models")
+    if os.path.exists(os.path.join(fallback, "m2m100_418M")):
+        MODELS_DIR = fallback
+        print(f"📁 Using fallback models: {MODELS_DIR}")
+
 m2m100_path = os.path.join(MODELS_DIR, "m2m100_418M")
 
 # Temporarily allow startup without translator for initial deployment
