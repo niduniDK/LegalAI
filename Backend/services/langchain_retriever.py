@@ -22,8 +22,18 @@ from rank_bm25 import BM25Okapi
 import pandas as pd
 import faiss as faiss_lib
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DOCS_DIR = os.path.join(BASE_DIR, "..", "docs")
+# Support both local and Railway/production paths
+if os.path.exists("/app/data"):
+    DATA_DIR = "/app/data"  # Railway Volume mount path
+    print(f"📁 Using Railway volume for data: {DATA_DIR}")
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    DATA_DIR = os.path.join(BASE_DIR, "..", "data")  # Local development
+    print(f"📁 Using local data directory: {DATA_DIR}")
+
+# Subfolders for different data types
+INDICES_DIR = os.path.join(DATA_DIR, "indices")  # For .faiss, .pkl, .tsv files
+MODELS_DIR = os.path.join(DATA_DIR, "models")     # For Legal-BERT model
 
 # Global cache for the retriever instance (type hints added after class definition)
 _RETRIEVER_CACHE = None
@@ -277,6 +287,7 @@ def load_all_documents(docs_dir: str) -> Tuple[Dict, Dict, Dict]:
 def load_embeddings_model() -> HuggingFaceEmbeddings:
     """
     Load the embeddings model with caching.
+    Loads Legal-BERT from docs folder (network storage) instead of downloading.
     
     Returns:
         Cached or newly loaded HuggingFaceEmbeddings instance
@@ -287,14 +298,31 @@ def load_embeddings_model() -> HuggingFaceEmbeddings:
         return _EMBEDDINGS_CACHE
     
     print("📦 Loading embeddings model...")
+    
+    # Path to Legal-BERT model in data/models folder
+    legal_bert_path = os.path.join(MODELS_DIR, "legal-bert-base-uncased")
+    
     try:
-        embeddings = HuggingFaceEmbeddings(
-            model_name='nlpaueb/legal-bert-base-uncased',
-            model_kwargs={'device': 'cpu'}
-        )
-        print("✓ Loaded legal-bert-base-uncased")
+        if os.path.exists(legal_bert_path):
+            # Load from local data/models folder (network storage)
+            print(f"📁 Loading Legal-BERT from: {legal_bert_path}")
+            embeddings = HuggingFaceEmbeddings(
+                model_name=legal_bert_path,
+                model_kwargs={'device': 'cpu'}
+            )
+            print("✓ Loaded legal-bert-base-uncased from data/models folder")
+        else:
+            # Fallback: try to download (only if not in data/models folder)
+            print(f"⚠ Legal-BERT not found in: {legal_bert_path}")
+            print("  Attempting to download from HuggingFace...")
+            embeddings = HuggingFaceEmbeddings(
+                model_name='nlpaueb/legal-bert-base-uncased',
+                model_kwargs={'device': 'cpu'}
+            )
+            print("✓ Downloaded legal-bert-base-uncased")
     except Exception as e:
-        print(f"⚠ Failed to load legal-bert, using fallback: {e}")
+        print(f"⚠ Failed to load legal-bert: {e}")
+        print("  Using fallback model: all-MiniLM-L6-v2")
         embeddings = HuggingFaceEmbeddings(
             model_name='all-MiniLM-L6-v2',
             model_kwargs={'device': 'cpu'}
@@ -327,8 +355,8 @@ def initialize_retriever(force_reload: bool = False) -> HybridRetriever:
     # Load embeddings model (with its own caching)
     embeddings = load_embeddings_model()
     
-    # Load all indices and documents
-    faiss_indices, bm25_indices, documents = load_all_documents(DOCS_DIR)
+    # Load all indices and documents from data/indices folder
+    faiss_indices, bm25_indices, documents = load_all_documents(INDICES_DIR)
     
     # Create retriever
     retriever = HybridRetriever(

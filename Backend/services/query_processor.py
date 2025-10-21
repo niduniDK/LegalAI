@@ -9,13 +9,29 @@ from rank_bm25 import BM25Okapi
 import re
 import csv
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DOCS_DIR = os.path.join(BASE_DIR, "..", "docs")
+# Support both local and Railway/production paths
+if os.path.exists("/app/data"):
+    DATA_DIR = "/app/data"  # Railway Volume mount path
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    DATA_DIR = os.path.join(BASE_DIR, "..", "data")  # Local development
+
+# Subfolders for different data types
+INDICES_DIR = os.path.join(DATA_DIR, "indices")  # For .faiss, .pkl, .tsv files
+MODELS_DIR = os.path.join(DATA_DIR, "models")     # For Legal-BERT model
 
 # Load Sentence Transformer model
+legal_bert_path = os.path.join(MODELS_DIR, "legal-bert-base-uncased")
+
 try:
-    model = SentenceTransformer('nlpaueb/legal-bert-base-uncased')
-    print(f"Successfully loaded model: nlpaueb/legal-bert-base-uncased")
+    if os.path.exists(legal_bert_path):
+        # Load from local data/models folder
+        model = SentenceTransformer(legal_bert_path)
+        print(f"Successfully loaded model from: {legal_bert_path}")
+    else:
+        # Try to download from HuggingFace
+        model = SentenceTransformer('nlpaueb/legal-bert-base-uncased')
+        print(f"Successfully loaded model: nlpaueb/legal-bert-base-uncased")
 except Exception as e:
     print(f"Failed to load nlpaueb/legal-bert-base-uncased: {e}")
     print("This model exists on Hugging Face but may need to be downloaded first")
@@ -126,8 +142,8 @@ def load_all_documents(docs_dir: str):
 
     return sources
 
-# Load all documents
-sources = load_all_documents(DOCS_DIR)
+# Load all documents from data/indices folder
+sources = load_all_documents(INDICES_DIR)
 
 # Print summary of loaded sources
 print(f"Loaded {len(sources)} document sources:")

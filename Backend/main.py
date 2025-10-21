@@ -1,4 +1,5 @@
 import uvicorn
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import get_ai_response
@@ -47,9 +48,25 @@ async def startup_event():
     
     print("="*60 + "\n")
 
+# Configure CORS with environment variable support
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+
+allowed_origins = [
+    FRONTEND_URL,
+    "http://localhost:3000",
+    "http://localhost:3001",
+]
+
+# Add additional origins if provided
+additional_origins = os.getenv("ADDITIONAL_CORS_ORIGINS", "")
+if additional_origins:
+    allowed_origins.extend([origin.strip() for origin in additional_origins.split(",")])
+
+print(f"🔒 CORS configured for origins: {allowed_origins}")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  
+    allow_origins=allowed_origins,  
     allow_credentials=True,
     allow_methods=["*"],  
     allow_headers=["*"],  

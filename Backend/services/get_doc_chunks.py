@@ -1,14 +1,23 @@
 import pandas as pd
 import os
 
+# Support both local and Railway/production paths
+if os.path.exists("/app/data"):
+    DATA_DIR = "/app/data"
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    DATA_DIR = os.path.join(BASE_DIR, "..", "data")
+
+INDICES_DIR = os.path.join(DATA_DIR, "indices")
+
 def get_doc_chunks(filename, type):
-    base_path = "./docs/constitution.tsv"
+    base_path = os.path.join(INDICES_DIR, "constitution.tsv")
     if type == "acts":
-        base_path = "./docs/acts.tsv"
+        base_path = os.path.join(INDICES_DIR, "acts.tsv")
     elif type == "bills":
-        base_path = "./docs/bills.tsv"
+        base_path = os.path.join(INDICES_DIR, "bills.tsv")
     elif type == "gazettes":
-        base_path = "./docs/gazettes.tsv"
+        base_path = os.path.join(INDICES_DIR, "gazettes.tsv")
     
     try:
         # Check if file exists
