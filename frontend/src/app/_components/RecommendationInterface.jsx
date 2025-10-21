@@ -222,8 +222,7 @@ export function RecommendationsInterface() {
       if (response.ok) {
         const data = await response.json();
         console.log('Recommendations response:', data);
-        const urls = Object.values(data);
-        setUserRecommendations(urls);
+        setUserRecommendations(data.recommendations || []);
       }
     } catch (error) {
       console.error('Error fetching recommendations:', error);
@@ -263,11 +262,14 @@ export function RecommendationsInterface() {
       const newSummaries = { ...docSummaries };
       let needsUpdate = false;
 
-      for (const url of userRecommendations) {
+      for (const item of userRecommendations) {
+        // Handle both string URLs and object format {url, filename, ...}
+        const url = typeof item === 'string' ? item : item.url;
+
         // Extract filename from URL
         let filename = '';
         const basePath = 'https://documents.gov.lk/view/';
-        if (url.startsWith(basePath)) {
+        if (url && url.startsWith(basePath)) {
           const afterBase = url.slice(basePath.length);
           const parts = afterBase.split('/');
           if (parts.length > 1) {
@@ -358,7 +360,10 @@ export function RecommendationsInterface() {
               </div>
             ) : userRecommendations.length > 0 ? (
               <div className='grid gap-4 md:grid-cols-2'>
-                {userRecommendations.map((url, index) => {
+                {userRecommendations.map((item, index) => {
+                  // Handle both string URLs and object format {url, filename, ...}
+                  const url = typeof item === 'string' ? item : item.url;
+
                   // Extract document information from URL (same logic as DiscoverInterface)
                   let docType = 'Document';
                   let filename = '';
@@ -366,7 +371,7 @@ export function RecommendationsInterface() {
                   let extractedDate = new Date().toISOString().split('T')[0]; // Default to today
 
                   const basePath = 'https://documents.gov.lk/view/';
-                  if (url.startsWith(basePath)) {
+                  if (url && url.startsWith(basePath)) {
                     const afterBase = url.slice(basePath.length);
                     const parts = afterBase.split('/');
                     if (parts.length > 1) {
