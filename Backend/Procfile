@@ -1,1 +1,1 @@
-web: python preload_model.py && python copy_docs_to_volume.py && uvicorn main:app --host 0.0.0.0 --port $PORT
+web: python copy_docs_to_volume.py && uvicorn main:app --host 0.0.0.0 --port $PORT

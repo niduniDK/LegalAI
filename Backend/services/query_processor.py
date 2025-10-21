@@ -73,6 +73,13 @@ def load_all_documents(docs_dir: str):
     Supports: .faiss, _bm25.pkl, _data.pkl, .tsv
     """
     sources = {}
+    
+    # Check if directory exists
+    if not os.path.exists(docs_dir):
+        print(f"⚠️ Indices directory not found: {docs_dir}")
+        print(f"   Service will start but queries will fail until data is available.")
+        return sources
+    
     for fname in os.listdir(docs_dir):
         path = os.path.join(docs_dir, fname)
 
