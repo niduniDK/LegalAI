@@ -32,6 +32,7 @@ export function ChatInterface({
   const [isLoading, setIsLoading] = useState(false);
   const [language, setLanguage] = useState('en');
   const [documentContext, setDocumentContext] = useState(null);
+  const [hasAutoSent, setHasAutoSent] = useState(false);
   const scrollAreaRef = useRef(null);
 
   // Initialize with document context and query when component mounts
@@ -64,6 +65,17 @@ export function ChatInterface({
       setInput(initialQuery);
     }
   }, [initialQuery]);
+
+  // Auto-send the initial query when component mounts
+  React.useEffect(() => {
+    if (initialQuery && !hasAutoSent && !isLoading && input === initialQuery) {
+      setHasAutoSent(true);
+      // Small delay to ensure state is fully initialized
+      setTimeout(() => {
+        handleSend();
+      }, 100);
+    }
+  }, [initialQuery, input, hasAutoSent, isLoading]);
 
   const handleDocumentSummary = async (context) => {
     if (!context || !context.filename) return;
