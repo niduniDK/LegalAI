@@ -8,7 +8,7 @@ router = APIRouter()
 
 class Recommendation(BaseModel):
     username: str
-    prefrerences: list[str] = []
+    preferences: list[str] = []
     language: str
 
 @router.post("/get_recommendations")
@@ -23,7 +23,7 @@ def get_recommendations_endpoint(request: Recommendation):
     4. Returns ranked recommendations
     """
     username = request.username
-    preferences = request.prefrerences  # Note: typo in field name preserved for compatibility
+    preferences = request.preferences
     language = request.language
 
     print(f"\n> GET_RECOMMENDATIONS: Processing for user: {username}")

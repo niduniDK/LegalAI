@@ -205,7 +205,7 @@ export function RecommendationsInterface() {
     try {
       setLoading(true);
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/recommendations/get_recommendations/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/recommendations/get_recommendations`,
         {
           method: 'POST',
           headers: {
