@@ -24,7 +24,13 @@ from langgraph.checkpoint.memory import MemorySaver
 
 from config.llm_config import get_langchain_llm, get_provider_info
 from services.langchain_retriever import create_hybrid_retriever
-from services.translator import translate
+# Temporarily disabled to allow initial deployment
+# from services.translator import translate
+try:
+    from services.translator import translate
+except Exception as e:
+    print(f"⚠️ Translator not available: {e}")
+    translate = None
 
 load_dotenv()
 
