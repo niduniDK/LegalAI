@@ -48,28 +48,23 @@ async def startup_event():
     
     print("="*60 + "\n")
 
-# Configure CORS with environment variable support
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+# Configure CORS - comma-separated allowed origins
+ALLOWED_ORIGINS = os.getenv(
+    "ALLOWED_ORIGINS",
+    "http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000"
+)
 
-allowed_origins = [
-    FRONTEND_URL,
-    "http://localhost:3000",
-    "http://localhost:3001",
-]
-
-# Add additional origins if provided
-additional_origins = os.getenv("ADDITIONAL_CORS_ORIGINS", "")
-if additional_origins:
-    allowed_origins.extend([origin.strip() for origin in additional_origins.split(",")])
+# Parse origins from comma-separated string
+allowed_origins = [origin.strip() for origin in ALLOWED_ORIGINS.split(",") if origin.strip()]
 
 print(f"🔒 CORS configured for origins: {allowed_origins}")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,  
+    allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],  
-    allow_headers=["*"],  
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Include routers
