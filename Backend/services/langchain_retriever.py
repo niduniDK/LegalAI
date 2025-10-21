@@ -302,9 +302,12 @@ def load_embeddings_model() -> HuggingFaceEmbeddings:
     # Path to Legal-BERT model in data/models folder
     legal_bert_path = os.path.join(MODELS_DIR, "legal-bert-base-uncased")
     
+    # Temporarily allow startup without models for initial deployment
     if not os.path.exists(legal_bert_path):
+        print(f"⚠️ Legal-BERT not found at {legal_bert_path}. Service will start but queries will fail.")
+        print(f"   Run 'python download_models.py' inside the container to download models.")
         raise FileNotFoundError(
-            f"Legal-BERT not found at {legal_bert_path}. "
+            f"Legal-BERT not found. Cannot initialize retriever. "
             f"Run 'python download_models.py' to download it."
         )
     

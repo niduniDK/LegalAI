@@ -23,17 +23,17 @@ MODELS_DIR = os.path.join(DATA_DIR, "models")     # For Legal-BERT model
 # Load Sentence Transformer model
 legal_bert_path = os.path.join(MODELS_DIR, "legal-bert-base-uncased")
 
+# Temporarily allow startup without models for initial deployment
+model = None
 if not os.path.exists(legal_bert_path):
-    raise FileNotFoundError(
-        f"Legal-BERT not found at {legal_bert_path}. "
-        f"Run 'python download_models.py' to download it."
-    )
-
-try:
-    model = SentenceTransformer(legal_bert_path)
-    print(f"✓ Loaded Legal-BERT from {legal_bert_path}")
-except Exception as e:
-    raise RuntimeError(f"Failed to load Legal-BERT: {e}")
+    print(f"⚠️ Legal-BERT not found at {legal_bert_path}. Service will start but queries will fail.")
+    print(f"   Run 'python download_models.py' inside the container to download models.")
+else:
+    try:
+        model = SentenceTransformer(legal_bert_path)
+        print(f"✓ Loaded Legal-BERT from {legal_bert_path}")
+    except Exception as e:
+        print(f"⚠️ Failed to load Legal-BERT: {e}")
 
 def safe_read_tsv(path: str) -> pd.DataFrame:
     """
