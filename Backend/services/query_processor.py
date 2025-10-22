@@ -8,6 +8,7 @@ import pandas as pd
 from rank_bm25 import BM25Okapi
 import re
 import csv
+from .get_doc_chunks import get_doc_chunks
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DOCS_DIR = os.path.join(BASE_DIR, "..", "docs")
@@ -188,27 +189,35 @@ def bm25_retrieve(query: str, source_key: str, k: int = 5) -> List[Tuple[str, di
             results.append((docs[i], metadata[i], float(scores[i])))
     return results
 
-def retrieve_doc(query: str, top_k: int = 5):
+def retrieve_doc(query: str, top_k: int = 5, doc_summary: bool = False, doc_type=None, document: str = None):
     """Retrieve top K documents from all sources, sorted by similarity score."""
     results_dict = {}
+    
+    if not doc_summary:
+        for key in sources.keys():
+            bm25_results = bm25_retrieve(query, key, k=top_k) if "bm25" in sources[key] else []
+            faiss_results = faiss_retrieve(query, key, k=top_k) if "faiss" in sources[key] else []
 
-    for key in sources.keys():
-        bm25_results = bm25_retrieve(query, key, k=top_k) if "bm25" in sources[key] else []
-        faiss_results = faiss_retrieve(query, key, k=top_k) if "faiss" in sources[key] else []
+            combined_results = bm25_results + faiss_results
 
-        combined_results = bm25_results + faiss_results
+            for doc, meta, score in combined_results:
+                name = meta["name"]
+                if name not in results_dict or score > results_dict[name][2]:
+                    results_dict[name] = (doc, meta, score)
 
-        for doc, meta, score in combined_results:
-            name = meta["name"]
-            if name not in results_dict or score > results_dict[name][2]:
-                results_dict[name] = (doc, meta, score)
+        sorted_results = sorted(results_dict.values(), key=lambda x: x[2], reverse=True)
+        final_results = sorted_results[:top_k]
 
-    sorted_results = sorted(results_dict.values(), key=lambda x: x[2], reverse=True)
-    final_results = sorted_results[:top_k]
+        content = [doc for doc, meta, score in final_results]
+        filenames = [f"{meta['type'] if meta['type'] != 'bill' else 'bills'}/{meta['name']}" for doc, meta, score in final_results]
 
-    content = [doc for doc, meta, score in final_results]
-    filenames = [f"{meta['type'] if meta['type'] != 'bill' else 'bills'}/{meta['name']}" for doc, meta, score in final_results]
+        print(content)
 
-    print(content)
-
-    return content, filenames
+        return content, filenames
+    
+    else:
+        if document:
+            chunks = get_doc_chunks(document, doc_type)
+            return chunks, [document]
+        else:
+            return [], []

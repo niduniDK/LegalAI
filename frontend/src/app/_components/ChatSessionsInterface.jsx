@@ -44,18 +44,12 @@ export function ChatSessionsInterface() {
   const [language, setLanguage] = React.useState("en")
 
   const fetchChatSessions = async () => {
-    if (!token) {
-      console.warn("No authentication token available")
-      setIsLoading(false)
-      return
-    }
-
     try {
       const response = await fetch("http://localhost:8000/chat-history/user_sessions", {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          ...(token && { "Authorization": `Bearer ${token}` })
         },
       })
 

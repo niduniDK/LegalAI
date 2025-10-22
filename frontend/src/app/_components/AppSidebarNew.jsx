@@ -67,6 +67,16 @@ export function AppSidebar() {
     router.push('/login')
   }
 
+  const handleNewChat = () => {
+    // Force navigation to home page and refresh state
+    if (pathname === '/') {
+      // If already on home page, dispatch custom event to reset state
+      window.dispatchEvent(new CustomEvent('resetChat'))
+    } else {
+      router.push('/')
+    }
+  }
+
   React.useEffect(() => {
     const fetchChatSessions = async () => {
       if (!token) {
@@ -136,12 +146,10 @@ export function AppSidebar() {
                     <Button 
                       className="w-full justify-start gap-2 h-10 mb-3 bg-primary hover:bg-primary/90" 
                       size="sm"
-                      asChild
+                      onClick={handleNewChat}
                     >
-                      <Link href="/">
-                        <Plus className="h-4 w-4" />
-                        New Chat
-                      </Link>
+                      <Plus className="h-4 w-4" />
+                      New Chat
                     </Button>
                   </SidebarMenuItem>
                 </SidebarMenu>
@@ -158,14 +166,22 @@ export function AppSidebar() {
                   {navigationItems.map((item) => (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton 
-                        asChild 
+                        asChild={item.url !== "/"}
                         isActive={pathname === item.url}
                         tooltip={item.description}
+                        onClick={item.url === "/" ? handleNewChat : undefined}
                       >
-                        <Link href={item.url} className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-accent">
-                          <item.icon className="h-4 w-4" />
-                          <span className="text-sm">{item.title}</span>
-                        </Link>
+                        {item.url === "/" ? (
+                          <div className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-accent cursor-pointer">
+                            <item.icon className="h-4 w-4" />
+                            <span className="text-sm">{item.title}</span>
+                          </div>
+                        ) : (
+                          <Link href={item.url} className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-accent">
+                            <item.icon className="h-4 w-4" />
+                            <span className="text-sm">{item.title}</span>
+                          </Link>
+                        )}
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   ))}

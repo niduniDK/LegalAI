@@ -119,7 +119,7 @@ def get_highlights(file: FileNameRequest):
                 if content:
                     # Limit content to first 5 chunks and truncate each to 200 chars
                     limited_content = []
-                    for chunk in content[:5]:
+                    for chunk in content:
                         if isinstance(chunk, str) and chunk.strip():
                             truncated = chunk.strip()[:200]
                             if len(chunk.strip()) > 200:
@@ -188,8 +188,7 @@ def generate_document_summary(
         5. Any significant implications for citizens or businesses
         
         Format the response in a clear, structured manner that's easy to understand. No need of saying that you are unable to access the 
-        external documents, including the PDF you provided, "2023/8/10-2023_E.pdf." Therefore, you cannot provide a comprehensive summary 
-        based on its content."""
+        external documents."""
         
         response = gemini_client.generate_content(prompt)
         summary = response.text if hasattr(response, "text") and response.text else "Sorry, something went wrong. Please try again later."

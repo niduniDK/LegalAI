@@ -141,7 +141,10 @@ export function DocumentSummaryChatInterface({ documentContext }) {
         },
         body: JSON.stringify({ 
           query: input, 
-          language: language
+          history: [...messages, userMessage],
+          language: language,
+          document_summary: true,
+          document: documentContext.filename || null,
         }),
       })
       
