@@ -6,6 +6,8 @@ venv/
 
 docs/
 finetune_Tests/
+data/
+md_files/
 
 **.tsv
 

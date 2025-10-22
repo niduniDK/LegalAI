@@ -1,14 +1,15 @@
 import os
 import requests
 from dotenv import load_dotenv
-import google.generativeai as genai
+from config.llm_config import get_generative_client, generate_content, get_provider_info
 from .query_processor import retrieve_doc
 
 load_dotenv()
 
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
-genai.configure(api_key=GEMINI_API_KEY)
-gemini_client = genai.GenerativeModel("gemini-2.0-flash")
+# Get LLM client based on configuration
+llm_client = get_generative_client()
+provider_info = get_provider_info()
+print(f"🤖 Using LLM Provider: {provider_info['provider']} ({provider_info['model']})")
 
 # Hugging Face configuration
 HF_API_TOKEN = os.getenv('HF_API_TOKEN')
@@ -123,14 +124,10 @@ Question: {query}
 Answer:""")
     
     try:
-        print(f"\n> Sending prompt to Gemini API")
-        response = gemini_client.generate_content(prompt)
-        if hasattr(response, "text") and response.text:
-            print(f"Generated Response: {response.text}")
-            return response.text
-        else:
-            print(f"No response text generated")
-            return "Sorry, something went wrong. Please try again later."
+        print(f"\n> Sending prompt to {provider_info['provider']} API")
+        response_text = generate_content(llm_client, prompt)
+        print(f"Generated Response: {response_text}")
+        return response_text
     except Exception as e:
         print(f"Error generating response: {e}")
         return "Sorry, something went wrong. Please try again later."

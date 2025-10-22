@@ -9,32 +9,44 @@ from rank_bm25 import BM25Okapi
 import re
 import csv
 
+# Support both local and Railway/production paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DOCS_DIR = os.path.join(BASE_DIR, "..", "docs")
+if os.path.exists("/app/data"):
+    DATA_DIR = "/app/data"  # Railway Volume mount path
+else:
+    DATA_DIR = os.path.join(BASE_DIR, "..", "data")  # Local development
+
+# Subfolders for different data types
+INDICES_DIR = os.path.join(DATA_DIR, "indices")
+MODELS_DIR = os.path.join(DATA_DIR, "models")
+
+# Fallback to root data/ if not found in DATA_DIR
+if not os.path.exists(os.path.join(MODELS_DIR, "legal-bert-base-uncased")):
+    fallback = os.path.join(BASE_DIR, "..", "data", "models")
+    if os.path.exists(os.path.join(fallback, "legal-bert-base-uncased")):
+        MODELS_DIR = fallback
+        print(f"📁 Using fallback models: {MODELS_DIR}")
+
+if not os.path.exists(INDICES_DIR) or not os.listdir(INDICES_DIR):
+    fallback = os.path.join(BASE_DIR, "..", "data", "indices")
+    if os.path.exists(fallback) and os.listdir(fallback):
+        INDICES_DIR = fallback
+        print(f"📁 Using fallback indices: {INDICES_DIR}")
 
 # Load Sentence Transformer model
-try:
-    model = SentenceTransformer('nlpaueb/legal-bert-base-uncased')
-    print(f"Successfully loaded model: nlpaueb/legal-bert-base-uncased")
-except Exception as e:
-    print(f"Failed to load nlpaueb/legal-bert-base-uncased: {e}")
-    print("This model exists on Hugging Face but may need to be downloaded first")
-    
+legal_bert_path = os.path.join(MODELS_DIR, "legal-bert-base-uncased")
+
+# Temporarily allow startup without models for initial deployment
+model = None
+if not os.path.exists(legal_bert_path):
+    print(f"⚠️ Legal-BERT not found at {legal_bert_path}. Service will start but queries will fail.")
+    print(f"   Run 'python download_models.py' inside the container to download models.")
+else:
     try:
-        from transformers import AutoModel, AutoTokenizer
-        tokenizer = AutoTokenizer.from_pretrained('nlpaueb/legal-bert-base-uncased')
-        bert_model = AutoModel.from_pretrained('nlpaueb/legal-bert-base-uncased')
-        # Create sentence transformer with mean pooling
-        from sentence_transformers.models import Transformer, Pooling
-        word_embedding_model = Transformer('nlpaueb/legal-bert-base-uncased')
-        pooling_model = Pooling(word_embedding_model.get_word_embedding_dimension())
-        model = SentenceTransformer(modules=[word_embedding_model, pooling_model])
-        print("Successfully created SentenceTransformer with custom pooling")
-    except Exception as e2:
-        print(f"Failed to create custom model: {e2}")
-        print("Falling back to a working model...")
-        model = SentenceTransformer('all-MiniLM-L6-v2')
-        print("Using fallback model: all-MiniLM-L6-v2")
+        model = SentenceTransformer(legal_bert_path)
+        print(f"✓ Loaded Legal-BERT from {legal_bert_path}")
+    except Exception as e:
+        print(f"⚠️ Failed to load Legal-BERT: {e}")
 
 def safe_read_tsv(path: str) -> pd.DataFrame:
     """
@@ -74,6 +86,13 @@ def load_all_documents(docs_dir: str):
     Supports: .faiss, _bm25.pkl, _data.pkl, .tsv
     """
     sources = {}
+    
+    # Check if directory exists
+    if not os.path.exists(docs_dir):
+        print(f"⚠️ Indices directory not found: {docs_dir}")
+        print(f"   Service will start but queries will fail until data is available.")
+        return sources
+    
     for fname in os.listdir(docs_dir):
         path = os.path.join(docs_dir, fname)
 
@@ -126,8 +145,8 @@ def load_all_documents(docs_dir: str):
 
     return sources
 
-# Load all documents
-sources = load_all_documents(DOCS_DIR)
+# Load all documents from data/indices folder
+sources = load_all_documents(INDICES_DIR)
 
 # Print summary of loaded sources
 print(f"Loaded {len(sources)} document sources:")
