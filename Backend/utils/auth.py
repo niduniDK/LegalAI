@@ -30,12 +30,22 @@ SMTP_FROM_EMAIL = os.getenv("SMTP_FROM_EMAIL")
 SMTP_FROM_NAME = os.getenv("SMTP_FROM_NAME", "LegalAI")
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verify a plaintext password against its hash."""
-    return pwd_context.verify(plain_password, hashed_password)
+    """Verify a plaintext password against its hash.
+    
+    Note: bcrypt has a 72-byte limit. Passwords are truncated to this limit.
+    """
+    # Truncate password to 72 bytes (bcrypt limitation)
+    truncated_password = plain_password.encode('utf-8')[:72].decode('utf-8', errors='ignore')
+    return pwd_context.verify(truncated_password, hashed_password)
 
 def get_password_hash(password: str) -> str:
-    """Hash a password for storing."""
-    return pwd_context.hash(password)
+    """Hash a password for storing.
+    
+    Note: bcrypt has a 72-byte limit. Passwords are truncated to this limit.
+    """
+    # Truncate password to 72 bytes (bcrypt limitation)
+    truncated_password = password.encode('utf-8')[:72].decode('utf-8', errors='ignore')
+    return pwd_context.hash(truncated_password)
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     """Create a JWT access token."""
@@ -168,9 +178,11 @@ def create_verification_email(email: str, code: str) -> tuple[str, str]:
     return subject, html_body
 
 def create_password_reset_email(email: str, reset_token: str) -> tuple[str, str]:
-    """Create password reset email content."""
-    reset_link = f"{os.getenv('APP_URL', 'http://localhost:3000')}/reset-password?token={reset_token}"
+    """Create password reset email content.
     
+    Note: The email contains only the reset token. The user will need to
+    enter this token in the password reset page of the application.
+    """
     subject = "Reset Your LegalAI Password"
     
     html_body = f"""
@@ -181,7 +193,7 @@ def create_password_reset_email(email: str, reset_token: str) -> tuple[str, str]
             body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
             .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
             .header {{ background-color: #f8f9fa; padding: 20px; text-align: center; border-radius: 5px; }}
-            .button {{ display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }}
+            .token {{ font-size: 18px; font-weight: bold; color: #007bff; text-align: center; padding: 20px; background-color: #f8f9fa; border-radius: 5px; margin: 20px 0; word-break: break-all; }}
             .footer {{ font-size: 12px; color: #666; text-align: center; margin-top: 30px; }}
         </style>
     </head>
@@ -191,16 +203,19 @@ def create_password_reset_email(email: str, reset_token: str) -> tuple[str, str]
                 <h2>Password Reset Request</h2>
             </div>
             
-            <p>We received a request to reset your LegalAI password. Click the button below to reset your password:</p>
+            <p>We received a request to reset your LegalAI password. Please use the following reset token:</p>
             
-            <div style="text-align: center;">
-                <a href="{reset_link}" class="button">Reset Password</a>
-            </div>
+            <div class="token">{reset_token}</div>
             
-            <p>If the button doesn't work, copy and paste this link into your browser:</p>
-            <p style="word-break: break-all; color: #007bff;">{reset_link}</p>
+            <p>To reset your password:</p>
+            <ol>
+                <li>Go to the LegalAI password reset page</li>
+                <li>Enter your email address</li>
+                <li>Enter the reset token shown above</li>
+                <li>Create your new password</li>
+            </ol>
             
-            <p>This link will expire in 1 hour for security reasons.</p>
+            <p>This token will expire in 1 hour for security reasons.</p>
             
             <p>If you didn't request a password reset, please ignore this email. Your password will remain unchanged.</p>
             
