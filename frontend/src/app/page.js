@@ -13,6 +13,20 @@ export default function HomePage() {
   const [sessionName, setSessionName] = useState('');
   const [chat_id, setChatId] = useState(null);
 
+  const handleNewChat = useCallback(() => {
+    setChatStarted(false)
+    setInitialQuery("")
+    setSessionName("")
+    setChatId(null)
+  }, [])
+
+  // Reset chat when navigating with reset parameter
+  useEffect(() => {
+    if (searchParams.get('reset') === 'true') {
+      handleNewChat()
+    }
+  }, [searchParams, handleNewChat])
+
   const handleStartChat = (query) => {
     setInitialQuery(query);
     setChatStarted(true);

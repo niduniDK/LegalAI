@@ -44,6 +44,24 @@ engine = create_engine(
 # Create SessionLocal class
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+def get_database_url():
+    """Get the database URL for testing purposes"""
+    return DATABASE_URL
+
+def get_engine():
+    """Get database engine for testing with stress-test optimized settings"""
+    from sqlalchemy.pool import QueuePool
+    return create_engine(
+        DATABASE_URL,
+        poolclass=QueuePool,
+        pool_size=30,
+        max_overflow=50,
+        pool_timeout=30,
+        pool_recycle=3600,
+        pool_pre_ping=True,
+        echo=False
+    )
+
 # Create Base class
 Base = declarative_base()
 

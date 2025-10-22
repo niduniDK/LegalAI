@@ -1,7 +1,11 @@
 venv/
 .env
 **/__pycache__/
+**/.pytest_cache/
+**/.vscode
 
+docs/
+finetune_Tests/
 data/
 md_files/
 
@@ -12,3 +16,6 @@ md_files/
 **.faiss
 
 **.tsv.gz
+
+tests/
+pytest.ini

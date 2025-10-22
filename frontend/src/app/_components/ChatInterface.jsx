@@ -35,7 +35,7 @@ export function ChatInterface({
   const [hasAutoSent, setHasAutoSent] = useState(false);
   const scrollAreaRef = useRef(null);
 
-  // Initialize with document context and query when component mounts
+  // Initialize and automatically send the initial query when component mounts
   React.useEffect(() => {
     // Check for document context from localStorage
     const chatContext = localStorage.getItem('chatContext');

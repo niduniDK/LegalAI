@@ -1,3 +1,8 @@
+import { Button } from "@/components/ui/button"
+import { AutoResizeTextarea } from "@/components/ui/textarea"
+import { Focus, Paperclip, Zap, ChevronDown, ArrowRight } from "lucide-react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useState } from "react"
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Focus, Paperclip, Zap, ChevronDown, ArrowRight } from 'lucide-react';
@@ -24,6 +29,19 @@ export function ChatBox({ onStartChat }) {
       handleSubmit();
     }
   };
+
+  const handleSendMessage = () => {
+    if (query.trim()) {
+      onStartChat(query)
+    }
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSendMessage()
+    }
+  }
 
   return (
     <div className='w-full space-y-4'>
